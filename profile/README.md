@@ -92,6 +92,70 @@ MSA 5종으로 구성됩니다.
 | [crowfoot-core-api](https://github.com/crowfoot-erd/crowfoot-core-api) | 코어 API — 회원·워크스페이스·팀·모델 문서·댓글, 매니지드 DB 프로비저닝(전용 계정 발급·철회), SQL 생성·배포·리버스 엔지니어링, 코드 테이블·감사 로그 |
 | [crowfoot-collab](https://github.com/crowfoot-erd/crowfoot-collab) | 협업 서버 — WebSocket(STOMP). 문서별 presence(접속 현황)와 편집 변경사항의 실시간 브로드캐스트, 단일 인스턴스 운영 |
 
+## 직접 실행하기
+
+### 사전 요건
+
+| 도구 | 버전 | 대상 |
+| --- | --- | --- |
+| Java (Temurin) | 21 | 서버 4종 |
+| Maven | 3.9+ | 서버 4종 빌드·기동 |
+| Node.js / pnpm | 20 / 10 | 프론트엔드 |
+| PostgreSQL | 16+ | 도메인 DB (`crowfoot` 데이터베이스 + `crowfoot_core` 스키마) |
+| Redis | 6+ | 인증 로그아웃 블랙리스트 |
+
+스키마는 자동 생성하지 않는다(`ddl-auto: none`) — DDL 스크립트로 초기화한다.
+
+### 로컬 포트 구성
+
+| 서비스 | 포트 | 비고 |
+| --- | --- | --- |
+| crowfoot-web (Vite) | 8080 | `/api` 요청을 게이트웨이(8000)로 프록시 |
+| crowfoot-api-gateway | 8000 | `auth`(8081)·`core-api`(8082)로 라우팅 |
+| crowfoot-auth | 8081 | |
+| crowfoot-core-api | 8082 | |
+| crowfoot-collab | 8083 | WebSocket(STOMP) — 게이트웨이 경유 없이 직접 연결 |
+
+### 환경변수
+
+각 서버는 리포 루트의 `.env-local`(gitignore 대상)을 자동으로 읽는다 — `.env-local.example`을 복사해 값을 채운다. 게이트웨이와 collab은 필요한 환경변수가 없다.
+
+**crowfoot-auth**
+
+| 변수 | 설명 |
+| --- | --- |
+| `CROWFOOT_AUTH_JWT_SECRET` | JWT HS256 서명 키 — Base64 32바이트 이상 (`openssl rand -base64 48`) |
+| `CROWFOOT_AUTH_FLOW_SECRET` | `auth_flow` 쿠키 HMAC-SHA256 서명 키 — JWT 키와 용도 분리 |
+| `CROWFOOT_AUTH_GITHUB_CLIENT_ID` / `..._SECRET` | GitHub OAuth 앱 자격 |
+| `CROWFOOT_AUTH_GOOGLE_CLIENT_ID` / `..._SECRET` | Google OAuth 클라이언트 자격 (PKCE) |
+| `CROWFOOT_REDIS_PASSWORD` / `CROWFOOT_REDIS_DATABASE` | Redis 블랙리스트 접속 (호스트는 `application-local.yml`) |
+
+OAuth 앱에는 리디렉션 URI `http://localhost:8080/auth/callback`을 등록한다.
+
+**crowfoot-core-api**
+
+| 변수 | 설명 |
+| --- | --- |
+| `DB_URL` | PostgreSQL JDBC URL — `jdbc:postgresql://{host}:5432/crowfoot?currentSchema=crowfoot_core` |
+| `DB_USERNAME` / `DB_PASSWORD` | 도메인 데이터베이스 계정 |
+
+**crowfoot-web** — 개발은 기본값 그대로 (`VITE_API_BASE_URL` 빈 값 → Vite 프록시로 같은 오리진 유지). 운영 빌드는 `VITE_API_BASE_URL`(API 게이트웨이 주소)·`VITE_WS_URL`(협업 WS 주소)을 주입한다.
+
+### 기동
+
+```bash
+# 서버 4종 — 각 리포에서 (로컬 프로필이 기본값)
+mvn spring-boot:run
+
+# 프론트엔드
+pnpm install
+pnpm dev        # http://localhost:8080
+```
+
+### 운영
+
+운영에서는 5종 전부 컨테이너 이미지로 빌드되고 서버 포트는 8080으로 통일한다. 시크릿은 코드·이미지에 두지 않고 환경변수로만 주입한다 — 각 리포의 `application-prod.yml`이 참조하는 환경변수가 필요하다.
+
 ## 기술 스택
 
 **프론트엔드** — React 19 · TypeScript · Vite · TanStack Query · Zustand · React Flow · ELK(자동 레이아웃) · Tailwind CSS · shadcn/ui(radix-ui) · i18next · Vitest·Testing Library·Playwright·MSW

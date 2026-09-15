@@ -92,6 +92,70 @@ Five services, one MSA.
 | [crowfoot-core-api](https://github.com/crowfoot-erd/crowfoot-core-api) | Core API — users·workspaces·teams·model documents·comments, managed DB provisioning (dedicated account issue & revoke), SQL generation·deployment·reverse engineering, code tables·audit logs |
 | [crowfoot-collab](https://github.com/crowfoot-erd/crowfoot-collab) | Collaboration server — WebSocket (STOMP). Per-document presence and real-time edit broadcast, single-instance deployment |
 
+## Running It Yourself
+
+### Prerequisites
+
+| Tool | Version | Used by |
+| --- | --- | --- |
+| Java (Temurin) | 21 | the four servers |
+| Maven | 3.9+ | building & running the servers |
+| Node.js / pnpm | 20 / 10 | frontend |
+| PostgreSQL | 16+ | domain DB (`crowfoot` database + `crowfoot_core` schema) |
+| Redis | 6+ | auth logout blacklist |
+
+The schema is not auto-created (`ddl-auto: none`) — initialize it with a DDL script.
+
+### Local Ports
+
+| Service | Port | Notes |
+| --- | --- | --- |
+| crowfoot-web (Vite) | 8080 | proxies `/api` to the gateway (8000) |
+| crowfoot-api-gateway | 8000 | routes to `auth` (8081) and `core-api` (8082) |
+| crowfoot-auth | 8081 | |
+| crowfoot-core-api | 8082 | |
+| crowfoot-collab | 8083 | WebSocket (STOMP) — connected directly, not through the gateway |
+
+### Environment Variables
+
+Each server automatically reads a `.env-local` file (gitignored) from the repository root — copy `.env-local.example` and fill in the values. The gateway and collab need no environment variables.
+
+**crowfoot-auth**
+
+| Variable | Description |
+| --- | --- |
+| `CROWFOOT_AUTH_JWT_SECRET` | JWT HS256 signing key — Base64, 32+ bytes (`openssl rand -base64 48`) |
+| `CROWFOOT_AUTH_FLOW_SECRET` | HMAC-SHA256 key for the `auth_flow` cookie — kept separate from the JWT key |
+| `CROWFOOT_AUTH_GITHUB_CLIENT_ID` / `..._SECRET` | GitHub OAuth app credentials |
+| `CROWFOOT_AUTH_GOOGLE_CLIENT_ID` / `..._SECRET` | Google OAuth client credentials (PKCE) |
+| `CROWFOOT_REDIS_PASSWORD` / `CROWFOOT_REDIS_DATABASE` | Redis blacklist connection (host lives in `application-local.yml`) |
+
+Register the redirect URI `http://localhost:8080/auth/callback` in your OAuth apps.
+
+**crowfoot-core-api**
+
+| Variable | Description |
+| --- | --- |
+| `DB_URL` | PostgreSQL JDBC URL — `jdbc:postgresql://{host}:5432/crowfoot?currentSchema=crowfoot_core` |
+| `DB_USERNAME` / `DB_PASSWORD` | domain database account |
+
+**crowfoot-web** — development works with the defaults (`VITE_API_BASE_URL` empty → the Vite proxy keeps everything same-origin). Production builds inject `VITE_API_BASE_URL` (API gateway) and `VITE_WS_URL` (collaboration WS).
+
+### Start
+
+```bash
+# the four servers — from each repository (local profile is the default)
+mvn spring-boot:run
+
+# frontend
+pnpm install
+pnpm dev        # http://localhost:8080
+```
+
+### Production
+
+In production all five services run as container images with a unified server port of 8080. Secrets live only in environment variables — never in code or images. See each repository's `application-prod.yml` for the variables it expects.
+
 ## Tech Stack
 
 **Frontend** — React 19 · TypeScript · Vite · TanStack Query · Zustand · React Flow · ELK (auto layout) · Tailwind CSS · shadcn/ui (radix-ui) · i18next · Vitest·Testing Library·Playwright·MSW
