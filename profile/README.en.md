@@ -6,7 +6,7 @@
 
 **Where design ends, your database begins.**
 
-Crowfoot is an open-source ERD editor that runs in your browser. From logical modeling to physical schema, team collaboration, and real database provisioning — every step of your data work in one place.
+Crowfoot is an open-source ERD editor that runs in your browser. From logical modeling to physical schema, team collaboration, and real database provisioning — every step of your data work in one place. The name comes from the **Crow's Foot notation** — the symbol shaped like a crow's foot that marks relationships in an ERD.
 
 ## Services
 
