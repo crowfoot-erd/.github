@@ -14,7 +14,7 @@ Crowfoot is an open-source ERD editor that runs in your browser. From logical mo
 | --- | --- |
 | Web (editor · dashboard) | https://crowfoot.java21.net |
 | API gateway | https://crowfoot-api.java21.net |
-| Collaboration WebSocket server | crowfoot-ws.java21.net |
+| Collaboration WebSocket server | ws://crowfoot-ws.java21.net |
 
 ## Free Managed Databases
 
