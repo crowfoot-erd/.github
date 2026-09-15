@@ -2,6 +2,8 @@
 
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 
+**한국어** | **[English](./README.en.md)**
+
 **설계가 끝나면, 데이터베이스가 시작됩니다.**
 
 Crowfoot은 브라우저에서 동작하는 오픈소스 ERD 에디터입니다. 논리 모델 설계부터 물리 모델 변환, 팀 협업, 그리고 실제 데이터베이스 발급까지 — 데이터 작업의 처음부터 끝까지 한 곳에서 제공합니다.
