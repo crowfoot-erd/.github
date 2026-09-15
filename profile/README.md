@@ -15,6 +15,9 @@ Crowfoot은 브라우저에서 동작하는 오픈소스 ERD 에디터입니다.
 | 웹 (에디터·대시보드) | https://crowfoot.java21.net |
 | API 게이트웨이 | https://crowfoot-api.java21.net |
 | 협업 WebSocket 서버 | ws://crowfoot-ws.java21.net |
+| 시스템 ERD | https://crowfoot.java21.net/share/1KeFkNED0uTmx6MPWqmXph |
+
+Crowfoot 시스템 자체의 ERD도 Crowfoot으로 직접 설계했습니다 — 위의 공유 링크에서 확인할 수 있습니다.
 
 ## 무료 매니지드 데이터베이스
 
