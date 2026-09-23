@@ -95,6 +95,18 @@ Five services, one MSA.
 | [crowfoot-core-api](https://github.com/crowfoot-erd/crowfoot-core-api) | Core API — users·workspaces·teams·model documents·comments, managed DB provisioning (dedicated account issue & revoke), SQL generation·deployment·reverse engineering, code tables·audit logs |
 | [crowfoot-collab](https://github.com/crowfoot-erd/crowfoot-collab) | Collaboration server — WebSocket (STOMP). Per-document presence and real-time edit broadcast, single-instance deployment |
 
+## Releases
+
+| Version | Date | Highlights | Tag | Release notes |
+| --- | --- | --- | --- | --- |
+| v1.12 | 2026-09-23 | Model explorer & unified search, SQL import | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.12) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.12) | [View](https://crowfoot.java21.net/release-notes/14) |
+| v1.11 | 2026-09-22 | Relationship editing & version compare, faster image export | — | [View](https://crowfoot.java21.net/release-notes/13) |
+| v1.10 | 2026-09-21 | Version compare & migration DDL | — | [View](https://crowfoot.java21.net/release-notes/11) |
+| v1.09 | 2026-09-20 | Document version history & DB sync | — | [View](https://crowfoot.java21.net/release-notes/10) |
+| v1.08 | 2026-09-18 | Community boards, real-time chat, editor safeguards | — | [View](https://crowfoot.java21.net/release-notes/9) |
+
+Every release ships with public [release notes](https://crowfoot.java21.net/) (the landing page lists them all). Git tags are kept in each repository from v1.12 on.
+
 ## Running It Yourself
 
 ### Prerequisites

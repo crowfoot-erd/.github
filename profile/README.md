@@ -95,6 +95,18 @@ MSA 5종으로 구성됩니다.
 | [crowfoot-core-api](https://github.com/crowfoot-erd/crowfoot-core-api) | 코어 API — 회원·워크스페이스·팀·모델 문서·댓글, 매니지드 DB 프로비저닝(전용 계정 발급·철회), SQL 생성·배포·리버스 엔지니어링, 코드 테이블·감사 로그 |
 | [crowfoot-collab](https://github.com/crowfoot-erd/crowfoot-collab) | 협업 서버 — WebSocket(STOMP). 문서별 presence(접속 현황)와 편집 변경사항의 실시간 브로드캐스트, 단일 인스턴스 운영 |
 
+## 릴리스
+
+| 버전 | 날짜 | 주요 내용 | 태그 | 릴리스 노트 |
+| --- | --- | --- | --- | --- |
+| v1.12 | 2026-09-23 | 모델 익스플로러·통합 검색, SQL 가져오기 | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.12) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.12) | [보기](https://crowfoot.java21.net/release-notes/14) |
+| v1.11 | 2026-09-22 | 관계 편집·버전 비교 개선, 빠른 이미지 내보내기 | — | [보기](https://crowfoot.java21.net/release-notes/13) |
+| v1.10 | 2026-09-21 | 버전 비교·마이그레이션 DDL | — | [보기](https://crowfoot.java21.net/release-notes/11) |
+| v1.09 | 2026-09-20 | 문서 버전 기록·DB 동기화 | — | [보기](https://crowfoot.java21.net/release-notes/10) |
+| v1.08 | 2026-09-18 | 커뮤니티 게시판·실시간 채팅·에디터 안전장치 | — | [보기](https://crowfoot.java21.net/release-notes/9) |
+
+릴리스마다 변경 사항을 [릴리스 노트](https://crowfoot.java21.net/)로 정리해 공개한다(랜딩의 최근 릴리스에서 전체 목록을 볼 수 있다). git 태그는 v1.12부터 각 리포에 남긴다.
+
 ## 직접 실행하기
 
 ### 사전 요건
