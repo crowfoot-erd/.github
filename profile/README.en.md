@@ -99,6 +99,7 @@ Five services, one MSA.
 
 | Version | Date | Highlights | Tag | Release notes |
 | --- | --- | --- | --- | --- |
+| v1.15 | 2026-09-25 | System dictionary bulk expansion (34,075 tokens), inference loading improvement | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.15) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.15) | [View](https://crowfoot.java21.net/release-notes/17) |
 | v1.14 | 2026-09-25 | Term dictionary panel & system dictionary admin, inference language picker, column name suggestions | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.14) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.14) | [View](https://crowfoot.java21.net/release-notes/16) |
 | v1.13 | 2026-09-24 | Logical groups (subject areas), logical name inference, keyboard cheat sheet | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.13) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.13) | [View](https://crowfoot.java21.net/release-notes/15) |
 | v1.12 | 2026-09-23 | Model explorer & unified search, SQL import | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.12) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.12) | [View](https://crowfoot.java21.net/release-notes/14) |
