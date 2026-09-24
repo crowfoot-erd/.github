@@ -99,6 +99,7 @@ MSA 5종으로 구성됩니다.
 
 | 버전 | 날짜 | 주요 내용 | 태그 | 릴리스 노트 |
 | --- | --- | --- | --- | --- |
+| v1.14 | 2026-09-25 | 용어 사전 패널·시스템 사전 관리, 추론 언어 선택, 컬럼 물리명 사전 제안 | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.14) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.14) | [보기](https://crowfoot.java21.net/release-notes/16) |
 | v1.13 | 2026-09-24 | 논리 그룹(주제 영역), 논리명 자동 추론, 단축키 치트시트 | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.13) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.13) | [보기](https://crowfoot.java21.net/release-notes/15) |
 | v1.12 | 2026-09-23 | 모델 익스플로러·통합 검색, SQL 가져오기 | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.12) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.12) | [보기](https://crowfoot.java21.net/release-notes/14) |
 | v1.11 | 2026-09-22 | 관계 편집·버전 비교 개선, 빠른 이미지 내보내기 | — | [보기](https://crowfoot.java21.net/release-notes/13) |
