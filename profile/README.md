@@ -2,7 +2,7 @@
 
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 
-**한국어** | **[English](./README.en.md)**
+**한국어** | **[English](./README.en.md)** | **[日本語](./README.ja.md)** | **[简体中文](./README.zh.md)**
 
 **설계가 끝나면, 데이터베이스가 시작됩니다.**
 
@@ -89,7 +89,7 @@ MSA 5종으로 구성됩니다.
 
 | 저장소 | 설명 |
 | --- | --- |
-| [crowfoot-web](https://github.com/crowfoot-erd/crowfoot-web) | 프론트엔드 — React SPA. ERD 에디터(React Flow), 대시보드·워크스페이스·팀, 관리자 콘솔, 협업 클라이언트(STOMP), i18n(ko·en)·다크 모드 |
+| [crowfoot-web](https://github.com/crowfoot-erd/crowfoot-web) | 프론트엔드 — React SPA. ERD 에디터(React Flow), 대시보드·워크스페이스·팀, 관리자 콘솔, 협업 클라이언트(STOMP), i18n(ko·en·ja·zh)·다크 모드 |
 | [crowfoot-api-gateway](https://github.com/crowfoot-erd/crowfoot-api-gateway) | API 게이트웨이 — Spring Cloud Gateway. 라우팅, Bearer 토큰 introspection 검증, 사용자 식별 헤더 주입, 공개 경로 화이트리스트 |
 | [crowfoot-auth](https://github.com/crowfoot-erd/crowfoot-auth) | 인증 서버 — OAuth2 로그인(GitHub·Google·PKCE), JWT 발급·갱신·introspection, Redis 블랙리스트(로그아웃) |
 | [crowfoot-core-api](https://github.com/crowfoot-erd/crowfoot-core-api) | 코어 API — 회원·워크스페이스·팀·모델 문서·댓글, 매니지드 DB 프로비저닝(전용 계정 발급·철회), SQL 생성·배포·리버스 엔지니어링, 코드 테이블·감사 로그 |

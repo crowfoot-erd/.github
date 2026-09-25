@@ -2,7 +2,7 @@
 
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 
-**[한국어](./README.md)** | **English**
+**[한국어](./README.md)** | **English** | **[日本語](./README.ja.md)** | **[简体中文](./README.zh.md)**
 
 **Where design ends, your database begins.**
 
@@ -89,7 +89,7 @@ Five services, one MSA.
 
 | Repository | Description |
 | --- | --- |
-| [crowfoot-web](https://github.com/crowfoot-erd/crowfoot-web) | Frontend — React SPA. ERD editor (React Flow), dashboard·workspaces·teams, admin console, collaboration client (STOMP), i18n (ko·en) & dark mode |
+| [crowfoot-web](https://github.com/crowfoot-erd/crowfoot-web) | Frontend — React SPA. ERD editor (React Flow), dashboard·workspaces·teams, admin console, collaboration client (STOMP), i18n (ko·en·ja·zh) & dark mode |
 | [crowfoot-api-gateway](https://github.com/crowfoot-erd/crowfoot-api-gateway) | API gateway — Spring Cloud Gateway. Routing, bearer-token introspection, user identity header injection, public-path whitelist |
 | [crowfoot-auth](https://github.com/crowfoot-erd/crowfoot-auth) | Auth server — OAuth2 sign-in (GitHub·Google·PKCE), JWT issue/refresh/introspection, Redis blacklist (logout) |
 | [crowfoot-core-api](https://github.com/crowfoot-erd/crowfoot-core-api) | Core API — users·workspaces·teams·model documents·comments, managed DB provisioning (dedicated account issue & revoke), SQL generation·deployment·reverse engineering, code tables·audit logs |
