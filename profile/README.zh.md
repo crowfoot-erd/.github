@@ -99,6 +99,7 @@ Crowfoot 的核心功能。**每个账户最多可免费开通 5 个** PostgreSQ
 
 | 版本 | 日期 | 主要内容 | 标签 | 发布说明 |
 | --- | --- | --- | --- | --- |
+| v1.16 | 2026-09-25 | 全面支持 4 种语言(韩语、英语、日语、中文)、语言专属 URL·SEO、账号语言、多语言发布说明 | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.16) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.16) | [查看](https://crowfoot.java21.net/release-notes/18) |
 | v1.15 | 2026-09-25 | 系统词典批量扩充(34,075 个词条)、推理加载优化 | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.15) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.15) | [查看](https://crowfoot.java21.net/release-notes/17) |
 | v1.14 | 2026-09-25 | 术语词典面板 · 系统词典管理、推理语言选择、列物理名词典建议 | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.14) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.14) | [查看](https://crowfoot.java21.net/release-notes/16) |
 | v1.13 | 2026-09-24 | 逻辑分组(主题区域)、逻辑名自动推理、快捷键速查表 | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.13) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.13) | [查看](https://crowfoot.java21.net/release-notes/15) |

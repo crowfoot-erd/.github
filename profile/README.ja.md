@@ -99,6 +99,7 @@ Crowfootの核となる機能です。**アカウントごとに最大5個まで
 
 | バージョン | 日付 | 主な内容 | タグ | リリースノート |
 | --- | --- | --- | --- | --- |
+| v1.16 | 2026-09-25 | 4言語の完全対応(韓国語・英語・日本語・中国語)、言語別URL・SEO、アカウント言語、リリースノート多言語化 | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.16) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.16) | [見る](https://crowfoot.java21.net/release-notes/18) |
 | v1.15 | 2026-09-25 | システム辞書の大量拡張(34,075トークン)、推論ローディング改善 | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.15) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.15) | [見る](https://crowfoot.java21.net/release-notes/17) |
 | v1.14 | 2026-09-25 | 用語辞書パネル·システム辞書管理、推論の言語選択、カラム物理名の辞書サジェスト | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.14) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.14) | [見る](https://crowfoot.java21.net/release-notes/16) |
 | v1.13 | 2026-09-24 | 論理グループ(主題領域)、論理名自動推論、ショートカットチートシート | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.13) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.13) | [見る](https://crowfoot.java21.net/release-notes/15) |
