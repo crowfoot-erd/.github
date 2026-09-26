@@ -99,8 +99,8 @@ Five services, one MSA.
 
 | Version | Date | Highlights | Tag | Release notes |
 | --- | --- | --- | --- | --- |
-| v1.17 | 2026-09-26 | Collaboration upgrade: live cursors, selections & movement, concurrent editing convergence, edit locks, conflict resolution | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.17) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.17) · [collab](https://github.com/crowfoot-erd/crowfoot-collab/releases/tag/v1.17) | [View](https://crowfoot.java21.net/release-notes/19) |
-| v1.16 | 2026-09-25 | Full support for 4 languages (Korean, English, Japanese, Chinese), per-language URLs & SEO, account language, multilingual release notes | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.16) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.16) | [View](https://crowfoot.java21.net/release-notes/18) |
+| v1.17 | 2026-09-26 | Collaboration upgrade: live cursors, selections & movement, concurrent editing convergence, edit locks, conflict resolution | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.17) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.17) · [auth](https://github.com/crowfoot-erd/crowfoot-auth/releases/tag/v1.17) · [collab](https://github.com/crowfoot-erd/crowfoot-collab/releases/tag/v1.17) · [gateway](https://github.com/crowfoot-erd/crowfoot-api-gateway/releases/tag/v1.17) | [View](https://crowfoot.java21.net/release-notes/19) |
+| v1.16 | 2026-09-25 | Full support for 4 languages (Korean, English, Japanese, Chinese), per-language URLs & SEO, account language, multilingual release notes | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.16) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.16) · [auth](https://github.com/crowfoot-erd/crowfoot-auth/releases/tag/v1.16) · [collab](https://github.com/crowfoot-erd/crowfoot-collab/releases/tag/v1.16) · [gateway](https://github.com/crowfoot-erd/crowfoot-api-gateway/releases/tag/v1.16) | [View](https://crowfoot.java21.net/release-notes/18) |
 | v1.15 | 2026-09-25 | System dictionary bulk expansion (34,075 tokens), inference loading improvement | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.15) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.15) | [View](https://crowfoot.java21.net/release-notes/17) |
 | v1.14 | 2026-09-25 | Term dictionary panel & system dictionary admin, inference language picker, column name suggestions | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.14) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.14) | [View](https://crowfoot.java21.net/release-notes/16) |
 | v1.13 | 2026-09-24 | Logical groups (subject areas), logical name inference, keyboard cheat sheet | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.13) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.13) | [View](https://crowfoot.java21.net/release-notes/15) |
@@ -110,7 +110,7 @@ Five services, one MSA.
 | v1.09 | 2026-09-20 | Document version history & DB sync | — | [View](https://crowfoot.java21.net/release-notes/10) |
 | v1.08 | 2026-09-18 | Community boards, real-time chat, editor safeguards | — | [View](https://crowfoot.java21.net/release-notes/9) |
 
-Every release ships with public [release notes](https://crowfoot.java21.net/) (the landing page lists them all). Git tags are kept in each repository from v1.12 on.
+Every release ships with public [release notes](https://crowfoot.java21.net/) (the landing page lists them all). Git tags have been kept since v1.12, and from v1.16 on every release tags all five deployable repositories (unchanged ones get a no-change tag to keep system versions aligned).
 
 ## Running It Yourself
 

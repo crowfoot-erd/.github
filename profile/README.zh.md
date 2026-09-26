@@ -99,8 +99,8 @@ Crowfoot 的核心功能。**每个账户最多可免费开通 5 个** PostgreSQ
 
 | 版本 | 日期 | 主要内容 | 标签 | 发布说明 |
 | --- | --- | --- | --- | --- |
-| v1.17 | 2026-09-26 | 协作增强：实时光标·选区·移动、同时编辑收敛、编辑锁、版本冲突解决 | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.17) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.17) · [collab](https://github.com/crowfoot-erd/crowfoot-collab/releases/tag/v1.17) | [查看](https://crowfoot.java21.net/release-notes/19) |
-| v1.16 | 2026-09-25 | 全面支持 4 种语言(韩语、英语、日语、中文)、语言专属 URL·SEO、账号语言、多语言发布说明 | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.16) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.16) | [查看](https://crowfoot.java21.net/release-notes/18) |
+| v1.17 | 2026-09-26 | 协作增强：实时光标·选区·移动、同时编辑收敛、编辑锁、版本冲突解决 | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.17) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.17) · [auth](https://github.com/crowfoot-erd/crowfoot-auth/releases/tag/v1.17) · [collab](https://github.com/crowfoot-erd/crowfoot-collab/releases/tag/v1.17) · [gateway](https://github.com/crowfoot-erd/crowfoot-api-gateway/releases/tag/v1.17) | [查看](https://crowfoot.java21.net/release-notes/19) |
+| v1.16 | 2026-09-25 | 全面支持 4 种语言(韩语、英语、日语、中文)、语言专属 URL·SEO、账号语言、多语言发布说明 | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.16) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.16) · [auth](https://github.com/crowfoot-erd/crowfoot-auth/releases/tag/v1.16) · [collab](https://github.com/crowfoot-erd/crowfoot-collab/releases/tag/v1.16) · [gateway](https://github.com/crowfoot-erd/crowfoot-api-gateway/releases/tag/v1.16) | [查看](https://crowfoot.java21.net/release-notes/18) |
 | v1.15 | 2026-09-25 | 系统词典批量扩充(34,075 个词条)、推理加载优化 | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.15) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.15) | [查看](https://crowfoot.java21.net/release-notes/17) |
 | v1.14 | 2026-09-25 | 术语词典面板 · 系统词典管理、推理语言选择、列物理名词典建议 | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.14) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.14) | [查看](https://crowfoot.java21.net/release-notes/16) |
 | v1.13 | 2026-09-24 | 逻辑分组(主题区域)、逻辑名自动推理、快捷键速查表 | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.13) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.13) | [查看](https://crowfoot.java21.net/release-notes/15) |
@@ -110,7 +110,7 @@ Crowfoot 的核心功能。**每个账户最多可免费开通 5 个** PostgreSQ
 | v1.09 | 2026-09-20 | 文档版本历史 · 数据库同步 | — | [查看](https://crowfoot.java21.net/release-notes/10) |
 | v1.08 | 2026-09-18 | 社区板块 · 实时聊天 · 编辑器安全防护 | — | [查看](https://crowfoot.java21.net/release-notes/9) |
 
-每个版本的变更内容都会以[发布说明](https://crowfoot.java21.net/)的形式公开(首页的"最近发布"中有完整列表)。git 标签从 v1.12 起保留在各仓库中。
+每个版本的变更内容都会以[发布说明](https://crowfoot.java21.net/)的形式公开(首页的"最近发布"中有完整列表)。git 标签自 v1.12 起开始保留，自 v1.16 起每个版本都会在全部 5 个部署仓库打上标签(无变更的仓库也以无变更标签对齐系统版本)。
 
 ## 自行运行
 

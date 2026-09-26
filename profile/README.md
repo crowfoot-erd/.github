@@ -99,8 +99,8 @@ MSA 5종으로 구성됩니다.
 
 | 버전 | 날짜 | 주요 내용 | 태그 | 릴리스 노트 |
 | --- | --- | --- | --- | --- |
-| v1.17 | 2026-09-26 | 협업 고도화: 실시간 커서·선택·이동, 동시 편집 수렴, 편집 잠금, 버전 충돌 해결 | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.17) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.17) · [collab](https://github.com/crowfoot-erd/crowfoot-collab/releases/tag/v1.17) | [보기](https://crowfoot.java21.net/release-notes/19) |
-| v1.16 | 2026-09-25 | 4개 언어 전면 지원(한국어·영어·일본어·중국어), 언어별 URL·SEO, 계정 언어, 릴리스 노트 다국어 | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.16) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.16) | [보기](https://crowfoot.java21.net/release-notes/18) |
+| v1.17 | 2026-09-26 | 협업 고도화: 실시간 커서·선택·이동, 동시 편집 수렴, 편집 잠금, 버전 충돌 해결 | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.17) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.17) · [auth](https://github.com/crowfoot-erd/crowfoot-auth/releases/tag/v1.17) · [collab](https://github.com/crowfoot-erd/crowfoot-collab/releases/tag/v1.17) · [gateway](https://github.com/crowfoot-erd/crowfoot-api-gateway/releases/tag/v1.17) | [보기](https://crowfoot.java21.net/release-notes/19) |
+| v1.16 | 2026-09-25 | 4개 언어 전면 지원(한국어·영어·일본어·중국어), 언어별 URL·SEO, 계정 언어, 릴리스 노트 다국어 | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.16) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.16) · [auth](https://github.com/crowfoot-erd/crowfoot-auth/releases/tag/v1.16) · [collab](https://github.com/crowfoot-erd/crowfoot-collab/releases/tag/v1.16) · [gateway](https://github.com/crowfoot-erd/crowfoot-api-gateway/releases/tag/v1.16) | [보기](https://crowfoot.java21.net/release-notes/18) |
 | v1.15 | 2026-09-25 | 시스템 사전 대량 확장(34,075 표준 토큰), 추론 로딩 개선 | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.15) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.15) | [보기](https://crowfoot.java21.net/release-notes/17) |
 | v1.14 | 2026-09-25 | 용어 사전 패널·시스템 사전 관리, 추론 언어 선택, 컬럼 물리명 사전 제안 | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.14) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.14) | [보기](https://crowfoot.java21.net/release-notes/16) |
 | v1.13 | 2026-09-24 | 논리 그룹(주제 영역), 논리명 자동 추론, 단축키 치트시트 | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.13) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.13) | [보기](https://crowfoot.java21.net/release-notes/15) |
@@ -110,7 +110,7 @@ MSA 5종으로 구성됩니다.
 | v1.09 | 2026-09-20 | 문서 버전 기록·DB 동기화 | — | [보기](https://crowfoot.java21.net/release-notes/10) |
 | v1.08 | 2026-09-18 | 커뮤니티 게시판·실시간 채팅·에디터 안전장치 | — | [보기](https://crowfoot.java21.net/release-notes/9) |
 
-릴리스마다 변경 사항을 [릴리스 노트](https://crowfoot.java21.net/)로 정리해 공개한다(랜딩의 최근 릴리스에서 전체 목록을 볼 수 있다). git 태그는 v1.12부터 각 리포에 남긴다.
+릴리스마다 변경 사항을 [릴리스 노트](https://crowfoot.java21.net/)로 정리해 공개한다(랜딩의 최근 릴리스에서 전체 목록을 볼 수 있다). git 태그는 v1.12부터 남기기 시작했고, v1.16부터는 매 버전 배포 리포 5개 전부에 찍는다(변경이 없던 리포도 무변경 태그로 시스템 버전을 정렬).
 
 ## 직접 실행하기
 

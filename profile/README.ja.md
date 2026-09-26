@@ -99,8 +99,8 @@ Crowfootの核となる機能です。**アカウントごとに最大5個まで
 
 | バージョン | 日付 | 主な内容 | タグ | リリースノート |
 | --- | --- | --- | --- | --- |
-| v1.17 | 2026-09-26 | コラボレーション強化：リアルタイムカーソル・選択・移動、同時編集の収束、編集ロック、バージョン競合の解決 | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.17) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.17) · [collab](https://github.com/crowfoot-erd/crowfoot-collab/releases/tag/v1.17) | [見る](https://crowfoot.java21.net/release-notes/19) |
-| v1.16 | 2026-09-25 | 4言語の完全対応(韓国語・英語・日本語・中国語)、言語別URL・SEO、アカウント言語、リリースノート多言語化 | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.16) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.16) | [見る](https://crowfoot.java21.net/release-notes/18) |
+| v1.17 | 2026-09-26 | コラボレーション強化：リアルタイムカーソル・選択・移動、同時編集の収束、編集ロック、バージョン競合の解決 | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.17) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.17) · [auth](https://github.com/crowfoot-erd/crowfoot-auth/releases/tag/v1.17) · [collab](https://github.com/crowfoot-erd/crowfoot-collab/releases/tag/v1.17) · [gateway](https://github.com/crowfoot-erd/crowfoot-api-gateway/releases/tag/v1.17) | [見る](https://crowfoot.java21.net/release-notes/19) |
+| v1.16 | 2026-09-25 | 4言語の完全対応(韓国語・英語・日本語・中国語)、言語別URL・SEO、アカウント言語、リリースノート多言語化 | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.16) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.16) · [auth](https://github.com/crowfoot-erd/crowfoot-auth/releases/tag/v1.16) · [collab](https://github.com/crowfoot-erd/crowfoot-collab/releases/tag/v1.16) · [gateway](https://github.com/crowfoot-erd/crowfoot-api-gateway/releases/tag/v1.16) | [見る](https://crowfoot.java21.net/release-notes/18) |
 | v1.15 | 2026-09-25 | システム辞書の大量拡張(34,075トークン)、推論ローディング改善 | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.15) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.15) | [見る](https://crowfoot.java21.net/release-notes/17) |
 | v1.14 | 2026-09-25 | 用語辞書パネル·システム辞書管理、推論の言語選択、カラム物理名の辞書サジェスト | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.14) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.14) | [見る](https://crowfoot.java21.net/release-notes/16) |
 | v1.13 | 2026-09-24 | 論理グループ(主題領域)、論理名自動推論、ショートカットチートシート | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.13) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.13) | [見る](https://crowfoot.java21.net/release-notes/15) |
@@ -110,7 +110,7 @@ Crowfootの核となる機能です。**アカウントごとに最大5個まで
 | v1.09 | 2026-09-20 | ドキュメントのバージョン履歴·DB同期 | — | [見る](https://crowfoot.java21.net/release-notes/10) |
 | v1.08 | 2026-09-18 | コミュニティ掲示板·リアルタイムチャット·エディタの安全装置 | — | [見る](https://crowfoot.java21.net/release-notes/9) |
 
-各リリースの変更内容は[リリースノート](https://crowfoot.java21.net/)として公開しています(ランディングの「最近のリリース」に全一覧があります)。gitタグはv1.12以降、各リポジトリに付与しています。
+各リリースの変更内容は[リリースノート](https://crowfoot.java21.net/)として公開しています(ランディングの「最近のリリース」に全一覧があります)。gitタグはv1.12から残し始め、v1.16以降は毎リリース、デプロイ対象の5リポジトリすべてに付与しています(変更のないリポジトリも無変更タグでシステムのバージョンを揃えます)。
 
 ## 自分で動かす
 
