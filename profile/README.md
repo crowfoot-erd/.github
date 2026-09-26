@@ -99,6 +99,7 @@ MSA 5종으로 구성됩니다.
 
 | 버전 | 날짜 | 주요 내용 | 태그 | 릴리스 노트 |
 | --- | --- | --- | --- | --- |
+| v1.17 | 2026-09-26 | 협업 고도화: 실시간 커서·선택·이동, 동시 편집 수렴, 편집 잠금, 버전 충돌 해결 | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.17) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.17) · [collab](https://github.com/crowfoot-erd/crowfoot-collab/releases/tag/v1.17) | [보기](https://crowfoot.java21.net/release-notes/19) |
 | v1.16 | 2026-09-25 | 4개 언어 전면 지원(한국어·영어·일본어·중국어), 언어별 URL·SEO, 계정 언어, 릴리스 노트 다국어 | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.16) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.16) | [보기](https://crowfoot.java21.net/release-notes/18) |
 | v1.15 | 2026-09-25 | 시스템 사전 대량 확장(34,075 표준 토큰), 추론 로딩 개선 | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.15) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.15) | [보기](https://crowfoot.java21.net/release-notes/17) |
 | v1.14 | 2026-09-25 | 용어 사전 패널·시스템 사전 관리, 추론 언어 선택, 컬럼 물리명 사전 제안 | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.14) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.14) | [보기](https://crowfoot.java21.net/release-notes/16) |

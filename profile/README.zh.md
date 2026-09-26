@@ -99,6 +99,7 @@ Crowfoot 的核心功能。**每个账户最多可免费开通 5 个** PostgreSQ
 
 | 版本 | 日期 | 主要内容 | 标签 | 发布说明 |
 | --- | --- | --- | --- | --- |
+| v1.17 | 2026-09-26 | 协作增强：实时光标·选区·移动、同时编辑收敛、编辑锁、版本冲突解决 | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.17) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.17) · [collab](https://github.com/crowfoot-erd/crowfoot-collab/releases/tag/v1.17) | [查看](https://crowfoot.java21.net/release-notes/19) |
 | v1.16 | 2026-09-25 | 全面支持 4 种语言(韩语、英语、日语、中文)、语言专属 URL·SEO、账号语言、多语言发布说明 | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.16) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.16) | [查看](https://crowfoot.java21.net/release-notes/18) |
 | v1.15 | 2026-09-25 | 系统词典批量扩充(34,075 个词条)、推理加载优化 | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.15) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.15) | [查看](https://crowfoot.java21.net/release-notes/17) |
 | v1.14 | 2026-09-25 | 术语词典面板 · 系统词典管理、推理语言选择、列物理名词典建议 | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.14) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.14) | [查看](https://crowfoot.java21.net/release-notes/16) |
