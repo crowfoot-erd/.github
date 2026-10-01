@@ -66,7 +66,7 @@ Crowfoot 的核心功能。**每个账户最多可免费开通 5 个** PostgreSQ
 
 ## 架构
 
-五个服务，一个微服务架构。
+六个服务，一个微服务架构。
 
 ```
   Browser
@@ -81,8 +81,11 @@ Crowfoot 的核心功能。**每个账户最多可免费开通 5 个** PostgreSQ
 │ api-gateway  │────▶│  auth        │  OAuth2 · JWT · introspection · Redis
 └──────┬───────┘     └──────────────┘
        │             ┌──────────────┐
-       └────────────▶│  core-api    │  domain (PostgreSQL) · managed DB
-                     └──────┬───────┘  provisioning (PostgreSQL · MySQL)
+       ├────────────▶│  core-api    │  domain (PostgreSQL) · managed DB
+       │             └──────▲───────┘  provisioning (PostgreSQL · MySQL)
+       │             ┌──────┴───────────┐
+       └────────────▶│ database-manager │  data browser (connects to the connection's DB)
+                     └──────────────────┘
 ```
 
 ## 仓库
@@ -94,11 +97,13 @@ Crowfoot 的核心功能。**每个账户最多可免费开通 5 个** PostgreSQ
 | [crowfoot-auth](https://github.com/crowfoot-erd/crowfoot-auth) | 认证服务器 — OAuth2 登录(GitHub · Google · PKCE)、JWT 签发 · 刷新 · introspection、Redis 黑名单(登出) |
 | [crowfoot-core-api](https://github.com/crowfoot-erd/crowfoot-core-api) | 核心 API — 用户 · 工作空间 · 团队 · 模型文档 · 评论、托管数据库开通(专用账户的发放与撤销)、SQL 生成 · 部署 · 逆向工程、代码表 · 审计日志 |
 | [crowfoot-collab](https://github.com/crowfoot-erd/crowfoot-collab) | 协作服务器 — WebSocket(STOMP)。按文档的在线状态与编辑变更的实时广播，单实例部署 |
+| [crowfoot-database-manager](https://github.com/crowfoot-erd/crowfoot-database-manager) | 数据库管理器 — 数据浏览器。对连接所指向的数据库进行数据查看、行编辑和 SQL 控制台操作。自身没有数据库，每次请求时连接，权限判定交给核心 API |
 
 ## 版本发布
 
 | 版本 | 日期 | 主要内容 | 标签 | 发布说明 |
 | --- | --- | --- | --- | --- |
+| v1.28 | 2026-10-01 | 数据浏览器(查看、筛选、排序已连接数据库的数据并导出 CSV)、行编辑(汇总后一次应用・冲突检测)、SQL 控制台(语法高亮・自动补全・写入语句确认)、从 ERD 编辑器直接打开表数据 | [crowfoot-web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.28) · [crowfoot-core-api](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.28) · [crowfoot-auth](https://github.com/crowfoot-erd/crowfoot-auth/releases/tag/v1.28) · [crowfoot-collab](https://github.com/crowfoot-erd/crowfoot-collab/releases/tag/v1.28) · [crowfoot-api-gateway](https://github.com/crowfoot-erd/crowfoot-api-gateway/releases/tag/v1.28) · [crowfoot-database-manager](https://github.com/crowfoot-erd/crowfoot-database-manager/releases/tag/v1.28) | [查看](https://crowfoot.java21.net/release-notes/30) |
 | v1.27 | 2026-10-01 | 复制为其他DBMS(仅目标 DBMS 不同的新文档・检查结果预览)、编辑器工具栏整理(8 个按钮 + 导出・工具菜单)、文档列表操作菜单・数据库类型显示名、首页与登录页改版、每日登录计数缺陷修复 | [crowfoot-web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.27) · [crowfoot-core-api](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.27) · [crowfoot-auth](https://github.com/crowfoot-erd/crowfoot-auth/releases/tag/v1.27) · [crowfoot-collab](https://github.com/crowfoot-erd/crowfoot-collab/releases/tag/v1.27) · [crowfoot-api-gateway](https://github.com/crowfoot-erd/crowfoot-api-gateway/releases/tag/v1.27) | [查看](https://crowfoot.java21.net/release-notes/29) |
 | v1.26 | 2026-09-30 | 文档连接数据库(手绘文档可稍后绑定连接)、迁移 DDL 套用到数据库(执行时重新计算・不可撤销确认窗口・逐条语句报告)、侧边栏工作区区块区分、类型标注规范化缺陷修复 | [crowfoot-web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.26) · [crowfoot-core-api](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.26) · [crowfoot-auth](https://github.com/crowfoot-erd/crowfoot-auth/releases/tag/v1.26) · [crowfoot-collab](https://github.com/crowfoot-erd/crowfoot-collab/releases/tag/v1.26) · [crowfoot-api-gateway](https://github.com/crowfoot-erd/crowfoot-api-gateway/releases/tag/v1.26) | [查看](https://crowfoot.java21.net/release-notes/28) |
 | v1.25 | 2026-09-29 | ERD 图库上线(509 个实务主题 — 含需求、键与完整性设计说明)、布局间距平衡(表格更宽松、分组更紧凑)、修复备注纵向重叠 | [crowfoot-web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.25) · [crowfoot-core-api](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.25) · [crowfoot-auth](https://github.com/crowfoot-erd/crowfoot-auth/releases/tag/v1.25) · [crowfoot-collab](https://github.com/crowfoot-erd/crowfoot-collab/releases/tag/v1.25) · [crowfoot-api-gateway](https://github.com/crowfoot-erd/crowfoot-api-gateway/releases/tag/v1.25) | [查看](https://crowfoot.java21.net/release-notes/27) |
@@ -120,7 +125,7 @@ Crowfoot 的核心功能。**每个账户最多可免费开通 5 个** PostgreSQ
 | v1.09 | 2026-09-20 | 文档版本历史 · 数据库同步 | — | [查看](https://crowfoot.java21.net/release-notes/10) |
 | v1.08 | 2026-09-18 | 社区板块 · 实时聊天 · 编辑器安全防护 | — | [查看](https://crowfoot.java21.net/release-notes/9) |
 
-每个版本的变更内容都会以[发布说明](https://crowfoot.java21.net/)的形式公开(首页的"最近发布"中有完整列表)。git 标签自 v1.12 起开始保留，自 v1.16 起每个版本都会在全部 5 个部署仓库打上标签(无变更的仓库也以无变更标签对齐系统版本)。
+每个版本的变更内容都会以[发布说明](https://crowfoot.java21.net/)的形式公开(首页的"最近发布"中有完整列表)。git 标签自 v1.12 起开始保留，自 v1.16 起每个版本都会在全部部署仓库(自 v1.28 起为 6 个)打上标签(无变更的仓库也以无变更标签对齐系统版本)。
 
 ## 自行运行
 
@@ -184,7 +189,7 @@ pnpm dev        # http://localhost:8080
 
 ### 生产环境
 
-生产环境中五个服务全部以容器镜像运行,服务器端口统一为 8080。密钥只存在于环境变量中 — 绝不写入代码或镜像。各仓库的 `application-prod.yml` 中列出了所需的变量。
+生产环境中六个服务全部以容器镜像运行,服务器端口统一为 8080。密钥只存在于环境变量中 — 绝不写入代码或镜像。各仓库的 `application-prod.yml` 中列出了所需的变量。
 
 ## 技术栈
 

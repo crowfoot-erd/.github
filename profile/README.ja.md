@@ -66,7 +66,7 @@ Crowfootの核となる機能です。**アカウントごとに最大5個まで
 
 ## アーキテクチャ
 
-5つのサービス、1つのMSA。
+6つのサービス、1つのMSA。
 
 ```
   Browser
@@ -81,8 +81,11 @@ Crowfootの核となる機能です。**アカウントごとに最大5個まで
 │ api-gateway  │────▶│  auth        │  OAuth2 · JWT · introspection · Redis
 └──────┬───────┘     └──────────────┘
        │             ┌──────────────┐
-       └────────────▶│  core-api    │  domain (PostgreSQL) · managed DB
-                     └──────┬───────┘  provisioning (PostgreSQL · MySQL)
+       ├────────────▶│  core-api    │  domain (PostgreSQL) · managed DB
+       │             └──────▲───────┘  provisioning (PostgreSQL · MySQL)
+       │             ┌──────┴───────────┐
+       └────────────▶│ database-manager │  data browser (connects to the connection's DB)
+                     └──────────────────┘
 ```
 
 ## リポジトリ
@@ -94,11 +97,13 @@ Crowfootの核となる機能です。**アカウントごとに最大5個まで
 | [crowfoot-auth](https://github.com/crowfoot-erd/crowfoot-auth) | 認証サーバー — OAuth2ログイン(GitHub·Google·PKCE)、JWT発行·更新·introspection、Redisブラックリスト(ログアウト) |
 | [crowfoot-core-api](https://github.com/crowfoot-erd/crowfoot-core-api) | コアAPI — ユーザー·ワークスペース·チーム·モデルドキュメント·コメント、マネージドDBプロビジョニング(専用アカウントの発行·取り消し)、SQL生成·デプロイ·リバースエンジニアリング、コードテーブル·監査ログ |
 | [crowfoot-collab](https://github.com/crowfoot-erd/crowfoot-collab) | 協業サーバー — WebSocket(STOMP)。ドキュメントごとのプレゼンスと編集変更のリアルタイムブロードキャスト、単一インスタンス運用 |
+| [crowfoot-database-manager](https://github.com/crowfoot-erd/crowfoot-database-manager) | DBマネージャー — データブラウザ。コネクションが指すデータベースのデータ閲覧・行の編集・SQLコンソール。自前のDBを持たずリクエストごとに接続し、権限判定はコアAPIに委ねる |
 
 ## リリース
 
 | バージョン | 日付 | 主な内容 | タグ | リリースノート |
 | --- | --- | --- | --- | --- |
+| v1.28 | 2026-10-01 | データブラウザ(接続したデータベースのデータ閲覧・絞り込み・並べ替え・CSV)、行の編集(まとめて一括適用・競合検知)、SQLコンソール(シンタックスハイライト・自動補完・書き込み文の確認)、ERDエディタからテーブルのデータを直接開く | [crowfoot-web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.28) · [crowfoot-core-api](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.28) · [crowfoot-auth](https://github.com/crowfoot-erd/crowfoot-auth/releases/tag/v1.28) · [crowfoot-collab](https://github.com/crowfoot-erd/crowfoot-collab/releases/tag/v1.28) · [crowfoot-api-gateway](https://github.com/crowfoot-erd/crowfoot-api-gateway/releases/tag/v1.28) · [crowfoot-database-manager](https://github.com/crowfoot-erd/crowfoot-database-manager/releases/tag/v1.28) | [見る](https://crowfoot.java21.net/release-notes/30) |
 | v1.27 | 2026-10-01 | 別のDBMSに複製(対象DBMSだけが異なる新しいドキュメント・チェック結果のプレビュー)、エディタツールバーの整理(ボタン8個 + 書き出し・ツールメニュー)、ドキュメント一覧の操作メニュー・DB種類の表示名、ランディング・ログイン画面の刷新、日別ログイン集計のバグ修正 | [crowfoot-web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.27) · [crowfoot-core-api](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.27) · [crowfoot-auth](https://github.com/crowfoot-erd/crowfoot-auth/releases/tag/v1.27) · [crowfoot-collab](https://github.com/crowfoot-erd/crowfoot-collab/releases/tag/v1.27) · [crowfoot-api-gateway](https://github.com/crowfoot-erd/crowfoot-api-gateway/releases/tag/v1.27) | [見る](https://crowfoot.java21.net/release-notes/29) |
 | v1.26 | 2026-09-30 | ドキュメントのDB接続(手描きドキュメントを後からコネクションに紐付け)、マイグレーションDDLのDB反映(実行時再計算・取り消し不可の確認ウィンドウ・文ごとのレポート)、サイドバーのワークスペースセクション区別、型表記正規化のバグ修正 | [crowfoot-web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.26) · [crowfoot-core-api](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.26) · [crowfoot-auth](https://github.com/crowfoot-erd/crowfoot-auth/releases/tag/v1.26) · [crowfoot-collab](https://github.com/crowfoot-erd/crowfoot-collab/releases/tag/v1.26) · [crowfoot-api-gateway](https://github.com/crowfoot-erd/crowfoot-api-gateway/releases/tag/v1.26) | [見る](https://crowfoot.java21.net/release-notes/28) |
 | v1.25 | 2026-09-29 | ERDライブラリ公開(実務主題509種 — 要件・キー・整合性設計の解説付き)、レイアウト間隔のバランス調整(テーブルはゆったり、クラスタは近く)、メモ縦重なり修正 | [crowfoot-web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.25) · [crowfoot-core-api](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.25) · [crowfoot-auth](https://github.com/crowfoot-erd/crowfoot-auth/releases/tag/v1.25) · [crowfoot-collab](https://github.com/crowfoot-erd/crowfoot-collab/releases/tag/v1.25) · [crowfoot-api-gateway](https://github.com/crowfoot-erd/crowfoot-api-gateway/releases/tag/v1.25) | [見る](https://crowfoot.java21.net/release-notes/27) |
@@ -120,7 +125,7 @@ Crowfootの核となる機能です。**アカウントごとに最大5個まで
 | v1.09 | 2026-09-20 | ドキュメントのバージョン履歴·DB同期 | — | [見る](https://crowfoot.java21.net/release-notes/10) |
 | v1.08 | 2026-09-18 | コミュニティ掲示板·リアルタイムチャット·エディタの安全装置 | — | [見る](https://crowfoot.java21.net/release-notes/9) |
 
-各リリースの変更内容は[リリースノート](https://crowfoot.java21.net/)として公開しています(ランディングの「最近のリリース」に全一覧があります)。gitタグはv1.12から残し始め、v1.16以降は毎リリース、デプロイ対象の5リポジトリすべてに付与しています(変更のないリポジトリも無変更タグでシステムのバージョンを揃えます)。
+各リリースの変更内容は[リリースノート](https://crowfoot.java21.net/)として公開しています(ランディングの「最近のリリース」に全一覧があります)。gitタグはv1.12から残し始め、v1.16以降は毎リリース、デプロイ対象のリポジトリすべて(v1.28から6つ)に付与しています(変更のないリポジトリも無変更タグでシステムのバージョンを揃えます)。
 
 ## 自分で動かす
 
@@ -184,7 +189,7 @@ pnpm dev        # http://localhost:8080
 
 ### 本番環境
 
-本番では5つのサービスすべてがコンテナイメージとして動作し、サーバーポートは8080に統一されています。シークレットは環境変数のみに置き — コードやイメージには含めません。必要な変数は各リポジトリの`application-prod.yml`を参照してください。
+本番では6つのサービスすべてがコンテナイメージとして動作し、サーバーポートは8080に統一されています。シークレットは環境変数のみに置き — コードやイメージには含めません。必要な変数は各リポジトリの`application-prod.yml`を参照してください。
 
 ## 技術スタック
 

@@ -66,7 +66,7 @@ Crowfoot의 핵심 기능입니다. PostgreSQL·MySQL 개발용 데이터베이�
 
 ## 아키텍처
 
-MSA 5종으로 구성됩니다.
+MSA 6종으로 구성됩니다.
 
 ```
   브라우저
@@ -81,8 +81,11 @@ MSA 5종으로 구성됩니다.
 │ api-gateway  │────▶│  auth        │  OAuth2·JWT·introspection·Redis
 └──────┬───────┘     └──────────────┘
        │             ┌──────────────┐
-       └────────────▶│  core-api    │  도메인(PostgreSQL)·매니지드 DB
-                     └──────┬───────┘  프로비저닝(PostgreSQL·MySQL)
+       ├────────────▶│  core-api    │  도메인(PostgreSQL)·매니지드 DB
+       │             └──────▲───────┘  프로비저닝(PostgreSQL·MySQL)
+       │             ┌──────┴───────────┐
+       └────────────▶│ database-manager │  데이터 브라우저(커넥션의 DB에 접속)
+                     └──────────────────┘
 ```
 
 ## 저장소
@@ -94,11 +97,13 @@ MSA 5종으로 구성됩니다.
 | [crowfoot-auth](https://github.com/crowfoot-erd/crowfoot-auth) | 인증 서버 — OAuth2 로그인(GitHub·Google·PKCE), JWT 발급·갱신·introspection, Redis 블랙리스트(로그아웃) |
 | [crowfoot-core-api](https://github.com/crowfoot-erd/crowfoot-core-api) | 코어 API — 회원·워크스페이스·팀·모델 문서·댓글, 매니지드 DB 프로비저닝(전용 계정 발급·철회), SQL 생성·배포·리버스 엔지니어링, 코드 테이블·감사 로그 |
 | [crowfoot-collab](https://github.com/crowfoot-erd/crowfoot-collab) | 협업 서버 — WebSocket(STOMP). 문서별 presence(접속 현황)와 편집 변경사항의 실시간 브로드캐스트, 단일 인스턴스 운영 |
+| [crowfoot-database-manager](https://github.com/crowfoot-erd/crowfoot-database-manager) | DB 매니저 — 데이터 브라우저. 커넥션이 가리키는 데이터베이스의 데이터 조회·행 편집·SQL 콘솔. 자체 DB 없이 요청마다 접속하고, 권한 판정은 코어 API에 맡김 |
 
 ## 릴리스
 
 | 버전 | 날짜 | 주요 내용 | 태그 | 릴리스 노트 |
 | --- | --- | --- | --- | --- |
+| v1.28 | 2026-10-01 | 데이터 브라우저(연결한 데이터베이스의 데이터 조회·필터·정렬·CSV), 행 편집(모아서 한 번에 적용·충돌 감지), SQL 콘솔(문법 강조·자동 완성·쓰기 문장 확인), ERD 에디터에서 테이블 데이터 바로 열기 | [crowfoot-web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.28) · [crowfoot-core-api](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.28) · [crowfoot-auth](https://github.com/crowfoot-erd/crowfoot-auth/releases/tag/v1.28) · [crowfoot-collab](https://github.com/crowfoot-erd/crowfoot-collab/releases/tag/v1.28) · [crowfoot-api-gateway](https://github.com/crowfoot-erd/crowfoot-api-gateway/releases/tag/v1.28) · [crowfoot-database-manager](https://github.com/crowfoot-erd/crowfoot-database-manager/releases/tag/v1.28) | [보기](https://crowfoot.java21.net/release-notes/30) |
 | v1.27 | 2026-10-01 | 다른 DBMS로 복제(대상 DBMS만 다른 새 문서·검사 결과 미리보기), 에디터 도구 모음 정리(버튼 8개 + 내보내기·도구 메뉴), 문서 목록 작업 메뉴·DB 종류 표시명, 랜딩·로그인 화면 개편, 일별 로그인 집계 버그 수정 | [crowfoot-web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.27) · [crowfoot-core-api](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.27) · [crowfoot-auth](https://github.com/crowfoot-erd/crowfoot-auth/releases/tag/v1.27) · [crowfoot-collab](https://github.com/crowfoot-erd/crowfoot-collab/releases/tag/v1.27) · [crowfoot-api-gateway](https://github.com/crowfoot-erd/crowfoot-api-gateway/releases/tag/v1.27) | [보기](https://crowfoot.java21.net/release-notes/29) |
 | v1.26 | 2026-09-30 | 문서-데이터베이스 연결(직접 생성 문서를 나중에 커넥션에 연결), 마이그레이션 DDL DB 반영(실행 시점 재계산·되돌릴 수 없음 확인 창·문장별 리포트), 사이드바 워크스페이스 섹션 구분, 타입 표기 정규화 버그 수정 | [crowfoot-web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.26) · [crowfoot-core-api](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.26) · [crowfoot-auth](https://github.com/crowfoot-erd/crowfoot-auth/releases/tag/v1.26) · [crowfoot-collab](https://github.com/crowfoot-erd/crowfoot-collab/releases/tag/v1.26) · [crowfoot-api-gateway](https://github.com/crowfoot-erd/crowfoot-api-gateway/releases/tag/v1.26) | [보기](https://crowfoot.java21.net/release-notes/28) |
 | v1.25 | 2026-09-29 | ERD 라이브러리 공개(실무 주제 509종 — 요구사항·키·무결성 설계 해설 포함), 배치 간격 밸런스(테이블은 여유 있게·묶음은 가깝게), 메모 세로 겹침 수정 | [crowfoot-web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.25) · [crowfoot-core-api](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.25) · [crowfoot-auth](https://github.com/crowfoot-erd/crowfoot-auth/releases/tag/v1.25) · [crowfoot-collab](https://github.com/crowfoot-erd/crowfoot-collab/releases/tag/v1.25) · [crowfoot-api-gateway](https://github.com/crowfoot-erd/crowfoot-api-gateway/releases/tag/v1.25) | [보기](https://crowfoot.java21.net/release-notes/27) |
@@ -120,7 +125,7 @@ MSA 5종으로 구성됩니다.
 | v1.09 | 2026-09-20 | 문서 버전 기록·DB 동기화 | — | [보기](https://crowfoot.java21.net/release-notes/10) |
 | v1.08 | 2026-09-18 | 커뮤니티 게시판·실시간 채팅·에디터 안전장치 | — | [보기](https://crowfoot.java21.net/release-notes/9) |
 
-릴리스마다 변경 사항을 [릴리스 노트](https://crowfoot.java21.net/)로 정리해 공개한다(랜딩의 최근 릴리스에서 전체 목록을 볼 수 있다). git 태그는 v1.12부터 남기기 시작했고, v1.16부터는 매 버전 배포 리포 5개 전부에 찍는다(변경이 없던 리포도 무변경 태그로 시스템 버전을 정렬).
+릴리스마다 변경 사항을 [릴리스 노트](https://crowfoot.java21.net/)로 정리해 공개한다(랜딩의 최근 릴리스에서 전체 목록을 볼 수 있다). git 태그는 v1.12부터 남기기 시작했고, v1.16부터는 매 버전 배포 리포 전부(v1.28부터 6개)에 찍는다(변경이 없던 리포도 무변경 태그로 시스템 버전을 정렬).
 
 ## 직접 실행하기
 
@@ -184,7 +189,7 @@ pnpm dev        # http://localhost:8080
 
 ### 운영
 
-운영에서는 5종 전부 컨테이너 이미지로 빌드되고 서버 포트는 8080으로 통일한다. 시크릿은 코드·이미지에 두지 않고 환경변수로만 주입한다 — 각 리포의 `application-prod.yml`이 참조하는 환경변수가 필요하다.
+운영에서는 6종 전부 컨테이너 이미지로 빌드되고 서버 포트는 8080으로 통일한다. 시크릿은 코드·이미지에 두지 않고 환경변수로만 주입한다 — 각 리포의 `application-prod.yml`이 참조하는 환경변수가 필요하다.
 
 ## 기술 스택
 

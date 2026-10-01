@@ -66,7 +66,7 @@ The heart of Crowfoot. Spin up **up to 5 free PostgreSQL or MySQL development da
 
 ## Architecture
 
-Five services, one MSA.
+Six services, one MSA.
 
 ```
   Browser
@@ -81,8 +81,11 @@ Five services, one MSA.
 │ api-gateway  │────▶│  auth        │  OAuth2 · JWT · introspection · Redis
 └──────┬───────┘     └──────────────┘
        │             ┌──────────────┐
-       └────────────▶│  core-api    │  domain (PostgreSQL) · managed DB
-                     └──────┬───────┘  provisioning (PostgreSQL · MySQL)
+       ├────────────▶│  core-api    │  domain (PostgreSQL) · managed DB
+       │             └──────▲───────┘  provisioning (PostgreSQL · MySQL)
+       │             ┌──────┴───────────┐
+       └────────────▶│ database-manager │  data browser (connects to the connection's DB)
+                     └──────────────────┘
 ```
 
 ## Repositories
@@ -94,11 +97,13 @@ Five services, one MSA.
 | [crowfoot-auth](https://github.com/crowfoot-erd/crowfoot-auth) | Auth server — OAuth2 sign-in (GitHub·Google·PKCE), JWT issue/refresh/introspection, Redis blacklist (logout) |
 | [crowfoot-core-api](https://github.com/crowfoot-erd/crowfoot-core-api) | Core API — users·workspaces·teams·model documents·comments, managed DB provisioning (dedicated account issue & revoke), SQL generation·deployment·reverse engineering, code tables·audit logs |
 | [crowfoot-collab](https://github.com/crowfoot-erd/crowfoot-collab) | Collaboration server — WebSocket (STOMP). Per-document presence and real-time edit broadcast, single-instance deployment |
+| [crowfoot-database-manager](https://github.com/crowfoot-erd/crowfoot-database-manager) | Database manager — the data browser. Browse data, edit rows and run SQL against the database a connection points to. Has no database of its own, connects per request, and leaves authorization to the core API |
 
 ## Releases
 
 | Version | Date | Highlights | Tag | Release notes |
 | --- | --- | --- | --- | --- |
+| v1.28 | 2026-10-01 | Data browser (browse, filter, sort and export the data of a connected database), row editing (collected and applied at once, with conflict detection), SQL console (syntax highlighting, autocomplete, confirmation for writes), open a table's data straight from the ERD editor | [crowfoot-web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.28) · [crowfoot-core-api](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.28) · [crowfoot-auth](https://github.com/crowfoot-erd/crowfoot-auth/releases/tag/v1.28) · [crowfoot-collab](https://github.com/crowfoot-erd/crowfoot-collab/releases/tag/v1.28) · [crowfoot-api-gateway](https://github.com/crowfoot-erd/crowfoot-api-gateway/releases/tag/v1.28) · [crowfoot-database-manager](https://github.com/crowfoot-erd/crowfoot-database-manager/releases/tag/v1.28) | [View](https://crowfoot.java21.net/release-notes/30) |
 | v1.27 | 2026-10-01 | Duplicate for another DBMS (a new document differing only in target DBMS, with a check report), tidier editor toolbar (eight buttons plus Export and Tools menus), document list actions menu and database display names, refreshed landing and sign-in pages, daily sign-in count fix | [crowfoot-web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.27) · [crowfoot-core-api](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.27) · [crowfoot-auth](https://github.com/crowfoot-erd/crowfoot-auth/releases/tag/v1.27) · [crowfoot-collab](https://github.com/crowfoot-erd/crowfoot-collab/releases/tag/v1.27) · [crowfoot-api-gateway](https://github.com/crowfoot-erd/crowfoot-api-gateway/releases/tag/v1.27) | [View](https://crowfoot.java21.net/release-notes/29) |
 | v1.26 | 2026-09-30 | Link documents to databases (attach hand-drawn documents to a connection later), apply migration DDL to the database (server-side recompute, cannot-be-undone confirmation, per-statement report), sidebar workspace section separation, type-notation normalization fix | [crowfoot-web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.26) · [crowfoot-core-api](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.26) · [crowfoot-auth](https://github.com/crowfoot-erd/crowfoot-auth/releases/tag/v1.26) · [crowfoot-collab](https://github.com/crowfoot-erd/crowfoot-collab/releases/tag/v1.26) · [crowfoot-api-gateway](https://github.com/crowfoot-erd/crowfoot-api-gateway/releases/tag/v1.26) | [View](https://crowfoot.java21.net/release-notes/28) |
 | v1.25 | 2026-09-29 | ERD library launch (509 real-world topics with requirements, key and integrity notes), balanced layout spacing (roomier tables, closer clusters), fixed note stacking overlap | [crowfoot-web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.25) · [crowfoot-core-api](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.25) · [crowfoot-auth](https://github.com/crowfoot-erd/crowfoot-auth/releases/tag/v1.25) · [crowfoot-collab](https://github.com/crowfoot-erd/crowfoot-collab/releases/tag/v1.25) · [crowfoot-api-gateway](https://github.com/crowfoot-erd/crowfoot-api-gateway/releases/tag/v1.25) | [View](https://crowfoot.java21.net/release-notes/27) |
@@ -120,7 +125,7 @@ Five services, one MSA.
 | v1.09 | 2026-09-20 | Document version history & DB sync | — | [View](https://crowfoot.java21.net/release-notes/10) |
 | v1.08 | 2026-09-18 | Community boards, real-time chat, editor safeguards | — | [View](https://crowfoot.java21.net/release-notes/9) |
 
-Every release ships with public [release notes](https://crowfoot.java21.net/) (the landing page lists them all). Git tags have been kept since v1.12, and from v1.16 on every release tags all five deployable repositories (unchanged ones get a no-change tag to keep system versions aligned).
+Every release ships with public [release notes](https://crowfoot.java21.net/) (the landing page lists them all). Git tags have been kept since v1.12, and from v1.16 on every release tags all deployable repositories (six since v1.28) (unchanged ones get a no-change tag to keep system versions aligned).
 
 ## Running It Yourself
 
@@ -184,7 +189,7 @@ pnpm dev        # http://localhost:8080
 
 ### Production
 
-In production all five services run as container images with a unified server port of 8080. Secrets live only in environment variables — never in code or images. See each repository's `application-prod.yml` for the variables it expects.
+In production all six services run as container images with a unified server port of 8080. Secrets live only in environment variables — never in code or images. See each repository's `application-prod.yml` for the variables it expects.
 
 ## Tech Stack
 
