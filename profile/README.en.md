@@ -66,27 +66,15 @@ The heart of Crowfoot. Spin up **up to 5 free PostgreSQL or MySQL development da
 
 ## Architecture
 
-Six services, one MSA.
+Seven services, one MSA. Every outside request goes through the gateway, and services talk to each other only through internal calls.
 
-```
-  Browser
-    │ HTTPS                          │ WebSocket (STOMP)
-    ▼                                ▼
-┌──────────────┐              ┌──────────────┐
-│ crowfoot-web │              │crowfoot-collab│  presence · live sync
-│  React SPA   │              └──────────────┘
-└──────┬───────┘
-       ▼
-┌──────────────┐     ┌──────────────┐
-│ api-gateway  │────▶│  auth        │  OAuth2 · JWT · introspection · Redis
-└──────┬───────┘     └──────────────┘
-       │             ┌──────────────┐
-       ├────────────▶│  core-api    │  domain (PostgreSQL) · managed DB
-       │             └──────▲───────┘  provisioning (PostgreSQL · MySQL)
-       │             ┌──────┴───────────┐
-       └────────────▶│ database-manager │  data browser (connects to the connection's DB)
-                     └──────────────────┘
-```
+![Crowfoot architecture — browser and MCP clients, nginx, seven services in Kubernetes, data stores, and the delivery pipeline](architecture.svg)
+
+- **Three ways in.** The app (`crowfoot.java21.net`), real-time collaboration (`crowfoot-ws.java21.net`, WebSocket), and AI integration (`crowfoot-mcp.java21.net`, MCP)
+- **The gateway checks identity.** It asks the auth server to verify login tokens and workspace tokens, then passes the verified user on in headers
+- **The core API is the center.** It owns documents and permissions, and the auth server, collaboration server, DB manager, and MCP server all ask it
+- **Two services touch databases.** The core API provisions free databases and runs DDL; the DB manager reads and edits data
+- **Delivery is GitOps.** Push to main, GitHub Actions builds the image, and Argo CD rolls it out to the cluster
 
 ## Repositories
 

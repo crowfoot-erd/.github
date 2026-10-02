@@ -66,27 +66,15 @@ Crowfoot 的核心功能。**每个账户最多可免费开通 5 个** PostgreSQ
 
 ## 架构
 
-六个服务，一个微服务架构。
+由七个服务组成的微服务架构。外部请求全部经过网关，服务之间只通过内部调用相连。
 
-```
-  Browser
-    │ HTTPS                          │ WebSocket (STOMP)
-    ▼                                ▼
-┌──────────────┐              ┌──────────────┐
-│ crowfoot-web │              │crowfoot-collab│  presence · live sync
-│  React SPA   │              └──────────────┘
-└──────┬───────┘
-       ▼
-┌──────────────┐     ┌──────────────┐
-│ api-gateway  │────▶│  auth        │  OAuth2 · JWT · introspection · Redis
-└──────┬───────┘     └──────────────┘
-       │             ┌──────────────┐
-       ├────────────▶│  core-api    │  domain (PostgreSQL) · managed DB
-       │             └──────▲───────┘  provisioning (PostgreSQL · MySQL)
-       │             ┌──────┴───────────┐
-       └────────────▶│ database-manager │  data browser (connects to the connection's DB)
-                     └──────────────────┘
-```
+![Crowfoot 架构 — 浏览器与 MCP 客户端、nginx、Kubernetes 中的七个服务、数据存储以及交付流水线](architecture.svg)
+
+- **入口有三个。** 页面(`crowfoot.java21.net`)、实时协作(`crowfoot-ws.java21.net`，WebSocket)、AI 集成(`crowfoot-mcp.java21.net`，MCP)
+- **网关负责确认身份。** 它向认证服务器核实登录令牌和工作区令牌，再把确认后的用户信息放进请求头传给后面
+- **核心 API 是中心。** 它保存文档和权限，认证服务器、协作服务器、数据库管理器和 MCP 服务器都向它查询
+- **接触数据库的服务有两个。** 核心 API 创建免费数据库并执行 DDL，数据库管理器负责查看和编辑数据
+- **交付采用 GitOps。** 推送到 main 后由 GitHub Actions 构建镜像，再由 Argo CD 发布到集群
 
 ## 仓库
 

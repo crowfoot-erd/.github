@@ -66,27 +66,15 @@ Crowfootの核となる機能です。**アカウントごとに最大5個まで
 
 ## アーキテクチャ
 
-6つのサービス、1つのMSA。
+7つのサービスからなる MSA です。外からのリクエストはすべてゲートウェイを通り、サービス同士は内部呼び出しだけでつながります。
 
-```
-  Browser
-    │ HTTPS                          │ WebSocket (STOMP)
-    ▼                                ▼
-┌──────────────┐              ┌──────────────┐
-│ crowfoot-web │              │crowfoot-collab│  presence · live sync
-│  React SPA   │              └──────────────┘
-└──────┬───────┘
-       ▼
-┌──────────────┐     ┌──────────────┐
-│ api-gateway  │────▶│  auth        │  OAuth2 · JWT · introspection · Redis
-└──────┬───────┘     └──────────────┘
-       │             ┌──────────────┐
-       ├────────────▶│  core-api    │  domain (PostgreSQL) · managed DB
-       │             └──────▲───────┘  provisioning (PostgreSQL · MySQL)
-       │             ┌──────┴───────────┐
-       └────────────▶│ database-manager │  data browser (connects to the connection's DB)
-                     └──────────────────┘
-```
+![Crowfoot アーキテクチャ — ブラウザと MCP クライアント、nginx、Kubernetes 内の 7 サービス、データストア、デリバリーパイプライン](architecture.svg)
+
+- **入口は 3 つです。** 画面(`crowfoot.java21.net`)、リアルタイムコラボレーション(`crowfoot-ws.java21.net`、WebSocket)、AI 連携(`crowfoot-mcp.java21.net`、MCP)
+- **ゲートウェイが身元を確認します。** ログイントークンとワークスペーストークンを認証サーバーに問い合わせ、確認できたユーザー情報をヘッダーに載せて後ろへ渡します
+- **コア API が中心です。** ドキュメントと権限を持ち、認証サーバー・コラボレーションサーバー・DB マネージャー・MCP サーバーがすべてコア API に問い合わせます
+- **データベースに触れるサービスは 2 つです。** コア API は無料データベースを発行して DDL を実行し、DB マネージャーはデータを閲覧・編集します
+- **デリバリーは GitOps です。** main に push すると GitHub Actions がイメージを作り、Argo CD がクラスターに反映します
 
 ## リポジトリ
 
