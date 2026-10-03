@@ -1,124 +1,222 @@
+<div align="center">
+
+<img src="logo.svg" alt="Crowfoot" width="72" />
+
 # Crowfoot
 
+**只能画 ERD 的工具很多，Crowfoot 一路做到真实数据库。**
+
+在一个浏览器里把需求 → ERD → 真实数据库 → 数据连成一线的开源 ERD 平台
+
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
+[![Release](https://img.shields.io/badge/release-v1.32-10b981.svg)](https://crowfoot.java21.net/release-notes/34)
+[![Live](https://img.shields.io/badge/live-crowfoot.java21.net-0ea5e9.svg)](https://crowfoot.java21.net)
+[![MCP](https://img.shields.io/badge/MCP-Claude%20%C2%B7%20ChatGPT-f97316.svg)](https://crowfoot.java21.net/guide#20.1)
 
 **[한국어](./README.md)** | **[English](./README.en.md)** | **[日本語](./README.ja.md)** | **简体中文**
 
-**设计完成之时，就是数据库开始之时。**
+[立即使用](https://crowfoot.java21.net) · [使用指南](https://crowfoot.java21.net/guide) · [发布说明](https://crowfoot.java21.net/release-notes) · [浏览共享 ERD](https://crowfoot.java21.net/shared)
 
-Crowfoot 是一个在浏览器中运行的开源 ERD 编辑器。从逻辑建模到物理模型转换、团队协作，再到真实数据库的开通 — 数据工作的全程都在一个地方完成。Crowfoot 这个名字来源于**鸦脚(Crow's Foot)记法** — 用形似乌鸦脚印的符号来表示 ERD 中表之间关系的记法。
+</div>
 
-## 服务
+<p align="center">
+  <img src="images/zh/landing-hero.webp" alt="Crowfoot 首页 — 免费一路做到真实数据库的 ERD 工具" width="860" />
+</p>
 
-| 类别 | 地址 |
-| --- | --- |
-| 网站(编辑器 · 仪表板) | https://crowfoot.java21.net |
-| API 网关 | https://crowfoot-api.java21.net |
-| 协作 WebSocket 服务器 | ws://crowfoot-ws.java21.net |
-| 系统 ERD | https://crowfoot.java21.net/share/1KeFkNED0uTmx6MPWqmXph |
+这个名字来源于**鸦脚（Crow's Foot）记法**，即用形似乌鸦脚印的符号来绘制表之间关系的记法。
 
-Crowfoot 系统自身的 ERD 也是用 Crowfoot 设计的 — 可以在上面的分享链接中查看。
+## 目录
 
-## 免费托管数据库
+- [为什么选择 Crowfoot](#为什么选择-crowfoot)
+- [快速开始](#快速开始)
+- [主要功能](#主要功能)
+- [架构](#架构)
+- [仓库](#仓库)
+- [自行运行](#自行运行)
+- [技术栈](#技术栈)
+- [版本发布](#版本发布)
+- [参与贡献](#参与贡献)
+- [许可证](#许可证)
 
-Crowfoot 的核心功能。**每个账户最多可免费开通 5 个** PostgreSQL · MySQL 开发用数据库。
+## 为什么选择 Crowfoot
 
-- 开通时**自动创建专用数据库账户** — 仅拥有 schema 级权限，实例 root 凭证不会在任何地方暴露
-- 发放的密码使用 AES-256-GCM 加密存储，只有所有者才能查看连接信息
-- 开通后立即进行连接测试，可以从任何外部客户端直接使用，不需要时可以随时撤销
-- 面向开发、学习和测试用途的数据库
+| | 一般的 ERD 工具 | Crowfoot |
+| --- | --- | --- |
+| 产出 | 图、DDL 文件 | 除了图和 DDL，还有**真正能运行的数据库** |
+| 数据库 | 自行准备 | **免费签发** MySQL、PostgreSQL 开发用数据库（每个工作区每位用户 5 个） |
+| 应用变更 | 手动执行 DDL | 计算文档与数据库之间的差异，**生成并执行迁移 SQL**。删除语句需单独批准 |
+| AI | 没有，或绑定在工具里的 AI | **通过 MCP 连接你正在使用的 Claude、ChatGPT**。Crowfoot 本身不内置 AI |
+| 需求 | 另外的文档 | 需求与 ERD 一起保存，并**追踪由哪些表来实现** |
+| 数据 | 用其他工具查看 | 在**数据浏览器**中查看、编辑、执行 SQL，并填充示例数据 |
+| 协作 | 共享文件 | **实时协同编辑**、评论、版本历史、共享链接 |
 
-## 功能
+## 快速开始
 
-### 浏览器 ERD 编辑器
+### 直接使用在线服务
 
-- 无需安装 — 直接在浏览器中用鸦脚记法绘制表和关系
-- **逻辑模型与物理模型并存** — 逻辑名、物理名并排显示，通用逻辑类型自动映射为各 DBMS 的物理类型
-- **5 种 DBMS 模板** — PostgreSQL、MySQL、Oracle、MSSQL(+通用)，各自反映其类型、自增和注释语法
-- 模型校验(名称重复、引用完整性等)、自动布局、按文档记忆视口(缩放 · 平移)
-- 大型文档(100 张表)下依然流畅的 60fps 平移与缩放
+1. 在 https://crowfoot.java21.net 使用 GitHub 或 Google 账号登录。
+2. 创建工作区并打开 ERD 文档。你可以从空白文档开始，也可以导入 SQL 脚本，或读取现有数据库生成 ERD。
+3. 在**数据库**标签页签发免费的 MySQL、PostgreSQL，并部署文档。
 
-### SQL 生成、部署与逆向工程
+### 连接 Claude、ChatGPT（MCP）
 
-- 将文档转换为**对应 DBMS 的 DDL 脚本** — 预览、复制或下载(表注释跟随逻辑名)
-- **正向工程** — 将生成的 DDL 直接部署到已开通或已登记的数据库
-- **逆向工程** — 将现有数据库的 schema 和注释读回为 ERD 文档
+在工作区的 **MCP** 标签页签发令牌后，会显示已填好令牌的注册命令。
 
-### 实时协作
+```bash
+claude mcp add --transport http crowfoot https://crowfoot-mcp.java21.net/mcp \
+  --header "Authorization: Bearer <签发的令牌>"
+```
 
-- 基于 WebSocket(STOMP)— 多人同时编辑同一文档，实时在线状态与变更同步
-- 可以在文档上留下评论
+然后通过对话把工作交给 AI。
 
-### 工作空间与团队角色
+```text
+> 整理图书借阅服务的需求并做成 ERD
+> 签发一个免费的 MySQL 并部署
+> 给每个表各添加 10 条示例数据
+```
 
-- 用工作空间组织文档，邀请用户或团队
-- 基于角色的权限 — **Owner、Editor、Commenter、Viewer** — 保障团队协作安全
+AI 生成的结果会原样显示在 Crowfoot 界面中，你在界面上修改的内容 AI 也会重新读取。详细方法请参阅[使用指南第 20 节](https://crowfoot.java21.net/guide#20.1)。
 
-### 接入你自己的数据库
+## 主要功能
 
-- 保存现有数据库的连接配置(加密)，一键测试连接
-- 托管数据库与个人数据库在同一个列表中管理
+<table>
+<tr>
+<td width="50%"><img src="images/zh/editor-overview.webp" alt="ERD 编辑器" /><br/><b>ERD 编辑器</b> — 鸦脚记法、自动布局、分组、备注</td>
+<td width="50%"><img src="images/zh/editor-requirements.webp" alt="需求标签页" /><br/><b>需求追踪</b> — 按领域的进度、没有依据的表</td>
+</tr>
+<tr>
+<td width="50%"><img src="images/zh/mcp-usage.webp" alt="MCP 使用方法" /><br/><b>AI 集成（MCP）</b> — 连接命令与请求示例</td>
+<td width="50%"><img src="images/zh/data-tab.webp" alt="数据浏览器" /><br/><b>数据浏览器</b> — 查看、行编辑、SQL 控制台</td>
+</tr>
+</table>
 
-### 认证与管理
+### 设计
 
-- **GitHub · Google OAuth2 登录** — 访问令牌保存在内存中，刷新令牌放在 `SameSite=Strict` Cookie 中，网关对每个请求进行 introspection 校验
-- 管理控制台 — 管理用户、代码表、托管数据库实例、开通配额和审计日志
+- **浏览器 ERD 编辑器** — 无需安装，打开即用。用鸦脚记法绘制表、列、键、索引和关系，大型文档也能用自动布局（分层、中心辐射、混合）整理。
+- **逻辑模型与物理模型** — 同时管理逻辑名和物理名，并把通用类型转换为各 DBMS 的类型。目标 DBMS 为 MySQL、PostgreSQL、Oracle、SQL Server。
+- **标准词典** — 用单词词典、术语词典和域类型统一名称与类型。根据逻辑名建议物理名，修改域类型后会同步到使用它的列。
+- **设计校验** — 持续检查名称重复、外键类型不一致、缺少主键等 17 条规则。
+- **需求** — 把需求一起保存在文档中并链接到表。内容变更后标记为“待反映”，并提供按领域的进度、验收标准以及 Markdown/CSV 导出。
+
+### 数据库
+
+- **免费托管数据库** — 一键签发 MySQL、PostgreSQL 开发用数据库。每次签发都会创建只对该 schema 拥有权限的专用账户，实例管理员账户绝不对外提供。
+- **SQL 生成与部署** — 把文档生成为各 DBMS 的 DDL，并直接部署到已连接的数据库。
+- **逆向工程** — 读取现有数据库或导入 SQL 脚本，生成 ERD 文档。
+- **迁移** — 重新计算文档与数据库之间的差异，生成并执行变更 SQL。删除表或列的语句默认不执行。
+- **数据浏览器** — 查看、筛选、排序已连接数据库中的数据，编辑行，执行 SQL。
+
+### 协作与共享
+
+- **实时协作** — 多人同时编辑同一文档，在线成员、光标和选区都实时可见。
+- **工作区与团队** — 以所有者、编辑者、评论者、查看者权限邀请用户和团队。
+- **版本历史** — 每次保存都会留下版本，可以比较两个版本或回滚。
+- **共享** — 通过链接以只读方式共享，并接收点赞和评论。任何人都可以在[共享 ERD 列表](https://crowfoot.java21.net/shared)中找到已共享的文档。
+- **ERD 图库** — 公开 500 多个实务主题的示例 ERD，并附有需求与设计说明。
+
+### 其他
+
+- **4 种语言** — 韩语、英语、日语、中文界面和使用指南
+- **AI 集成（MCP）** — 20 种工具：读取和创建文档、应用需求和 schema、数据库签发·部署·迁移、示例数据。签发、部署和应用都会先展示计划，只执行你批准的部分。
+- **管理控制台** — 用户、代码表、托管数据库实例、签发配额、审计日志、流量统计
 
 ## 架构
 
-由七个服务组成的微服务架构。外部请求全部经过网关，服务之间只通过内部调用相连。
+Crowfoot 是由 7 个服务组成的微服务架构。所有来自外部的 HTTP 请求都经过 API 网关，服务之间只通过集群内部调用相连。
 
 ![Crowfoot 架构 — 浏览器与 MCP 客户端、nginx、Kubernetes 中的七个服务、数据存储以及交付流水线](architecture.svg)
 
-- **入口有三个。** 页面(`crowfoot.java21.net`)、实时协作(`crowfoot-ws.java21.net`，WebSocket)、AI 集成(`crowfoot-mcp.java21.net`，MCP)
-- **网关负责确认身份。** 它向认证服务器核实登录令牌和工作区令牌，再把确认后的用户信息放进请求头传给后面
-- **核心 API 是中心。** 它保存文档和权限，认证服务器、协作服务器、数据库管理器和 MCP 服务器都向它查询
-- **接触数据库的服务有两个。** 核心 API 创建免费数据库并执行 DDL，数据库管理器负责查看和编辑数据
-- **交付采用 GitOps。** 推送到 main 后由 GitHub Actions 构建镜像，再由 Argo CD 发布到集群
+### 服务
+
+| 服务 | 职责 | 存储 | 依赖 |
+| --- | --- | --- | --- |
+| **crowfoot-web** | React SPA。编辑器、仪表板、管理控制台、公开页面 | — | gateway, collab |
+| **crowfoot-api-gateway** | 所有 HTTP 请求的入口。按路径和主机路由、令牌校验、公开路径白名单、注入用户身份头（`X-USER-ID` 等） | — | auth |
+| **crowfoot-auth** | GitHub、Google OAuth2 登录（PKCE）、JWT 签发与刷新、令牌校验（introspection）、登出黑名单 | Redis | core（会员、工作区令牌） |
+| **crowfoot-core-api** | 领域的中心。会员、工作区、团队、文档、需求、评论，SQL 生成·部署·逆向工程·迁移，托管数据库签发，审计日志 | PostgreSQL | 托管数据库实例、用户数据库 |
+| **crowfoot-collab** | 实时协作。在 WebSocket（STOMP）房间中中继在线状态和编辑变更 | 内存 | auth, core |
+| **crowfoot-database-manager** | 数据浏览器。查看、行编辑、SQL 控制台、示例数据。自身没有数据库，每次请求时连接 | — | core（权限、连接信息） |
+| **crowfoot-mcp** | MCP 服务器。把 Claude、ChatGPT 的工具调用转换为对 core 和数据库管理器的调用 | — | core, database-manager |
+
+### 请求流程
+
+**登录与 API 调用** — 访问令牌只保存在浏览器内存中，刷新令牌放在 `SameSite=Strict` Cookie 中。网关对每个请求都向认证服务器校验令牌。
+
+```mermaid
+sequenceDiagram
+    participant B as 浏览器
+    participant G as API 网关
+    participant A as 认证服务器
+    participant C as 核心 API
+    B->>G: GET /api/v1/core/... （Bearer 访问令牌）
+    G->>A: 校验令牌（introspection）
+    A-->>G: 用户 id、是否有效
+    G->>C: 请求 + X-USER-ID
+    C-->>G: 响应（权限由核心判定）
+    G-->>B: 响应
+```
+
+**AI 集成（MCP）** — 工作区令牌（`cfw_…`）以签发人的权限、仅在该工作区内使用。令牌只能通过 MCP 路径，普通 API 会被拦截。
+
+```mermaid
+sequenceDiagram
+    participant M as Claude · ChatGPT
+    participant G as API 网关
+    participant A as 认证服务器
+    participant P as MCP 服务器
+    participant C as 核心 API
+    participant D as 数据库管理器
+    M->>G: POST /mcp （Bearer cfw_…）
+    G->>A: 校验工作区令牌
+    A->>C: 查询令牌（内部 API）
+    G->>P: 工具调用 + X-USER-ID, X-TOKEN-WORKSPACE-ID
+    P->>C: 读取·编辑文档、部署计划·执行
+    P->>D: 填充示例数据
+    P-->>M: 结果与文档地址
+```
+
+**数据浏览器** — 数据库管理器不保存连接信息。每次请求都从核心 API 获取权限和连接信息，再连接目标数据库。
+
+```mermaid
+sequenceDiagram
+    participant B as 浏览器
+    participant G as API 网关
+    participant D as 数据库管理器
+    participant C as 核心 API
+    participant T as 目标数据库
+    B->>G: 表列表·行查看·SQL 执行
+    G->>D: 请求 + X-USER-ID
+    D->>C: 校验连接访问权限（内部 API）
+    C-->>D: 角色、地址、解密后的凭证
+    D->>T: JDBC 连接·执行
+    D-->>B: 结果
+```
+
+**实时协作** — 浏览器通过 WebSocket 直接连接协作服务器。协作服务器在连接时校验令牌和文档权限，并按顺序中继房间内的变更。文档通过核心 API 的 HTTP 保存来存储，并发保存通过版本比较来阻止。
+
+### 安全与数据保护
+
+- **密码加密** — 连接密码和签发账户的密码都使用 AES-256-GCM 加密存储。
+- **权限判定在核心完成** — 其他服务不自行判断权限，而是询问核心 API。他人的资源返回 404，连是否存在都不暴露。
+- **签发账户隔离** — 托管数据库每次签发都会创建只对该 schema 拥有权限的账户，撤销时会同时删除 schema 和账户。
+- **通过内部地址连接** — 生产环境的服务器通过集群内部地址连接托管数据库，向用户展示的则是可从外部访问的地址。
+- **审计日志** — 记录签发、撤销、部署、迁移、查看连接信息等重要操作。
+
+### 部署
+
+采用 GitOps 部署。推送到服务仓库的 `main` 后，GitHub Actions 会运行测试、构建镜像并推送到 GHCR，然后修改部署仓库中的镜像标签。Argo CD 再把该变更应用到 Kubernetes 集群。生产服务器全部使用 8080 端口启动，密钥只通过环境变量注入。
 
 ## 仓库
 
 | 仓库 | 说明 |
 | --- | --- |
-| [crowfoot-web](https://github.com/crowfoot-erd/crowfoot-web) | 前端 — React SPA。ERD 编辑器(React Flow)、仪表板 · 工作空间 · 团队、管理控制台、协作客户端(STOMP)、国际化(ko·en·ja·zh)· 深色模式 |
-| [crowfoot-api-gateway](https://github.com/crowfoot-erd/crowfoot-api-gateway) | API 网关 — Spring Cloud Gateway。路由、Bearer 令牌 introspection 校验、用户身份头注入、公开路径白名单 |
-| [crowfoot-auth](https://github.com/crowfoot-erd/crowfoot-auth) | 认证服务器 — OAuth2 登录(GitHub · Google · PKCE)、JWT 签发 · 刷新 · introspection、Redis 黑名单(登出) |
-| [crowfoot-core-api](https://github.com/crowfoot-erd/crowfoot-core-api) | 核心 API — 用户 · 工作空间 · 团队 · 模型文档 · 评论、托管数据库开通(专用账户的发放与撤销)、SQL 生成 · 部署 · 逆向工程、代码表 · 审计日志 |
-| [crowfoot-collab](https://github.com/crowfoot-erd/crowfoot-collab) | 协作服务器 — WebSocket(STOMP)。按文档的在线状态与编辑变更的实时广播，单实例部署 |
-| [crowfoot-database-manager](https://github.com/crowfoot-erd/crowfoot-database-manager) | 数据库管理器 — 数据浏览器。对连接所指向的数据库进行数据查看、行编辑和 SQL 控制台操作。自身没有数据库，每次请求时连接，权限判定交给核心 API |
-| [crowfoot-mcp](https://github.com/crowfoot-erd/crowfoot-mcp) | MCP 服务器 — Claude 等 MCP 客户端的入口。以工具形式提供需求和 ERD 的读写以及应用到数据库。自身没有存储，把工具调用转给核心 API |
-
-## 版本发布
-
-| 版本 | 日期 | 主要内容 | 标签 | 发布说明 |
-| --- | --- | --- | --- | --- |
-| v1.32 | 2026-10-03 | AI 集成扩展(填充示例数据、文档地址提示、默认跳过删除语句)、按领域整理需求(进度・查找・导出・验收标准)、共享文档列表与带目录的发布说明、全新起始页、新版本提示 | [crowfoot-web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.32) · [crowfoot-core-api](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.32) · [crowfoot-auth](https://github.com/crowfoot-erd/crowfoot-auth/releases/tag/v1.32) · [crowfoot-collab](https://github.com/crowfoot-erd/crowfoot-collab/releases/tag/v1.32) · [crowfoot-api-gateway](https://github.com/crowfoot-erd/crowfoot-api-gateway/releases/tag/v1.32) · [crowfoot-database-manager](https://github.com/crowfoot-erd/crowfoot-database-manager/releases/tag/v1.32) · [crowfoot-mcp](https://github.com/crowfoot-erd/crowfoot-mcp/releases/tag/v1.32) | [查看](https://crowfoot.java21.net/release-notes/34) |
-| v1.31 | 2026-10-02 | Claude 集成(MCP — 用工作区令牌连接 Claude Code，通过对话编写需求和 ERD)、需求面板(链接表・待反映标记)、打开时自动布局、按连接允许 MCP 应用 | [crowfoot-web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.31) · [crowfoot-core-api](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.31) · [crowfoot-auth](https://github.com/crowfoot-erd/crowfoot-auth/releases/tag/v1.31) · [crowfoot-collab](https://github.com/crowfoot-erd/crowfoot-collab/releases/tag/v1.31) · [crowfoot-api-gateway](https://github.com/crowfoot-erd/crowfoot-api-gateway/releases/tag/v1.31) · [crowfoot-database-manager](https://github.com/crowfoot-erd/crowfoot-database-manager/releases/tag/v1.31) · [crowfoot-mcp](https://github.com/crowfoot-erd/crowfoot-mcp/releases/tag/v1.31) | [查看](https://crowfoot.java21.net/release-notes/33) |
-| v1.30 | 2026-10-02 | 术语关联域类型(术语指向域类型・创建为域类型)、列名建议分为术语和单词、标准面板合一(词典・域类型・系统词典)、使用指南(20 节・四种语言的截图・查找) | [crowfoot-web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.30) · [crowfoot-core-api](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.30) · [crowfoot-auth](https://github.com/crowfoot-erd/crowfoot-auth/releases/tag/v1.30) · [crowfoot-collab](https://github.com/crowfoot-erd/crowfoot-collab/releases/tag/v1.30) · [crowfoot-api-gateway](https://github.com/crowfoot-erd/crowfoot-api-gateway/releases/tag/v1.30) · [crowfoot-database-manager](https://github.com/crowfoot-erd/crowfoot-database-manager/releases/tag/v1.30) | [查看](https://crowfoot.java21.net/release-notes/32) |
-| v1.29 | 2026-10-02 | 域类型(多个列共用的类型定义・按列使用不同的值・变更应用预览)、粘贴到其他文档(右键复制・创建副本・粘贴)、编辑关系的列映射、自动布局方向(从左到右)・计算时界面不再卡住 | [crowfoot-web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.29) · [crowfoot-core-api](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.29) · [crowfoot-auth](https://github.com/crowfoot-erd/crowfoot-auth/releases/tag/v1.29) · [crowfoot-collab](https://github.com/crowfoot-erd/crowfoot-collab/releases/tag/v1.29) · [crowfoot-api-gateway](https://github.com/crowfoot-erd/crowfoot-api-gateway/releases/tag/v1.29) · [crowfoot-database-manager](https://github.com/crowfoot-erd/crowfoot-database-manager/releases/tag/v1.29) | [查看](https://crowfoot.java21.net/release-notes/31) |
-| v1.28 | 2026-10-01 | 数据浏览器(查看、筛选、排序已连接数据库的数据并导出 CSV)、行编辑(汇总后一次应用・冲突检测)、SQL 控制台(语法高亮・自动补全・写入语句确认)、从 ERD 编辑器直接打开表数据 | [crowfoot-web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.28) · [crowfoot-core-api](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.28) · [crowfoot-auth](https://github.com/crowfoot-erd/crowfoot-auth/releases/tag/v1.28) · [crowfoot-collab](https://github.com/crowfoot-erd/crowfoot-collab/releases/tag/v1.28) · [crowfoot-api-gateway](https://github.com/crowfoot-erd/crowfoot-api-gateway/releases/tag/v1.28) · [crowfoot-database-manager](https://github.com/crowfoot-erd/crowfoot-database-manager/releases/tag/v1.28) | [查看](https://crowfoot.java21.net/release-notes/30) |
-| v1.27 | 2026-10-01 | 复制为其他DBMS(仅目标 DBMS 不同的新文档・检查结果预览)、编辑器工具栏整理(8 个按钮 + 导出・工具菜单)、文档列表操作菜单・数据库类型显示名、首页与登录页改版、每日登录计数缺陷修复 | [crowfoot-web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.27) · [crowfoot-core-api](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.27) · [crowfoot-auth](https://github.com/crowfoot-erd/crowfoot-auth/releases/tag/v1.27) · [crowfoot-collab](https://github.com/crowfoot-erd/crowfoot-collab/releases/tag/v1.27) · [crowfoot-api-gateway](https://github.com/crowfoot-erd/crowfoot-api-gateway/releases/tag/v1.27) | [查看](https://crowfoot.java21.net/release-notes/29) |
-| v1.26 | 2026-09-30 | 文档连接数据库(手绘文档可稍后绑定连接)、迁移 DDL 套用到数据库(执行时重新计算・不可撤销确认窗口・逐条语句报告)、侧边栏工作区区块区分、类型标注规范化缺陷修复 | [crowfoot-web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.26) · [crowfoot-core-api](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.26) · [crowfoot-auth](https://github.com/crowfoot-erd/crowfoot-auth/releases/tag/v1.26) · [crowfoot-collab](https://github.com/crowfoot-erd/crowfoot-collab/releases/tag/v1.26) · [crowfoot-api-gateway](https://github.com/crowfoot-erd/crowfoot-api-gateway/releases/tag/v1.26) | [查看](https://crowfoot.java21.net/release-notes/28) |
-| v1.25 | 2026-09-29 | ERD 图库上线(509 个实务主题 — 含需求、键与完整性设计说明)、布局间距平衡(表格更宽松、分组更紧凑)、修复备注纵向重叠 | [crowfoot-web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.25) · [crowfoot-core-api](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.25) · [crowfoot-auth](https://github.com/crowfoot-erd/crowfoot-auth/releases/tag/v1.25) · [crowfoot-collab](https://github.com/crowfoot-erd/crowfoot-collab/releases/tag/v1.25) · [crowfoot-api-gateway](https://github.com/crowfoot-erd/crowfoot-api-gateway/releases/tag/v1.25) | [查看](https://crowfoot.java21.net/release-notes/27) |
-| v1.24 | 2026-09-29 | 三种自动布局模式(新增中心辐射与混合放射状)、拖动时关系线实时重新走线、八项操作细节修复、1:1 关系自动生成唯一键、模板卡片按原文语言显示、社区菜单中的通知、文档列表分页、生效共享自动登记站点地图 | [crowfoot-web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.24) · [crowfoot-core-api](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.24) · [crowfoot-auth](https://github.com/crowfoot-erd/crowfoot-auth/releases/tag/v1.24) · [crowfoot-collab](https://github.com/crowfoot-erd/crowfoot-collab/releases/tag/v1.24) · [crowfoot-api-gateway](https://github.com/crowfoot-erd/crowfoot-api-gateway/releases/tag/v1.24) | [查看](https://crowfoot.java21.net/release-notes/26) |
-| v1.23 | 2026-09-28 | 发布说明图片改进: 元素级放大截图(2× 视网膜屏)取代全屏截图,部署流程文档化 — 无功能变化 | [crowfoot-web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.23) · [crowfoot-core-api](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.23) · [crowfoot-auth](https://github.com/crowfoot-erd/crowfoot-auth/releases/tag/v1.23) · [crowfoot-collab](https://github.com/crowfoot-erd/crowfoot-collab/releases/tag/v1.23) · [crowfoot-api-gateway](https://github.com/crowfoot-erd/crowfoot-api-gateway/releases/tag/v1.23) | [查看](https://crowfoot.java21.net/release-notes/25) |
-| v1.22 | 2026-09-28 | 通知: 顶栏铃铛(未读徽标·30 秒轮询)、三类事件(我的文档评论·点赞、我的评论收到作者回复)、通知总览页、点击行直达文档、保留 90 天 | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.22) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.22) · [auth](https://github.com/crowfoot-erd/crowfoot-auth/releases/tag/v1.22) · [collab](https://github.com/crowfoot-erd/crowfoot-collab/releases/tag/v1.22) · [gateway](https://github.com/crowfoot-erd/crowfoot-api-gateway/releases/tag/v1.22) | [查看](https://crowfoot.java21.net/release-notes/24) |
-| v1.21 | 2026-09-28 | 交流: 文档级反馈(点赞·匿名评论·作者回复)、公开查看页评论标签、我的反馈汇总(我的评论·点赞)、公开页 SQL 导出、按 DBMS 的外键索引策略 | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.21) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.21) · [auth](https://github.com/crowfoot-erd/crowfoot-auth/releases/tag/v1.21) · [collab](https://github.com/crowfoot-erd/crowfoot-collab/releases/tag/v1.21) · [gateway](https://github.com/crowfoot-erd/crowfoot-api-gateway/releases/tag/v1.21) | [查看](https://crowfoot.java21.net/release-notes/23) |
-| v1.20 | 2026-09-27 | 设计校验 ERD 检查器: 17 条规则(错误·警告·提示)、常时重算的校验面板、关系列映射明示、外键索引自动创建、模板回填 | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.20) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.20) · [auth](https://github.com/crowfoot-erd/crowfoot-auth/releases/tag/v1.20) · [collab](https://github.com/crowfoot-erd/crowfoot-collab/releases/tag/v1.20) · [gateway](https://github.com/crowfoot-erd/crowfoot-api-gateway/releases/tag/v1.20) | [查看](https://crowfoot.java21.net/release-notes/22) |
-| v1.19 | 2026-09-27 | 管理员流量统计:访问指标摘要(PV/UUV/会话/新访客/机器人)、维度分析(国家·来源·页面等)、共享文档 TOP、登录与功能使用量 | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.19) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.19) · [auth](https://github.com/crowfoot-erd/crowfoot-auth/releases/tag/v1.19) · [collab](https://github.com/crowfoot-erd/crowfoot-collab/releases/tag/v1.19) · [gateway](https://github.com/crowfoot-erd/crowfoot-api-gateway/releases/tag/v1.19) | [查看](https://crowfoot.java21.net/release-notes/21) |
-| v1.18 | 2026-09-27 | 展示与传播：8 个模板 ERD、统一共享画廊(热门 3+最新 15)、共享 SEO(预渲染·og)、空画布引导 | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.18) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.18) · [auth](https://github.com/crowfoot-erd/crowfoot-auth/releases/tag/v1.18) · [collab](https://github.com/crowfoot-erd/crowfoot-collab/releases/tag/v1.18) · [gateway](https://github.com/crowfoot-erd/crowfoot-api-gateway/releases/tag/v1.18) | [查看](https://crowfoot.java21.net/release-notes/20) |
-| v1.17 | 2026-09-26 | 协作增强：实时光标·选区·移动、同时编辑收敛、编辑锁、版本冲突解决 | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.17) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.17) · [auth](https://github.com/crowfoot-erd/crowfoot-auth/releases/tag/v1.17) · [collab](https://github.com/crowfoot-erd/crowfoot-collab/releases/tag/v1.17) · [gateway](https://github.com/crowfoot-erd/crowfoot-api-gateway/releases/tag/v1.17) | [查看](https://crowfoot.java21.net/release-notes/19) |
-| v1.16 | 2026-09-25 | 全面支持 4 种语言(韩语、英语、日语、中文)、语言专属 URL·SEO、账号语言、多语言发布说明 | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.16) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.16) · [auth](https://github.com/crowfoot-erd/crowfoot-auth/releases/tag/v1.16) · [collab](https://github.com/crowfoot-erd/crowfoot-collab/releases/tag/v1.16) · [gateway](https://github.com/crowfoot-erd/crowfoot-api-gateway/releases/tag/v1.16) | [查看](https://crowfoot.java21.net/release-notes/18) |
-| v1.15 | 2026-09-25 | 系统词典批量扩充(34,075 个词条)、推理加载优化 | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.15) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.15) | [查看](https://crowfoot.java21.net/release-notes/17) |
-| v1.14 | 2026-09-25 | 术语词典面板 · 系统词典管理、推理语言选择、列物理名词典建议 | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.14) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.14) | [查看](https://crowfoot.java21.net/release-notes/16) |
-| v1.13 | 2026-09-24 | 逻辑分组(主题区域)、逻辑名自动推理、快捷键速查表 | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.13) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.13) | [查看](https://crowfoot.java21.net/release-notes/15) |
-| v1.12 | 2026-09-23 | 模型浏览器 · 统一搜索、SQL 导入 | [web](https://github.com/crowfoot-erd/crowfoot-web/releases/tag/v1.12) · [core](https://github.com/crowfoot-erd/crowfoot-core-api/releases/tag/v1.12) | [查看](https://crowfoot.java21.net/release-notes/14) |
-| v1.11 | 2026-09-22 | 关系编辑 · 版本比较改进、更快的图片导出 | — | [查看](https://crowfoot.java21.net/release-notes/13) |
-| v1.10 | 2026-09-21 | 版本比较 · 迁移 DDL | — | [查看](https://crowfoot.java21.net/release-notes/11) |
-| v1.09 | 2026-09-20 | 文档版本历史 · 数据库同步 | — | [查看](https://crowfoot.java21.net/release-notes/10) |
-| v1.08 | 2026-09-18 | 社区板块 · 实时聊天 · 编辑器安全防护 | — | [查看](https://crowfoot.java21.net/release-notes/9) |
-
-每个版本的变更内容都会以[发布说明](https://crowfoot.java21.net/)的形式公开(首页的"最近发布"中有完整列表)。git 标签自 v1.12 起开始保留，自 v1.16 起每个版本都会在全部部署仓库(自 v1.28 起为 6 个)打上标签(无变更的仓库也以无变更标签对齐系统版本)。
+| [crowfoot-web](https://github.com/crowfoot-erd/crowfoot-web) | 前端 — React SPA。ERD 编辑器（React Flow）、仪表板·工作区·团队、管理控制台、协作客户端（STOMP）、4 种语言·深色模式、使用指南 |
+| [crowfoot-api-gateway](https://github.com/crowfoot-erd/crowfoot-api-gateway) | API 网关 — Spring Cloud Gateway。路由、令牌校验、用户身份头、公开路径白名单 |
+| [crowfoot-auth](https://github.com/crowfoot-erd/crowfoot-auth) | 认证服务器 — OAuth2 登录（GitHub·Google·PKCE）、JWT 签发·刷新·校验、工作区令牌校验、Redis 黑名单 |
+| [crowfoot-core-api](https://github.com/crowfoot-erd/crowfoot-core-api) | 核心 API — 会员·工作区·团队·文档·需求·评论、托管数据库签发·撤销、SQL 生成·部署·逆向工程·迁移、文档编辑 API、代码表·审计日志 |
+| [crowfoot-collab](https://github.com/crowfoot-erd/crowfoot-collab) | 协作服务器 — WebSocket（STOMP）。按文档实时中继在线状态和编辑变更 |
+| [crowfoot-database-manager](https://github.com/crowfoot-erd/crowfoot-database-manager) | 数据库管理器 — 数据查看·行编辑·SQL 控制台·示例数据。自身没有数据库，每次请求时连接，权限交由核心 API 判定 |
+| [crowfoot-mcp](https://github.com/crowfoot-erd/crowfoot-mcp) | MCP 服务器 — Spring AI MCP。以工具形式提供需求·ERD 的读写、数据库签发·部署·迁移以及示例数据 |
 
 ## 自行运行
 
@@ -126,53 +224,56 @@ Crowfoot 的核心功能。**每个账户最多可免费开通 5 个** PostgreSQ
 
 | 工具 | 版本 | 用途 |
 | --- | --- | --- |
-| Java (Temurin) | 21 | 四个服务器 |
-| Maven | 3.9+ | 构建和运行服务器 |
-| Node.js / pnpm | 20 / 10 | 前端 |
-| PostgreSQL | 16+ | 领域数据库(`crowfoot` 数据库 + `crowfoot_core` schema) |
-| Redis | 6+ | 认证登出黑名单 |
+| Java (Temurin) | 21 | 6 个服务器 |
+| Maven | 3.9 及以上 | 构建和运行服务器 |
+| Node.js / pnpm | 20.19 及以上 / 10 | 前端 |
+| PostgreSQL | 16 及以上 | 服务数据库（`crowfoot` 数据库、`crowfoot_core` schema） |
+| Redis | 6 及以上 | 登出黑名单 |
 
-Schema 不会自动创建(`ddl-auto: none`)— 请使用 DDL 脚本初始化。
+Schema 不会自动创建（`ddl-auto: none`）。请先使用 DDL 脚本初始化。
 
 ### 本地端口
 
 | 服务 | 端口 | 备注 |
 | --- | --- | --- |
-| crowfoot-web (Vite) | 8080 | 将 `/api` 代理到网关(8000) |
-| crowfoot-api-gateway | 8000 | 路由到 `auth`(8081)和 `core-api`(8082) |
+| crowfoot-web (Vite) | 8080 | 将 `/api` 请求转发到网关（8000） |
+| crowfoot-api-gateway | 8000 | 路由到 auth、core、database-manager，MCP 主机的 `/mcp` 路由到 MCP 服务器 |
 | crowfoot-auth | 8081 | |
 | crowfoot-core-api | 8082 | |
-| crowfoot-collab | 8083 | WebSocket(STOMP)— 不经过网关直接连接 |
+| crowfoot-collab | 8083 | WebSocket — 不经过网关，直接连接 |
+| crowfoot-database-manager | 8084 | |
+| crowfoot-mcp | 8085 | |
 
 ### 环境变量
 
-每个服务器会自动读取仓库根目录下的 `.env-local` 文件(已 gitignore)— 复制 `.env-local.example` 并填入数值。网关和 collab 不需要环境变量。
+每个服务器都会读取仓库根目录下的 `.env-local`（不提交到 git）。复制 `.env-local.example` 并填入数值。网关、collab、数据库管理器和 MCP 服务器不需要额外的值。
 
 **crowfoot-auth**
 
 | 变量 | 说明 |
 | --- | --- |
-| `CROWFOOT_AUTH_JWT_SECRET` | JWT HS256 签名密钥 — Base64,32 字节以上(`openssl rand -base64 48`) |
-| `CROWFOOT_AUTH_FLOW_SECRET` | `auth_flow` Cookie 的 HMAC-SHA256 密钥 — 与 JWT 密钥分开保管 |
+| `CROWFOOT_AUTH_JWT_SECRET` | JWT HS256 签名密钥 — Base64，32 字节以上（`openssl rand -base64 48`） |
+| `CROWFOOT_AUTH_FLOW_SECRET` | 登录流程 Cookie（`auth_flow`）的 HMAC-SHA256 签名密钥 — 与 JWT 密钥分开保管 |
 | `CROWFOOT_AUTH_GITHUB_CLIENT_ID` / `..._SECRET` | GitHub OAuth 应用凭证 |
-| `CROWFOOT_AUTH_GOOGLE_CLIENT_ID` / `..._SECRET` | Google OAuth 客户端凭证(PKCE) |
-| `CROWFOOT_REDIS_PASSWORD` / `CROWFOOT_REDIS_DATABASE` | Redis 黑名单连接(主机在 `application-local.yml` 中) |
+| `CROWFOOT_AUTH_GOOGLE_CLIENT_ID` / `..._SECRET` | Google OAuth 客户端凭证（PKCE） |
+| `CROWFOOT_REDIS_PASSWORD` / `CROWFOOT_REDIS_DATABASE` | Redis 连接（主机在 `application-local.yml` 中） |
 
-请在 OAuth 应用中注册回调 URI `http://localhost:8080/auth/callback`。
+请在 OAuth 应用中把 `http://localhost:8080/auth/callback` 注册为回调 URI。
 
 **crowfoot-core-api**
 
 | 变量 | 说明 |
 | --- | --- |
 | `DB_URL` | PostgreSQL JDBC URL — `jdbc:postgresql://{host}:5432/crowfoot?currentSchema=crowfoot_core` |
-| `DB_USERNAME` / `DB_PASSWORD` | 领域数据库账户 |
+| `DB_USERNAME` / `DB_PASSWORD` | 服务数据库账户 |
+| `CROWFOOT_CONNECTION_SECRET_KEY` | 连接密码的加密密钥 — Base64，32 字节。本地有开发用默认值，生产环境必须指定 |
 
-**crowfoot-web** — 开发环境使用默认值即可(`VITE_API_BASE_URL` 留空 → Vite 代理保持同源)。生产构建时注入 `VITE_API_BASE_URL`(API 网关)和 `VITE_WS_URL`(协作 WS)。
+**crowfoot-web** — 开发环境直接使用默认值（`VITE_API_BASE_URL` 留空，由 Vite 代理保持同源）。生产构建时需设置 `VITE_API_BASE_URL`（网关地址）、`VITE_WS_URL`（协作服务器地址，`wss://`）和 `VITE_MCP_URL`（MCP 地址）。
 
 ### 启动
 
 ```bash
-# 四个服务器 — 在各仓库中运行(local 配置为默认)
+# 6 个服务器 — 在各仓库中运行（默认使用 local 配置）
 mvn spring-boot:run
 
 # 前端
@@ -180,20 +281,67 @@ pnpm install
 pnpm dev        # http://localhost:8080
 ```
 
-### 生产环境
-
-生产环境中六个服务全部以容器镜像运行,服务器端口统一为 8080。密钥只存在于环境变量中 — 绝不写入代码或镜像。各仓库的 `application-prod.yml` 中列出了所需的变量。
+建议的启动顺序为 auth → core-api → gateway → collab · database-manager · mcp → web。auth 启动后，网关才能校验令牌。
 
 ## 技术栈
 
-**前端** — React 19 · TypeScript · Vite · TanStack Query · Zustand · React Flow · ELK(自动布局) · Tailwind CSS · shadcn/ui (radix-ui) · i18next · Vitest·Testing Library·Playwright·MSW
+| 领域 | 使用技术 |
+| --- | --- |
+| 前端 | React 19 · TypeScript · Vite · TanStack Query · Zustand · React Flow · elkjs（自动布局） · Tailwind CSS · shadcn/ui · i18next · CodeMirror |
+| 后端 | Java 21 · Spring Boot 4 · Spring Security（OAuth2 Client） · Spring Cloud Gateway · Spring Data JPA（Hibernate 7） · Querydsl · Spring WebSocket（STOMP） · Spring AI（MCP） |
+| 数据 | PostgreSQL（服务数据库·托管签发） · MySQL（托管签发） · Redis（登出黑名单） |
+| 测试 | JUnit 5 · Testcontainers · Vitest · Testing Library · MSW · Playwright |
+| 基础设施 | GitHub Actions · GHCR · Kubernetes · Argo CD（GitOps） · nginx |
 
-**后端** — Java 21 · Spring Boot 4 · Spring Security (OAuth2 Client) · Spring Cloud Gateway · Spring Data JPA (Hibernate 7) · Querydsl · Spring WebSocket (STOMP)
+## 版本发布
 
-**数据库** — PostgreSQL(领域 · 托管开通) · MySQL(托管开通) · Redis(认证会话)
+每个版本都会以 4 种语言公开[发布说明](https://crowfoot.java21.net/release-notes)。每个版本都会在全部 7 个服务仓库打上相同的 git 标签（`vX.Y`）— 没有变更的仓库也会打上标签，以对齐系统版本。
 
-**基础设施** — GitHub Actions · GHCR · Kubernetes (Rancher) · ArgoCD (GitOps)
+| 版本 | 日期 | 主要内容 | 发布说明 |
+| --- | --- | --- | --- |
+| v1.32 | 2026-10-03 | AI 集成扩展（填充示例数据、文档地址提示、默认跳过删除语句）、按领域整理需求（进度・查找・导出・验收标准）、共享文档列表与带目录的发布说明、全新起始页、新版本提示 | [查看](https://crowfoot.java21.net/release-notes/34) |
+| v1.31 | 2026-10-02 | Claude 集成（MCP — 用工作区令牌连接 Claude Code，通过对话编写需求和 ERD）、需求面板（链接表・待反映标记）、打开时自动布局、按连接允许 MCP 应用 | [查看](https://crowfoot.java21.net/release-notes/33) |
+| v1.30 | 2026-10-02 | 术语关联域类型、列名建议分为术语和单词、标准面板合一、使用指南（四种语言的截图・查找） | [查看](https://crowfoot.java21.net/release-notes/32) |
+| v1.29 | 2026-10-02 | 域类型（通用类型定义・变更应用预览）、粘贴到其他文档、编辑关系的列映射、自动布局方向 | [查看](https://crowfoot.java21.net/release-notes/31) |
+| v1.28 | 2026-10-01 | 数据浏览器（查看・筛选・排序・CSV）、行编辑（汇总后一次应用・冲突检测）、SQL 控制台（语法高亮・自动补全） | [查看](https://crowfoot.java21.net/release-notes/30) |
 
-## 许可证与贡献
+<details>
+<summary>早期版本（v1.08 ~ v1.27）</summary>
 
-所有仓库均以 [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0) 分发。欢迎提交 Bug 报告和贡献 — 请使用各仓库的 Issues。
+| 版本 | 日期 | 主要内容 | 发布说明 |
+| --- | --- | --- | --- |
+| v1.27 | 2026-10-01 | 复制为其他 DBMS、编辑器工具栏整理、文档列表操作菜单、首页与登录页改版 | [查看](https://crowfoot.java21.net/release-notes/29) |
+| v1.26 | 2026-09-30 | 文档连接数据库、迁移 DDL 套用到数据库（执行时重新计算・逐条语句报告） | [查看](https://crowfoot.java21.net/release-notes/28) |
+| v1.25 | 2026-09-29 | ERD 图库上线（509 个实务主题）、布局间距平衡 | [查看](https://crowfoot.java21.net/release-notes/27) |
+| v1.24 | 2026-09-29 | 三种自动布局模式、拖动时关系线实时重新走线、1:1 关系自动生成唯一键、文档列表分页 | [查看](https://crowfoot.java21.net/release-notes/26) |
+| v1.23 | 2026-09-28 | 发布说明图片改进、部署流程文档化 — 无功能变化 | [查看](https://crowfoot.java21.net/release-notes/25) |
+| v1.22 | 2026-09-28 | 通知（顶栏铃铛・三类事件・通知总览页） | [查看](https://crowfoot.java21.net/release-notes/24) |
+| v1.21 | 2026-09-28 | 文档级反馈（点赞・匿名评论・作者回复）、公开页 SQL 导出 | [查看](https://crowfoot.java21.net/release-notes/23) |
+| v1.20 | 2026-09-27 | 设计校验（17 条规则）、外键索引自动创建 | [查看](https://crowfoot.java21.net/release-notes/22) |
+| v1.19 | 2026-09-27 | 管理员流量统计 | [查看](https://crowfoot.java21.net/release-notes/21) |
+| v1.18 | 2026-09-27 | 模板展示、统一共享画廊、共享 SEO、空画布引导 | [查看](https://crowfoot.java21.net/release-notes/20) |
+| v1.17 | 2026-09-26 | 协作增强（光标・选区・移动、同时编辑收敛、编辑锁） | [查看](https://crowfoot.java21.net/release-notes/19) |
+| v1.16 | 2026-09-25 | 全面支持 4 种语言、语言专属 URL・SEO | [查看](https://crowfoot.java21.net/release-notes/18) |
+| v1.15 | 2026-09-25 | 系统词典扩充（34,075 个标准词条） | [查看](https://crowfoot.java21.net/release-notes/17) |
+| v1.14 | 2026-09-25 | 术语词典面板、列物理名词典建议 | [查看](https://crowfoot.java21.net/release-notes/16) |
+| v1.13 | 2026-09-24 | 逻辑分组（主题区域）、逻辑名自动推理、快捷键速查表 | [查看](https://crowfoot.java21.net/release-notes/15) |
+| v1.12 | 2026-09-23 | 模型浏览器・统一搜索、SQL 导入 | [查看](https://crowfoot.java21.net/release-notes/14) |
+| v1.11 | 2026-09-22 | 关系编辑・版本比较改进、更快的图片导出 | [查看](https://crowfoot.java21.net/release-notes/13) |
+| v1.10 | 2026-09-21 | 版本比较・迁移 DDL | [查看](https://crowfoot.java21.net/release-notes/11) |
+| v1.09 | 2026-09-20 | 文档版本历史・数据库同步 | [查看](https://crowfoot.java21.net/release-notes/10) |
+| v1.08 | 2026-09-18 | 社区板块・实时聊天・编辑器安全防护 | [查看](https://crowfoot.java21.net/release-notes/9) |
+
+</details>
+
+## 参与贡献
+
+欢迎提交 Bug 报告、功能建议和拉取请求。
+
+- **Bug 与建议** — 请在对应仓库的 Issue 中提交。如果不确定是哪个仓库，提交到 [crowfoot-web](https://github.com/crowfoot-erd/crowfoot-web/issues) 即可。附上复现步骤、预期行为、实际行为和截图，可以更快修复。
+- **拉取请求** — 请把变更范围拆小，并一并提交测试。服务器需通过 `mvn test`，前端需通过 `pnpm vitest run` 和 `pnpm build`。
+- **会改变界面的变更** — 请同时更新使用指南（4 种语言）中的说明和截图。
+- **安全问题** — 请不要提交公开 Issue，而是先告知仓库维护者。
+
+## 许可证
+
+所有仓库均以 [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0) 分发。

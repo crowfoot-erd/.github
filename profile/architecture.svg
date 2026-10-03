@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 900" width="1280" height="900" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" role="img" aria-label="Crowfoot system architecture">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 936" width="1280" height="936" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" role="img" aria-label="Crowfoot system architecture">
 <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#475569"/></marker></defs>
-<rect x="0.5" y="0.5" width="1279" height="899" rx="16" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="0.5" y="0.5" width="1279" height="935" rx="16" fill="#ffffff" stroke="#e2e8f0"/>
 <rect x="150" y="24" width="360" height="62" rx="12" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.5"/>
 <text x="330.0" y="50" text-anchor="middle" font-size="15" font-weight="700" fill="#0f172a">Browser</text>
 <text x="330.0" y="70" text-anchor="middle" font-size="11.5" fill="#475569">React SPA · ERD editor · data browser</text>
@@ -15,81 +15,88 @@
 <text x="560" y="159" text-anchor="middle" font-size="11" fill="#78350f" font-family="ui-monospace,SFMono-Regular,Menlo,monospace">crowfoot.java21.net</text>
 <rect x="814.1" y="143" width="171.79999999999998" height="24" rx="12" fill="#ffffff" stroke="#fcd34d"/>
 <text x="900" y="159" text-anchor="middle" font-size="11" fill="#78350f" font-family="ui-monospace,SFMono-Regular,Menlo,monospace">crowfoot-mcp.java21.net</text>
-<rect x="40" y="222" width="1200" height="352" rx="14" fill="#f8fafc" stroke="#94a3b8" stroke-dasharray="7 5"/>
-<text x="58" y="244" font-size="12" font-weight="700" fill="#475569">Kubernetes cluster</text>
-<rect x="70" y="262" width="230" height="82" rx="12" fill="#fce7f3" stroke="#ec4899" stroke-width="1.5"/>
+<rect x="40" y="222" width="1200" height="388" rx="14" fill="#f8fafc" stroke="#94a3b8" stroke-dasharray="7 5"/>
+<text x="58" y="244" font-size="12" font-weight="700" fill="#475569">Kubernetes cluster · Ingress routes each host to its service</text>
+<rect x="70" y="262" width="230" height="100" rx="12" fill="#fce7f3" stroke="#ec4899" stroke-width="1.5"/>
+<text x="185.0" y="352" text-anchor="middle" font-size="10.5" font-weight="600" fill="#047857" font-family="ui-monospace,SFMono-Regular,Menlo,monospace">Spring Boot · STOMP</text>
 <text x="185.0" y="288" text-anchor="middle" font-size="15" font-weight="700" fill="#0f172a">crowfoot-collab</text>
 <text x="185.0" y="308" text-anchor="middle" font-size="11.5" fill="#475569">WebSocket (STOMP)</text>
 <text x="185.0" y="324" text-anchor="middle" font-size="11.5" fill="#475569">presence · live sync</text>
-<rect x="330" y="262" width="210" height="82" rx="12" fill="#e0f2fe" stroke="#0ea5e9" stroke-width="1.5"/>
+<rect x="330" y="262" width="210" height="100" rx="12" fill="#e0f2fe" stroke="#0ea5e9" stroke-width="1.5"/>
+<text x="435.0" y="352" text-anchor="middle" font-size="10.5" font-weight="600" fill="#047857" font-family="ui-monospace,SFMono-Regular,Menlo,monospace">React 19 · Vite · nginx</text>
 <text x="435.0" y="288" text-anchor="middle" font-size="15" font-weight="700" fill="#0f172a">crowfoot-web</text>
-<text x="435.0" y="308" text-anchor="middle" font-size="11.5" fill="#475569">nginx · static SPA</text>
+<text x="435.0" y="308" text-anchor="middle" font-size="11.5" fill="#475569">static SPA · prerendered pages</text>
 <text x="435.0" y="324" text-anchor="middle" font-size="11.5" fill="#475569">i18n ko·en·ja·zh</text>
-<rect x="580" y="262" width="400" height="82" rx="12" fill="#d1fae5" stroke="#10b981" stroke-width="1.5"/>
+<rect x="580" y="262" width="400" height="100" rx="12" fill="#d1fae5" stroke="#10b981" stroke-width="1.5"/>
+<text x="780.0" y="352" text-anchor="middle" font-size="10.5" font-weight="600" fill="#047857" font-family="ui-monospace,SFMono-Regular,Menlo,monospace">Spring Cloud Gateway (WebFlux)</text>
 <text x="780.0" y="288" text-anchor="middle" font-size="15" font-weight="700" fill="#0f172a">crowfoot-api-gateway</text>
-<text x="780.0" y="308" text-anchor="middle" font-size="11.5" fill="#475569">Spring Cloud Gateway · routing by path and host</text>
-<text x="780.0" y="324" text-anchor="middle" font-size="11.5" fill="#475569">token introspection · public whitelist · identity headers</text>
-<rect x="1020" y="262" width="190" height="82" rx="12" fill="#ffedd5" stroke="#f97316" stroke-width="1.5"/>
+<text x="780.0" y="308" text-anchor="middle" font-size="11.5" fill="#475569">routing by path and host · public whitelist</text>
+<text x="780.0" y="324" text-anchor="middle" font-size="11.5" fill="#475569">token introspection · identity headers (X-USER-ID …)</text>
+<rect x="1020" y="262" width="190" height="100" rx="12" fill="#ffedd5" stroke="#f97316" stroke-width="1.5"/>
+<text x="1115.0" y="352" text-anchor="middle" font-size="10.5" font-weight="600" fill="#047857" font-family="ui-monospace,SFMono-Regular,Menlo,monospace">Spring AI MCP · HTTP</text>
 <text x="1115.0" y="288" text-anchor="middle" font-size="15" font-weight="700" fill="#0f172a">crowfoot-mcp</text>
 <text x="1115.0" y="308" text-anchor="middle" font-size="11.5" fill="#475569">MCP server for AI clients</text>
 <text x="1115.0" y="324" text-anchor="middle" font-size="11.5" fill="#475569">requirements · ERD · deploy</text>
-<rect x="70" y="452" width="250" height="92" rx="12" fill="#ede9fe" stroke="#8b5cf6" stroke-width="1.5"/>
-<text x="195.0" y="478" text-anchor="middle" font-size="15" font-weight="700" fill="#0f172a">crowfoot-auth</text>
-<text x="195.0" y="498" text-anchor="middle" font-size="11.5" fill="#475569">OAuth2 login · JWT issue / refresh</text>
-<text x="195.0" y="514" text-anchor="middle" font-size="11.5" fill="#475569">introspection (JWT, workspace token)</text>
-<rect x="380" y="452" width="330" height="92" rx="12" fill="#e0e7ff" stroke="#6366f1" stroke-width="1.5"/>
-<text x="545.0" y="478" text-anchor="middle" font-size="15" font-weight="700" fill="#0f172a">crowfoot-core-api</text>
-<text x="545.0" y="498" text-anchor="middle" font-size="11.5" fill="#475569">workspaces · model documents · requirements</text>
-<text x="545.0" y="514" text-anchor="middle" font-size="11.5" fill="#475569">SQL generation · migration · reverse engineering</text>
-<text x="545.0" y="530" text-anchor="middle" font-size="11.5" fill="#475569">managed DB provisioning · access tokens</text>
-<rect x="770" y="452" width="250" height="92" rx="12" fill="#ccfbf1" stroke="#14b8a6" stroke-width="1.5"/>
-<text x="895.0" y="478" text-anchor="middle" font-size="15" font-weight="700" fill="#0f172a">crowfoot-database-manager</text>
-<text x="895.0" y="498" text-anchor="middle" font-size="11.5" fill="#475569">data browser · row editing</text>
-<text x="895.0" y="514" text-anchor="middle" font-size="11.5" fill="#475569">SQL console · sample data</text>
-<text x="895.0" y="530" text-anchor="middle" font-size="11.5" fill="#475569">stateless — connects per request</text>
-<rect x="60" y="640" width="150" height="74" rx="12" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5"/>
-<text x="135.0" y="666" text-anchor="middle" font-size="15" font-weight="700" fill="#0f172a">GitHub · Google</text>
-<text x="135.0" y="686" text-anchor="middle" font-size="11.5" fill="#475569">OAuth2 providers</text>
-<rect x="225" y="640" width="130" height="74" rx="12" fill="#fee2e2" stroke="#ef4444" stroke-width="1.5"/>
-<text x="290.0" y="666" text-anchor="middle" font-size="15" font-weight="700" fill="#0f172a">Redis</text>
-<text x="290.0" y="686" text-anchor="middle" font-size="11.5" fill="#475569">access-token</text>
-<text x="290.0" y="702" text-anchor="middle" font-size="11.5" fill="#475569">blacklist</text>
-<rect x="380" y="640" width="330" height="74" rx="12" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>
-<text x="545.0" y="666" text-anchor="middle" font-size="15" font-weight="700" fill="#0f172a">PostgreSQL</text>
-<text x="545.0" y="686" text-anchor="middle" font-size="11.5" fill="#475569">service data — members, workspaces, documents, audit</text>
-<rect x="760" y="640" width="250" height="74" rx="12" fill="#dcfce7" stroke="#22c55e" stroke-width="1.5"/>
-<text x="885.0" y="666" text-anchor="middle" font-size="15" font-weight="700" fill="#0f172a">Managed DB instances</text>
-<text x="885.0" y="686" text-anchor="middle" font-size="11.5" fill="#475569">free MySQL · PostgreSQL</text>
-<text x="885.0" y="702" text-anchor="middle" font-size="11.5" fill="#475569">one database + account per request</text>
-<rect x="1030" y="640" width="190" height="74" rx="12" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5"/>
-<text x="1125.0" y="666" text-anchor="middle" font-size="15" font-weight="700" fill="#0f172a">Your own databases</text>
-<text x="1125.0" y="686" text-anchor="middle" font-size="11.5" fill="#475569">MySQL · PostgreSQL</text>
-<text x="1125.0" y="702" text-anchor="middle" font-size="11.5" fill="#475569">registered connections</text>
-<rect x="40" y="776" width="1200" height="92" rx="14" fill="#f8fafc" stroke="#e2e8f0"/>
-<text x="58" y="798" font-size="12" font-weight="700" fill="#475569">Delivery (GitOps)</text>
-<rect x="60.0" y="808" width="170" height="46" rx="8" fill="#ffffff" stroke="#cbd5e1"/>
-<text x="145.0" y="827" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0f172a">7 repositories</text>
-<text x="145.0" y="844" text-anchor="middle" font-size="10.5" fill="#64748b">push to main</text>
-<path d="M233.0,831 L255.0,831" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a)"/>
-<rect x="258.0" y="808" width="170" height="46" rx="8" fill="#ffffff" stroke="#cbd5e1"/>
-<text x="343.0" y="827" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0f172a">GitHub Actions</text>
-<text x="343.0" y="844" text-anchor="middle" font-size="10.5" fill="#64748b">test · build image</text>
-<path d="M431.0,831 L453.0,831" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a)"/>
-<rect x="456.0" y="808" width="170" height="46" rx="8" fill="#ffffff" stroke="#cbd5e1"/>
-<text x="541.0" y="827" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0f172a">GHCR</text>
-<text x="541.0" y="844" text-anchor="middle" font-size="10.5" fill="#64748b">image tagged by commit</text>
-<path d="M629.0,831 L651.0,831" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a)"/>
-<rect x="654.0" y="808" width="170" height="46" rx="8" fill="#ffffff" stroke="#cbd5e1"/>
-<text x="739.0" y="827" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0f172a">crowfoot-manifests</text>
-<text x="739.0" y="844" text-anchor="middle" font-size="10.5" fill="#64748b">image tag committed</text>
-<path d="M827.0,831 L849.0,831" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a)"/>
-<rect x="852.0" y="808" width="170" height="46" rx="8" fill="#ffffff" stroke="#cbd5e1"/>
-<text x="937.0" y="827" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0f172a">Argo CD</text>
-<text x="937.0" y="844" text-anchor="middle" font-size="10.5" fill="#64748b">sync apps/*</text>
-<path d="M1025.0,831 L1047.0,831" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a)"/>
-<rect x="1050.0" y="808" width="170" height="46" rx="8" fill="#ffffff" stroke="#cbd5e1"/>
-<text x="1135.0" y="827" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0f172a">Kubernetes</text>
-<text x="1135.0" y="844" text-anchor="middle" font-size="10.5" fill="#64748b">rolling update</text>
+<rect x="70" y="470" width="250" height="110" rx="12" fill="#ede9fe" stroke="#8b5cf6" stroke-width="1.5"/>
+<text x="195.0" y="570" text-anchor="middle" font-size="10.5" font-weight="600" fill="#047857" font-family="ui-monospace,SFMono-Regular,Menlo,monospace">Spring Security · JWT HS256</text>
+<text x="195.0" y="496" text-anchor="middle" font-size="15" font-weight="700" fill="#0f172a">crowfoot-auth</text>
+<text x="195.0" y="516" text-anchor="middle" font-size="11.5" fill="#475569">OAuth2 login (PKCE) · JWT issue / refresh</text>
+<text x="195.0" y="532" text-anchor="middle" font-size="11.5" fill="#475569">introspection (JWT, workspace token)</text>
+<rect x="380" y="470" width="330" height="110" rx="12" fill="#e0e7ff" stroke="#6366f1" stroke-width="1.5"/>
+<text x="545.0" y="570" text-anchor="middle" font-size="10.5" font-weight="600" fill="#047857" font-family="ui-monospace,SFMono-Regular,Menlo,monospace">Spring Boot · JPA · Querydsl</text>
+<text x="545.0" y="496" text-anchor="middle" font-size="15" font-weight="700" fill="#0f172a">crowfoot-core-api</text>
+<text x="545.0" y="516" text-anchor="middle" font-size="11.5" fill="#475569">workspaces · model documents · requirements</text>
+<text x="545.0" y="532" text-anchor="middle" font-size="11.5" fill="#475569">SQL generation · migration · reverse engineering</text>
+<text x="545.0" y="548" text-anchor="middle" font-size="11.5" fill="#475569">managed DB provisioning · access tokens</text>
+<rect x="770" y="470" width="250" height="110" rx="12" fill="#ccfbf1" stroke="#14b8a6" stroke-width="1.5"/>
+<text x="895.0" y="570" text-anchor="middle" font-size="10.5" font-weight="600" fill="#047857" font-family="ui-monospace,SFMono-Regular,Menlo,monospace">Spring Boot · JDBC</text>
+<text x="895.0" y="496" text-anchor="middle" font-size="15" font-weight="700" fill="#0f172a">crowfoot-database-manager</text>
+<text x="895.0" y="516" text-anchor="middle" font-size="11.5" fill="#475569">data browser · row editing</text>
+<text x="895.0" y="532" text-anchor="middle" font-size="11.5" fill="#475569">SQL console · sample data</text>
+<text x="895.0" y="548" text-anchor="middle" font-size="11.5" fill="#475569">stateless — connects per request</text>
+<rect x="60" y="676" width="150" height="74" rx="12" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5"/>
+<text x="135.0" y="702" text-anchor="middle" font-size="15" font-weight="700" fill="#0f172a">GitHub · Google</text>
+<text x="135.0" y="722" text-anchor="middle" font-size="11.5" fill="#475569">OAuth2 providers</text>
+<rect x="225" y="676" width="130" height="74" rx="12" fill="#fee2e2" stroke="#ef4444" stroke-width="1.5"/>
+<text x="290.0" y="702" text-anchor="middle" font-size="15" font-weight="700" fill="#0f172a">Redis</text>
+<text x="290.0" y="722" text-anchor="middle" font-size="11.5" fill="#475569">access-token</text>
+<text x="290.0" y="738" text-anchor="middle" font-size="11.5" fill="#475569">blacklist</text>
+<rect x="380" y="676" width="330" height="74" rx="12" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="545.0" y="702" text-anchor="middle" font-size="15" font-weight="700" fill="#0f172a">PostgreSQL</text>
+<text x="545.0" y="722" text-anchor="middle" font-size="11.5" fill="#475569">service data — members, workspaces, documents, audit</text>
+<rect x="760" y="676" width="250" height="74" rx="12" fill="#dcfce7" stroke="#22c55e" stroke-width="1.5"/>
+<text x="885.0" y="702" text-anchor="middle" font-size="15" font-weight="700" fill="#0f172a">Managed DB instances</text>
+<text x="885.0" y="722" text-anchor="middle" font-size="11.5" fill="#475569">free MySQL · PostgreSQL</text>
+<text x="885.0" y="738" text-anchor="middle" font-size="11.5" fill="#475569">one database + account per request</text>
+<rect x="1030" y="676" width="190" height="74" rx="12" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5"/>
+<text x="1125.0" y="702" text-anchor="middle" font-size="15" font-weight="700" fill="#0f172a">Your own databases</text>
+<text x="1125.0" y="722" text-anchor="middle" font-size="11.5" fill="#475569">MySQL · PostgreSQL</text>
+<text x="1125.0" y="738" text-anchor="middle" font-size="11.5" fill="#475569">registered connections</text>
+<rect x="40" y="812" width="1200" height="92" rx="14" fill="#f8fafc" stroke="#e2e8f0"/>
+<text x="58" y="834" font-size="12" font-weight="700" fill="#475569">Delivery (GitOps)</text>
+<rect x="60.0" y="844" width="170" height="46" rx="8" fill="#ffffff" stroke="#cbd5e1"/>
+<text x="145.0" y="863" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0f172a">7 repositories</text>
+<text x="145.0" y="880" text-anchor="middle" font-size="10.5" fill="#64748b">push to main</text>
+<path d="M233.0,867 L255.0,867" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a)"/>
+<rect x="258.0" y="844" width="170" height="46" rx="8" fill="#ffffff" stroke="#cbd5e1"/>
+<text x="343.0" y="863" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0f172a">GitHub Actions</text>
+<text x="343.0" y="880" text-anchor="middle" font-size="10.5" fill="#64748b">test · build image</text>
+<path d="M431.0,867 L453.0,867" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a)"/>
+<rect x="456.0" y="844" width="170" height="46" rx="8" fill="#ffffff" stroke="#cbd5e1"/>
+<text x="541.0" y="863" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0f172a">GHCR</text>
+<text x="541.0" y="880" text-anchor="middle" font-size="10.5" fill="#64748b">image tagged by commit</text>
+<path d="M629.0,867 L651.0,867" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a)"/>
+<rect x="654.0" y="844" width="170" height="46" rx="8" fill="#ffffff" stroke="#cbd5e1"/>
+<text x="739.0" y="863" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0f172a">crowfoot-manifests</text>
+<text x="739.0" y="880" text-anchor="middle" font-size="10.5" fill="#64748b">image tag committed</text>
+<path d="M827.0,867 L849.0,867" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a)"/>
+<rect x="852.0" y="844" width="170" height="46" rx="8" fill="#ffffff" stroke="#cbd5e1"/>
+<text x="937.0" y="863" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0f172a">Argo CD</text>
+<text x="937.0" y="880" text-anchor="middle" font-size="10.5" fill="#64748b">sync apps/*</text>
+<path d="M1025.0,867 L1047.0,867" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a)"/>
+<rect x="1050.0" y="844" width="170" height="46" rx="8" fill="#ffffff" stroke="#cbd5e1"/>
+<text x="1135.0" y="863" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0f172a">Kubernetes</text>
+<text x="1135.0" y="880" text-anchor="middle" font-size="10.5" fill="#64748b">rolling update</text>
 <path d="M290,86 L310,132" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a)"/>
 <rect x="307.85" y="102" width="28.299999999999997" height="15" rx="3" fill="#ffffff" opacity="0.92"/>
 <text x="322" y="113" text-anchor="middle" font-size="10.5" fill="#334155">WSS</text>
@@ -112,44 +119,44 @@
 <rect x="877.8" y="203" width="34.4" height="15" rx="3" fill="#ffffff" opacity="0.92"/>
 <text x="895" y="214" text-anchor="middle" font-size="10.5" fill="#334155">/mcp</text>
 <path d="M980,303 L1020,303" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a)"/>
-<path d="M620,344 L250,452" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a)"/>
-<rect x="434.5" y="367" width="71.0" height="15" rx="3" fill="#ffffff" opacity="0.92"/>
-<text x="470" y="378" text-anchor="middle" font-size="10.5" fill="#334155">introspect</text>
-<path d="M700,344 L560,452" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a)"/>
-<rect x="594.75" y="401" width="40.5" height="15" rx="3" fill="#ffffff" opacity="0.92"/>
-<text x="615" y="412" text-anchor="middle" font-size="10.5" fill="#334155">/core</text>
-<path d="M860,344 L890,452" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a)"/>
-<rect x="843.15" y="425" width="113.69999999999999" height="15" rx="3" fill="#ffffff" opacity="0.92"/>
-<text x="900" y="436" text-anchor="middle" font-size="10.5" fill="#334155">/database-manager</text>
-<path d="M150,344 L170,452" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a)" stroke-dasharray="5 4"/>
-<rect x="118.4" y="389" width="83.19999999999999" height="15" rx="3" fill="#ffffff" opacity="0.92"/>
-<text x="160" y="400" text-anchor="middle" font-size="10.5" fill="#334155">verify token</text>
-<path d="M250,344 L430,452" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a)" stroke-dasharray="5 4"/>
-<rect x="267.25" y="361" width="101.5" height="15" rx="3" fill="#ffffff" opacity="0.92"/>
-<text x="318" y="372" text-anchor="middle" font-size="10.5" fill="#334155">document access</text>
-<path d="M1075,344 L710,470" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a)" stroke-dasharray="5 4"/>
-<rect x="934.0" y="351" width="132.0" height="15" rx="3" fill="#ffffff" opacity="0.92"/>
-<text x="1000" y="362" text-anchor="middle" font-size="10.5" fill="#334155">read · edit · deploy</text>
-<path d="M1130,344 L1000,452" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a)" stroke-dasharray="5 4"/>
-<rect x="1069.45" y="399" width="77.1" height="15" rx="3" fill="#ffffff" opacity="0.92"/>
-<text x="1108" y="410" text-anchor="middle" font-size="10.5" fill="#334155">sample data</text>
-<path d="M320,498 L380,498" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a)" stroke-dasharray="5 4"/>
-<text x="350" y="490" text-anchor="middle" font-size="10" fill="#334155">members</text>
-<path d="M770,498 L710,498" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a)" stroke-dasharray="5 4"/>
-<text x="740" y="490" text-anchor="middle" font-size="10" fill="#334155">access</text>
-<path d="M140,544 L135,640" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a)"/>
-<path d="M260,544 L290,640" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a)"/>
-<path d="M545,544 L545,640" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a)"/>
-<path d="M680,544 L800,640" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a)"/>
-<rect x="737.55" y="585" width="64.9" height="15" rx="3" fill="#ffffff" opacity="0.92"/>
-<text x="770" y="596" text-anchor="middle" font-size="10.5" fill="#334155">provision</text>
-<path d="M880,544 L880,640" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a)"/>
-<rect x="831.5" y="615" width="40.5" height="15" rx="3" fill="#ffffff" opacity="0.92"/>
-<text x="868" y="626" text-anchor="end" font-size="10.5" fill="#334155">query</text>
-<path d="M980,544 L1110,640" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a)"/>
-<path d="M700,544 L1060,640" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a)" stroke-dasharray="5 4"/>
-<rect x="955.35" y="605" width="89.3" height="15" rx="3" fill="#ffffff" opacity="0.92"/>
-<text x="1000" y="616" text-anchor="middle" font-size="10.5" fill="#334155">DDL · reverse</text>
+<path d="M620,362 L250,470" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a)"/>
+<rect x="434.5" y="385" width="71.0" height="15" rx="3" fill="#ffffff" opacity="0.92"/>
+<text x="470" y="396" text-anchor="middle" font-size="10.5" fill="#334155">introspect</text>
+<path d="M700,362 L560,470" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a)"/>
+<rect x="594.75" y="419" width="40.5" height="15" rx="3" fill="#ffffff" opacity="0.92"/>
+<text x="615" y="430" text-anchor="middle" font-size="10.5" fill="#334155">/core</text>
+<path d="M860,362 L890,470" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a)"/>
+<rect x="843.15" y="443" width="113.69999999999999" height="15" rx="3" fill="#ffffff" opacity="0.92"/>
+<text x="900" y="454" text-anchor="middle" font-size="10.5" fill="#334155">/database-manager</text>
+<path d="M150,362 L170,470" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a)" stroke-dasharray="5 4"/>
+<rect x="118.4" y="407" width="83.19999999999999" height="15" rx="3" fill="#ffffff" opacity="0.92"/>
+<text x="160" y="418" text-anchor="middle" font-size="10.5" fill="#334155">verify token</text>
+<path d="M250,362 L430,470" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a)" stroke-dasharray="5 4"/>
+<rect x="267.25" y="379" width="101.5" height="15" rx="3" fill="#ffffff" opacity="0.92"/>
+<text x="318" y="390" text-anchor="middle" font-size="10.5" fill="#334155">document access</text>
+<path d="M1075,362 L710,488" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a)" stroke-dasharray="5 4"/>
+<rect x="934.0" y="369" width="132.0" height="15" rx="3" fill="#ffffff" opacity="0.92"/>
+<text x="1000" y="380" text-anchor="middle" font-size="10.5" fill="#334155">read · edit · deploy</text>
+<path d="M1130,362 L1000,470" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a)" stroke-dasharray="5 4"/>
+<rect x="1069.45" y="417" width="77.1" height="15" rx="3" fill="#ffffff" opacity="0.92"/>
+<text x="1108" y="428" text-anchor="middle" font-size="10.5" fill="#334155">sample data</text>
+<path d="M320,516 L380,516" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a)" stroke-dasharray="5 4"/>
+<text x="350" y="508" text-anchor="middle" font-size="10" fill="#334155">members</text>
+<path d="M770,516 L710,516" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a)" stroke-dasharray="5 4"/>
+<text x="740" y="508" text-anchor="middle" font-size="10" fill="#334155">access</text>
+<path d="M140,582 L135,676" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a)"/>
+<path d="M260,582 L290,676" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a)"/>
+<path d="M545,582 L545,676" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a)"/>
+<path d="M680,582 L800,676" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a)"/>
+<rect x="737.55" y="621" width="64.9" height="15" rx="3" fill="#ffffff" opacity="0.92"/>
+<text x="770" y="632" text-anchor="middle" font-size="10.5" fill="#334155">provision</text>
+<path d="M880,582 L880,676" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a)"/>
+<rect x="831.5" y="651" width="40.5" height="15" rx="3" fill="#ffffff" opacity="0.92"/>
+<text x="868" y="662" text-anchor="end" font-size="10.5" fill="#334155">query</text>
+<path d="M980,582 L1110,676" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a)"/>
+<path d="M700,582 L1060,676" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a)" stroke-dasharray="5 4"/>
+<rect x="955.35" y="641" width="89.3" height="15" rx="3" fill="#ffffff" opacity="0.92"/>
+<text x="1000" y="652" text-anchor="middle" font-size="10.5" fill="#334155">DDL · reverse</text>
 <path d="M1000,240 L1036,240" stroke="#475569" stroke-width="1.6"/>
 <text x="1042" y="244" font-size="10.5" fill="#475569">request path</text>
 <path d="M1120,240 L1156,240" stroke="#475569" stroke-width="1.6" stroke-dasharray="5 4"/>
