@@ -1,5 +1,7 @@
 <div align="center">
 
+🌐 **[한국어](./README.md)** | **[English](./README.en.md)** | **[日本語](./README.ja.md)** | **简体中文**
+
 <img src="logo.svg" alt="Crowfoot" width="72" />
 
 # Crowfoot
@@ -12,8 +14,6 @@
 [![Release](https://img.shields.io/badge/release-v1.32-10b981.svg)](https://crowfoot.java21.net/release-notes/34)
 [![Live](https://img.shields.io/badge/live-crowfoot.java21.net-0ea5e9.svg)](https://crowfoot.java21.net)
 [![MCP](https://img.shields.io/badge/MCP-Claude%20%C2%B7%20ChatGPT-f97316.svg)](https://crowfoot.java21.net/guide#20.1)
-
-**[한국어](./README.md)** | **[English](./README.en.md)** | **[日本語](./README.ja.md)** | **简体中文**
 
 [立即使用](https://crowfoot.java21.net) · [使用指南](https://crowfoot.java21.net/guide) · [发布说明](https://crowfoot.java21.net/release-notes) · [浏览共享 ERD](https://crowfoot.java21.net/shared)
 

@@ -1,5 +1,7 @@
 <div align="center">
 
+🌐 **[한국어](./README.md)** | **English** | **[日本語](./README.ja.md)** | **[简体中文](./README.zh.md)**
+
 <img src="logo.svg" alt="Crowfoot" width="72" />
 
 # Crowfoot
@@ -12,8 +14,6 @@ An open-source ERD platform that takes you from requirements → ERD → a real 
 [![Release](https://img.shields.io/badge/release-v1.32-10b981.svg)](https://crowfoot.java21.net/release-notes/34)
 [![Live](https://img.shields.io/badge/live-crowfoot.java21.net-0ea5e9.svg)](https://crowfoot.java21.net)
 [![MCP](https://img.shields.io/badge/MCP-Claude%20%C2%B7%20ChatGPT-f97316.svg)](https://crowfoot.java21.net/guide#20.1)
-
-**[한국어](./README.md)** | **English** | **[日本語](./README.ja.md)** | **[简体中文](./README.zh.md)**
 
 [Try it now](https://crowfoot.java21.net) · [User guide](https://crowfoot.java21.net/guide) · [Release notes](https://crowfoot.java21.net/release-notes) · [Browse shared ERDs](https://crowfoot.java21.net/shared)
 
