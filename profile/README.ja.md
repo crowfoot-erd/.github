@@ -285,13 +285,69 @@ pnpm dev        # http://localhost:8080
 
 ## 技術スタック
 
-| 分野 | 使用技術 |
-| --- | --- |
-| フロントエンド | React 19 · TypeScript · Vite · TanStack Query · Zustand · React Flow · elkjs(自動レイアウト) · Tailwind CSS · shadcn/ui · i18next · CodeMirror |
-| バックエンド | Java 21 · Spring Boot 4 · Spring Security(OAuth2 Client) · Spring Cloud Gateway · Spring Data JPA(Hibernate 7) · Querydsl · Spring WebSocket(STOMP) · Spring AI(MCP) |
-| データ | PostgreSQL(サービス DB・マネージド発行) · MySQL(マネージド発行) · Redis(ログアウトのブラックリスト) |
-| テスト | JUnit 5 · Testcontainers · Vitest · Testing Library · MSW · Playwright |
-| インフラ | GitHub Actions · GHCR · Kubernetes · Argo CD(GitOps) · nginx |
+### 共通基盤
+
+| 技術 | バージョン | 使う場所 | 理由・役割 |
+| --- | --- | --- | --- |
+| Java | 21 | 6 つのサーバー | LTS バージョン。レコード、パターンマッチング、仮想スレッドが使える現在の基準です |
+| Spring Boot | 4.1 | 6 つのサーバー | すべてのサーバーで同じバージョンに揃え、設定・ロギング・ヘルスチェック(Actuator)の方式を統一します。Kubernetes は Actuator のヘルスチェックでサーバーの状態を確認します |
+| Spring Cloud | 2025.1 | gateway, auth, database-manager | ゲートウェイとサービス間呼び出し(OpenFeign, LoadBalancer)のバージョンをひとまとめに管理します |
+| Lombok | — | サーバー | コンストラクタやアクセサのような繰り返しのコードを減らします |
+
+### サーバー別
+
+| サーバー | 中核技術 | 採用理由と役割 |
+| --- | --- | --- |
+| **crowfoot-api-gateway** | Spring Cloud Gateway (WebFlux) | すべての HTTP リクエストの入口です。ノンブロッキング(リアクティブ)方式なので、少ないスレッドで多くのリクエストを中継します。パスとホストでルーティングし(`/api/v1/core/**` → core、MCP ホストの `/mcp` → MCP サーバー)、グローバルフィルターでトークンを認証サーバーに確認したうえでユーザー識別ヘッダー(`X-USER-ID` など)を付けます。ログインなしで開ける公開パスは許可リストで管理します |
+| **crowfoot-auth** | Spring Security · OAuth2 Client · spring-security-oauth2-jose · Spring Data Redis · OpenFeign | GitHub・Google ログイン(OAuth2、Google は PKCE)を処理します。アクセストークンは JWT(HS256)として発行・確認し、リフレッシュトークンはクッキーに置きます。ログアウトしたトークンは有効期限までだけ Redis のブラックリストに保持します。会員情報とワークスペーストークンは OpenFeign で core に問い合わせます |
+| **crowfoot-core-api** | Spring Web MVC · Spring Data JPA (Hibernate 7) · Querydsl 5.1 · Bean Validation · PostgreSQL/MySQL JDBC · Commons DBCP2 · MaxMind GeoIP2 | ドメインの中心です。JPA で会員・ワークスペース・ドキュメントを保存し、一覧・検索のような動的な条件は Querydsl で型安全に書きます(関連の取得は fetch join で N+1 を防ぎます)。JDBC ドライバーでユーザーのデータベースを読み取って ERD にし(リバースエンジニアリング)、DDL をデプロイし、無料のデータベースを発行します。GeoIP2 は管理者向けトラフィック統計の国別集計に使います |
+| **crowfoot-collab** | Spring WebSocket · STOMP · RestClient | リアルタイムコラボレーションサーバーです。ドキュメントごとに STOMP のルームを設け、接続状況・カーソル・編集内容を順番に中継します。接続時に RestClient で auth にトークンを、core にドキュメントの権限を確認します |
+| **crowfoot-database-manager** | Spring Web MVC · JDBC (PostgreSQL·MySQL ドライバー) · OpenFeign | データブラウザです。自前の DB を持たず、リクエストごとに対象の DB へ JDBC で接続し、終わったら閉じます。接続情報と権限は OpenFeign で core に問い合わせます。行の編集とサンプルデータは 1 つのトランザクションで投入します |
+| **crowfoot-mcp** | Spring AI 2.0 (MCP Server, WebMVC) · RestClient | Claude・ChatGPT のような MCP クライアントの入口です。Spring AI の MCP サーバー(HTTP トランスポート)で 20 種類のツールを公開し、ツール呼び出しを core・database-manager の内部 API 呼び出しに変換します。サーバーの案内文(instructions)で、AI が守るべき作業の順序とルールを伝えます |
+
+### フロントエンド (crowfoot-web)
+
+| 技術 | バージョン | 使う場所と理由 |
+| --- | --- | --- |
+| React | 19 | 画面全体。コンポーネント単位でエディタ、ダッシュボード、管理コンソールを作ります |
+| TypeScript | 6 | ドキュメントの構造や API レスポンスの型をコードで検査します |
+| Vite | 8 | 開発サーバーとビルド。ビルド時にサイトマップの生成や公開ページのプリレンダリング(検索への露出)も担います |
+| React Router | 7 | 画面遷移と言語別の URL(`/en`, `/ja`, `/zh`) |
+| TanStack Query | 5 | サーバーデータの取得・キャッシュ・再取得。一覧と詳細画面のローディング・エラー状態を一貫して扱います |
+| Zustand | 5 | エディタのドキュメントの状態、元に戻す・やり直し、パネルの開閉といった画面の状態 |
+| React Flow (@xyflow/react) | 12 | ERD キャンバス。テーブルノードとリレーション線を描き、拡大・移動・選択を処理します。リレーション線の経路とカラスの足表記は独自に実装しています |
+| elkjs | 0.12 | 自動レイアウト(階層型)。テーブルの位置だけを計算し、リレーション線は独自のルーターが描き直します |
+| Zod | 4 | ドキュメント本体(JSON)のスキーマ検証。古いドキュメントも安全に読み込みます |
+| Tailwind CSS · shadcn/ui (Radix UI) | 4 · — | スタイルと基本コンポーネント(ダイアログ、メニュー、タブ)。ダークモードとテーマカラーをトークンで管理します |
+| i18next · react-i18next | 26 · 17 | 4 言語(韓国語・英語・日本語・中国語)の画面の文言 |
+| CodeMirror | 6 | SQL コンソール。シンタックスハイライトとキーワード・テーブル名の自動補完 |
+| Toast UI Editor | 3 | コミュニティの投稿、リリースノート、利用ガイドの Markdown の作成・表示 |
+| STOMP.js | 7 | リアルタイムコラボレーションのクライアント |
+| Recharts | 3 | 管理者向けトラフィック統計のチャート |
+| html-to-image | 1 | ERD を PNG 画像として書き出し |
+
+### データとインフラ
+
+| 技術 | 使う場所 | 役割 |
+| --- | --- | --- |
+| PostgreSQL 16 | core | サービス DB(会員・ワークスペース・ドキュメント・監査ログ、`crowfoot_core` スキーマ)。無料の PostgreSQL を発行するためのインスタンスでもあります |
+| MySQL 8 | core, database-manager | 無料の MySQL を発行するためのインスタンス |
+| Redis 6 | auth | ログアウトしたアクセストークンのブラックリスト(有効期限までの TTL、AOF で永続化) |
+| Docker · GHCR | 6 つのサーバー、web | リポジトリごとにイメージをビルドし、GitHub Container Registry に push します |
+| GitHub Actions | 7 つのリポジトリ | main に push するとテストしてイメージをビルドし、デプロイリポジトリのイメージタグを更新します |
+| Kubernetes · Argo CD | 本番 | Argo CD がデプロイリポジトリ(`apps/*`)を監視し、クラスターに反映します(GitOps)。サーバーはローリングアップデートで順に入れ替え、無停止でデプロイします |
+| nginx | フロント、web | フロントでは TLS を終端し、ホストごとに振り分けます。web コンテナの中では静的ファイルとプリレンダリング済みのページを配信します |
+
+### テスト
+
+| 技術 | 使う場所 | 役割 |
+| --- | --- | --- |
+| JUnit 5 · Spring Boot Test | 6 つのサーバー | 単体テスト・結合テスト |
+| Testcontainers | core, database-manager | 実際の PostgreSQL・MySQL コンテナで SQL 生成、リバースエンジニアリング、データ編集を検証します |
+| MockWebServer · embedded-redis | gateway, auth, collab | 他のサービスや Redis を模倣して、サービス間の呼び出しを検証します |
+| Vitest · Testing Library | web | 画面とロジックのテスト(約 1,300 件) |
+| MSW | web | モック API サーバー。テストと利用ガイドの画像撮影に使います |
+| Playwright | web | 実際のブラウザでの確認と、利用ガイド・リリースノートの画像撮影 |
 
 ## リリース
 

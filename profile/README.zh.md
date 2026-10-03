@@ -285,13 +285,69 @@ pnpm dev        # http://localhost:8080
 
 ## 技术栈
 
-| 领域 | 使用技术 |
-| --- | --- |
-| 前端 | React 19 · TypeScript · Vite · TanStack Query · Zustand · React Flow · elkjs（自动布局） · Tailwind CSS · shadcn/ui · i18next · CodeMirror |
-| 后端 | Java 21 · Spring Boot 4 · Spring Security（OAuth2 Client） · Spring Cloud Gateway · Spring Data JPA（Hibernate 7） · Querydsl · Spring WebSocket（STOMP） · Spring AI（MCP） |
-| 数据 | PostgreSQL（服务数据库·托管签发） · MySQL（托管签发） · Redis（登出黑名单） |
-| 测试 | JUnit 5 · Testcontainers · Vitest · Testing Library · MSW · Playwright |
-| 基础设施 | GitHub Actions · GHCR · Kubernetes · Argo CD（GitOps） · nginx |
+### 公共基础
+
+| 技术 | 版本 | 使用位置 | 原因与作用 |
+| --- | --- | --- | --- |
+| Java | 21 | 6 个服务器 | LTS 版本。可以使用记录类、模式匹配和虚拟线程的当前基准 |
+| Spring Boot | 4.1 | 6 个服务器 | 各服务器统一使用同一版本，使配置、日志和健康检查（Actuator）的方式保持一致。Kubernetes 通过 Actuator 健康检查确认服务器状态 |
+| Spring Cloud | 2025.1 | gateway, auth, database-manager | 把网关和服务间调用（OpenFeign、LoadBalancer）的版本作为一个整体统一管理 |
+| Lombok | — | 服务器 | 减少构造函数、访问器之类的重复代码 |
+
+### 各服务器
+
+| 服务器 | 核心技术 | 使用原因与职责 |
+| --- | --- | --- |
+| **crowfoot-api-gateway** | Spring Cloud Gateway (WebFlux) | 所有 HTTP 请求的入口。采用非阻塞（响应式）方式，用少量线程中继大量请求。按路径和主机路由（`/api/v1/core/**` → core，MCP 主机的 `/mcp` → MCP 服务器），并在全局过滤器中向认证服务器校验令牌后，附加用户身份头（`X-USER-ID` 等）。无需登录即可访问的公开路径通过白名单管理 |
+| **crowfoot-auth** | Spring Security · OAuth2 Client · spring-security-oauth2-jose · Spring Data Redis · OpenFeign | 处理 GitHub、Google 登录（OAuth2，Google 使用 PKCE）。访问令牌以 JWT（HS256）签发和校验，刷新令牌放在 Cookie 中。已登出的令牌只在 Redis 黑名单中保留到过期为止。会员信息和工作区令牌通过 OpenFeign 向 core 查询 |
+| **crowfoot-core-api** | Spring Web MVC · Spring Data JPA (Hibernate 7) · Querydsl 5.1 · Bean Validation · PostgreSQL/MySQL JDBC · Commons DBCP2 · MaxMind GeoIP2 | 领域的中心。用 JPA 存储会员、工作区和文档，列表、搜索之类的动态条件用 Querydsl 以类型安全的方式编写（关联查询用 fetch join 避免 N+1）。通过 JDBC 驱动读取用户的数据库并生成 ERD（逆向工程）、部署 DDL、签发免费数据库。GeoIP2 用于管理员流量统计中的按国家汇总 |
+| **crowfoot-collab** | Spring WebSocket · STOMP · RestClient | 实时协作服务器。为每个文档设一个 STOMP 房间，按顺序中继在线用户、光标和编辑变更。连接时通过 RestClient 向 auth 校验令牌、向 core 校验文档权限 |
+| **crowfoot-database-manager** | Spring Web MVC · JDBC (PostgreSQL·MySQL 驱动) · OpenFeign | 数据浏览器。自身没有数据库，每次请求都通过 JDBC 连接目标数据库，结束后即关闭。连接信息和权限通过 OpenFeign 向 core 查询。行编辑和示例数据在一个事务中写入 |
+| **crowfoot-mcp** | Spring AI 2.0 (MCP Server, WebMVC) · RestClient | Claude、ChatGPT 等 MCP 客户端的入口。通过 Spring AI 的 MCP 服务器（HTTP 传输）公开 20 种工具，并把工具调用转换为对 core、database-manager 内部 API 的调用。通过服务器说明（instructions）告诉 AI 应遵守的操作顺序和规则 |
+
+### 前端 (crowfoot-web)
+
+| 技术 | 版本 | 使用位置与原因 |
+| --- | --- | --- |
+| React | 19 | 整个界面。以组件为单位构建编辑器、仪表板和管理控制台 |
+| TypeScript | 6 | 在代码中检查文档结构和 API 响应类型 |
+| Vite | 8 | 开发服务器与构建。构建时还负责生成站点地图、预渲染公开页面（用于搜索曝光） |
+| React Router | 7 | 页面跳转和按语言区分的地址（`/en`、`/ja`、`/zh`） |
+| TanStack Query | 5 | 服务器数据的查询、缓存和重新请求。统一处理列表和详情页面的加载与错误状态 |
+| Zustand | 5 | 编辑器文档状态、撤销与重做、面板开关等界面状态 |
+| React Flow (@xyflow/react) | 12 | ERD 画布。绘制表节点和关系线，处理缩放、平移和选择。关系线路径和鸦脚记法为自行实现 |
+| elkjs | 0.12 | 自动布局（分层）。只计算表的位置，关系线由自研的路由器重新绘制 |
+| Zod | 4 | 文档主体（JSON）的 schema 校验。旧文档也能安全读取 |
+| Tailwind CSS · shadcn/ui (Radix UI) | 4 · — | 样式与基础组件（对话框、菜单、标签页）。深色模式和主题色以令牌（token）管理 |
+| i18next · react-i18next | 26 · 17 | 4 种语言（韩语、英语、日语、中文）的界面文案 |
+| CodeMirror | 6 | SQL 控制台。语法高亮以及关键字、表名的自动补全 |
+| Toast UI Editor | 3 | 社区帖子、发布说明、使用指南的 Markdown 编写与显示 |
+| STOMP.js | 7 | 实时协作客户端 |
+| Recharts | 3 | 管理员流量统计图表 |
+| html-to-image | 1 | 将 ERD 导出为 PNG 图片 |
+
+### 数据与基础设施
+
+| 技术 | 使用位置 | 作用 |
+| --- | --- | --- |
+| PostgreSQL 16 | core | 服务数据库（会员、工作区、文档、审计日志，`crowfoot_core` schema）。同时也是签发免费 PostgreSQL 的实例 |
+| MySQL 8 | core, database-manager | 签发免费 MySQL 的实例 |
+| Redis 6 | auth | 已登出访问令牌的黑名单（TTL 为过期时间，以 AOF 持久化） |
+| Docker · GHCR | 6 个服务器、web | 每个仓库构建镜像并推送到 GitHub Container Registry |
+| GitHub Actions | 7 个仓库 | 推送到 main 后运行测试、构建镜像，然后修改部署仓库中的镜像标签 |
+| Kubernetes · Argo CD | 生产环境 | Argo CD 监视部署仓库（`apps/*`）并将变更应用到集群（GitOps）。服务器通过滚动更新逐个替换，实现零停机部署 |
+| nginx | 前置层、web | 在前置层终止 TLS 并按主机转发。在 web 容器内提供静态文件和预渲染页面 |
+
+### 测试
+
+| 技术 | 使用位置 | 作用 |
+| --- | --- | --- |
+| JUnit 5 · Spring Boot Test | 6 个服务器 | 单元测试与集成测试 |
+| Testcontainers | core, database-manager | 用真实的 PostgreSQL、MySQL 容器验证 SQL 生成、逆向工程和数据编辑 |
+| MockWebServer · embedded-redis | gateway, auth, collab | 模拟其他服务和 Redis，验证服务间调用 |
+| Vitest · Testing Library | web | 界面与逻辑测试（约 1,300 个） |
+| MSW | web | 模拟 API 服务器。用于测试和使用指南截图 |
+| Playwright | web | 在真实浏览器中检查，以及为使用指南和发布说明截图 |
 
 ## 版本发布
 

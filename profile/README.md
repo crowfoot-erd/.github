@@ -285,13 +285,69 @@ pnpm dev        # http://localhost:8080
 
 ## 기술 스택
 
-| 영역 | 사용 기술 |
-| --- | --- |
-| 프론트엔드 | React 19 · TypeScript · Vite · TanStack Query · Zustand · React Flow · elkjs(자동 배치) · Tailwind CSS · shadcn/ui · i18next · CodeMirror |
-| 백엔드 | Java 21 · Spring Boot 4 · Spring Security(OAuth2 Client) · Spring Cloud Gateway · Spring Data JPA(Hibernate 7) · Querydsl · Spring WebSocket(STOMP) · Spring AI(MCP) |
-| 데이터 | PostgreSQL(서비스 DB·매니지드 발급) · MySQL(매니지드 발급) · Redis(로그아웃 블랙리스트) |
-| 테스트 | JUnit 5 · Testcontainers · Vitest · Testing Library · MSW · Playwright |
-| 인프라 | GitHub Actions · GHCR · Kubernetes · Argo CD(GitOps) · nginx |
+### 공통 기반
+
+| 기술 | 버전 | 쓰는 곳 | 왜·무엇을 |
+| --- | --- | --- | --- |
+| Java | 21 | 서버 6종 | LTS 버전. 레코드, 패턴 매칭, 가상 스레드를 쓸 수 있는 현재 기준 |
+| Spring Boot | 4.1 | 서버 6종 | 서버마다 같은 버전으로 맞춰 설정·로깅·헬스 체크(Actuator) 방식을 통일합니다. 쿠버네티스는 Actuator 헬스 체크로 서버 상태를 확인합니다 |
+| Spring Cloud | 2025.1 | gateway, auth, database-manager | 게이트웨이와 서비스 간 호출(OpenFeign, LoadBalancer)의 버전을 한 묶음으로 관리합니다 |
+| Lombok | — | 서버 | 생성자·접근자 같은 반복 코드를 줄입니다 |
+
+### 서버별
+
+| 서버 | 핵심 기술 | 쓰는 이유와 역할 |
+| --- | --- | --- |
+| **crowfoot-api-gateway** | Spring Cloud Gateway (WebFlux) | 모든 HTTP 요청의 입구입니다. 논블로킹(리액티브) 방식이라 적은 스레드로 많은 요청을 중계합니다. 경로와 호스트로 라우팅하고(`/api/v1/core/**` → core, MCP 호스트의 `/mcp` → MCP 서버), 전역 필터에서 토큰을 인증 서버에 확인한 뒤 사용자 식별 헤더(`X-USER-ID` 등)를 붙입니다. 로그인 없이 열리는 공개 경로는 허용 목록으로 관리합니다 |
+| **crowfoot-auth** | Spring Security · OAuth2 Client · spring-security-oauth2-jose · Spring Data Redis · OpenFeign | GitHub·Google 로그인(OAuth2, Google은 PKCE)을 처리합니다. Access 토큰은 JWT(HS256)로 발급·검증하고, Refresh 토큰은 쿠키로 둡니다. 로그아웃한 토큰은 Redis 블랙리스트에 만료 시간까지만 보관합니다. 회원 정보와 워크스페이스 토큰은 OpenFeign으로 core에 묻습니다 |
+| **crowfoot-core-api** | Spring Web MVC · Spring Data JPA (Hibernate 7) · Querydsl 5.1 · Bean Validation · PostgreSQL/MySQL JDBC · Commons DBCP2 · MaxMind GeoIP2 | 도메인의 중심입니다. JPA로 회원·워크스페이스·문서를 저장하고, 목록·검색 같은 동적 조건은 Querydsl로 타입 안전하게 씁니다(연관 조회는 fetch join으로 N+1을 막습니다). JDBC 드라이버로 사용자의 데이터베이스를 읽어 ERD로 만들고(역설계), DDL을 배포하고, 무료 데이터베이스를 발급합니다. GeoIP2는 관리자 트래픽 통계의 국가 집계에 씁니다 |
+| **crowfoot-collab** | Spring WebSocket · STOMP · RestClient | 실시간 협업 서버입니다. 문서마다 STOMP 방을 두고 접속자, 커서, 편집 변경을 순서대로 중계합니다. 접속할 때 RestClient로 auth에 토큰을, core에 문서 권한을 확인합니다 |
+| **crowfoot-database-manager** | Spring Web MVC · JDBC (PostgreSQL·MySQL 드라이버) · OpenFeign | 데이터 브라우저입니다. 자체 DB 없이 요청마다 대상 DB에 JDBC로 접속하고 끝나면 닫습니다. 접속 정보와 권한은 OpenFeign으로 core에 묻습니다. 행 편집과 샘플 데이터는 한 트랜잭션으로 넣습니다 |
+| **crowfoot-mcp** | Spring AI 2.0 (MCP Server, WebMVC) · RestClient | Claude·ChatGPT 같은 MCP 클라이언트의 진입점입니다. Spring AI의 MCP 서버(HTTP 전송)로 도구 20종을 공개하고, 도구 호출을 core·database-manager의 내부 API 호출로 옮깁니다. 서버 안내문(instructions)으로 AI가 지킬 작업 순서와 규칙을 알려 줍니다 |
+
+### 프론트엔드 (crowfoot-web)
+
+| 기술 | 버전 | 쓰는 곳과 이유 |
+| --- | --- | --- |
+| React | 19 | 화면 전체. 컴포넌트 단위로 에디터, 대시보드, 관리자 화면을 만듭니다 |
+| TypeScript | 6 | 문서 구조, API 응답 타입을 코드에서 검사합니다 |
+| Vite | 8 | 개발 서버와 빌드. 빌드 때 사이트맵 생성, 공개 페이지 프리렌더(검색 노출)도 함께 돕니다 |
+| React Router | 7 | 화면 이동과 언어별 주소(`/en`, `/ja`, `/zh`) |
+| TanStack Query | 5 | 서버 데이터 조회·캐시·재요청. 목록과 상세 화면의 로딩·오류 상태를 일관되게 다룹니다 |
+| Zustand | 5 | 에디터 문서 상태, 되돌리기·다시 실행, 패널 열림 같은 화면 상태 |
+| React Flow (@xyflow/react) | 12 | ERD 캔버스. 테이블 노드와 관계선을 그리고, 확대·이동·선택을 처리합니다. 관계선 경로와 까마귀발 표기는 직접 구현했습니다 |
+| elkjs | 0.12 | 자동 배치(계층형). 테이블 위치만 계산하고 관계선은 자체 라우터가 다시 그립니다 |
+| Zod | 4 | 문서 본체(JSON) 스키마 검증. 예전 문서도 안전하게 읽습니다 |
+| Tailwind CSS · shadcn/ui (Radix UI) | 4 · — | 스타일과 기본 컴포넌트(대화상자, 메뉴, 탭). 다크 모드와 테마 색을 토큰으로 관리합니다 |
+| i18next · react-i18next | 26 · 17 | 4개 언어(한국어·영어·일본어·중국어) 화면 문구 |
+| CodeMirror | 6 | SQL 콘솔. 문법 강조와 키워드·테이블 이름 자동 완성 |
+| Toast UI Editor | 3 | 커뮤니티 게시글, 릴리스 노트, 사용 가이드의 마크다운 작성·표시 |
+| STOMP.js | 7 | 실시간 협업 클라이언트 |
+| Recharts | 3 | 관리자 트래픽 통계 차트 |
+| html-to-image | 1 | ERD를 PNG 이미지로 내보내기 |
+
+### 데이터와 인프라
+
+| 기술 | 쓰는 곳 | 역할 |
+| --- | --- | --- |
+| PostgreSQL 16 | core | 서비스 DB(회원·워크스페이스·문서·감사 로그, `crowfoot_core` 스키마). 무료 PostgreSQL 발급용 인스턴스이기도 합니다 |
+| MySQL 8 | core, database-manager | 무료 MySQL 발급용 인스턴스 |
+| Redis 6 | auth | 로그아웃한 Access 토큰 블랙리스트(만료 시간 TTL, AOF로 보관) |
+| Docker · GHCR | 서버 6종, web | 저장소마다 이미지를 만들어 GitHub Container Registry에 올립니다 |
+| GitHub Actions | 저장소 7개 | main에 올리면 테스트하고 이미지를 만든 뒤 배포 저장소의 이미지 태그를 고칩니다 |
+| Kubernetes · Argo CD | 운영 | Argo CD가 배포 저장소(`apps/*`)를 지켜보다 클러스터에 반영합니다(GitOps). 서버는 순차 교체로 무중단 배포합니다 |
+| nginx | 앞단, web | 앞단에서 TLS를 끝내고 호스트별로 넘깁니다. web 컨테이너 안에서는 정적 파일과 프리렌더 페이지를 내줍니다 |
+
+### 테스트
+
+| 기술 | 쓰는 곳 | 역할 |
+| --- | --- | --- |
+| JUnit 5 · Spring Boot Test | 서버 6종 | 단위·통합 테스트 |
+| Testcontainers | core, database-manager | 실제 PostgreSQL·MySQL 컨테이너로 SQL 생성, 역설계, 데이터 편집을 검증합니다 |
+| MockWebServer · embedded-redis | gateway, auth, collab | 다른 서비스와 Redis를 흉내 내어 서비스 간 호출을 검증합니다 |
+| Vitest · Testing Library | web | 화면과 로직 테스트(1,300여 건) |
+| MSW | web | 가짜 API 서버. 테스트와 사용 가이드 그림 촬영에 씁니다 |
+| Playwright | web | 실제 브라우저 확인과 사용 가이드·릴리스 노트 그림 촬영 |
 
 ## 릴리스
 

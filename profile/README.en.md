@@ -285,13 +285,69 @@ The recommended order is auth → core-api → gateway → collab · database-ma
 
 ## Tech stack
 
-| Area | Technologies |
-| --- | --- |
-| Frontend | React 19 · TypeScript · Vite · TanStack Query · Zustand · React Flow · elkjs (auto layout) · Tailwind CSS · shadcn/ui · i18next · CodeMirror |
-| Backend | Java 21 · Spring Boot 4 · Spring Security (OAuth2 Client) · Spring Cloud Gateway · Spring Data JPA (Hibernate 7) · Querydsl · Spring WebSocket (STOMP) · Spring AI (MCP) |
-| Data | PostgreSQL (service DB, managed issuing) · MySQL (managed issuing) · Redis (logout blacklist) |
-| Testing | JUnit 5 · Testcontainers · Vitest · Testing Library · MSW · Playwright |
-| Infrastructure | GitHub Actions · GHCR · Kubernetes · Argo CD (GitOps) · nginx |
+### Common foundation
+
+| Technology | Version | Used in | Why and what |
+| --- | --- | --- | --- |
+| Java | 21 | the six servers | The LTS release. Today's baseline, with records, pattern matching and virtual threads |
+| Spring Boot | 4.1 | the six servers | Every server runs the same version, so configuration, logging and health checks (Actuator) work the same way everywhere. Kubernetes checks server status through the Actuator health checks |
+| Spring Cloud | 2025.1 | gateway, auth, database-manager | Manages the versions for the gateway and inter-service calls (OpenFeign, LoadBalancer) as one set |
+| Lombok | — | servers | Cuts down repetitive code such as constructors and accessors |
+
+### By server
+
+| Server | Core technologies | Why and what it does |
+| --- | --- | --- |
+| **crowfoot-api-gateway** | Spring Cloud Gateway (WebFlux) | The entry point for all HTTP requests. Being non-blocking (reactive), it relays many requests with few threads. It routes by path and host (`/api/v1/core/**` → core, `/mcp` on the MCP host → MCP server), and a global filter verifies the token with the auth server before adding user identity headers (`X-USER-ID` and others). Public paths that open without sign-in are managed in an allowlist |
+| **crowfoot-auth** | Spring Security · OAuth2 Client · spring-security-oauth2-jose · Spring Data Redis · OpenFeign | Handles GitHub and Google sign-in (OAuth2, with PKCE for Google). Access tokens are issued and verified as JWTs (HS256), and refresh tokens are kept in a cookie. Logged-out tokens stay in a Redis blacklist only until they expire. It asks core for member info and workspace tokens through OpenFeign |
+| **crowfoot-core-api** | Spring Web MVC · Spring Data JPA (Hibernate 7) · Querydsl 5.1 · Bean Validation · PostgreSQL/MySQL JDBC · Commons DBCP2 · MaxMind GeoIP2 | The center of the domain. JPA stores members, workspaces and documents, and dynamic conditions such as lists and search are written type-safely with Querydsl (associations are loaded with fetch joins to prevent N+1 queries). Through JDBC drivers it reads users' databases into ERDs (reverse engineering), deploys DDL and issues free databases. GeoIP2 provides the per-country breakdown in the admin traffic analytics |
+| **crowfoot-collab** | Spring WebSocket · STOMP · RestClient | The real-time collaboration server. Each document has its own STOMP room, where presence, cursors and edits are relayed in order. On connect, it uses RestClient to check the token with auth and document permissions with core |
+| **crowfoot-database-manager** | Spring Web MVC · JDBC (PostgreSQL·MySQL drivers) · OpenFeign | The data browser. It has no database of its own: for each request it connects to the target database over JDBC and closes the connection when done. It asks core for connection info and permissions through OpenFeign. Row edits and sample data are applied in a single transaction |
+| **crowfoot-mcp** | Spring AI 2.0 (MCP Server, WebMVC) · RestClient | The entry point for MCP clients such as Claude and ChatGPT. It exposes 20 tools through Spring AI's MCP server (HTTP transport) and turns tool calls into internal API calls to core and database-manager. Its server instructions tell the AI the order of work and the rules to follow |
+
+### Frontend (crowfoot-web)
+
+| Technology | Version | Where and why |
+| --- | --- | --- |
+| React | 19 | The entire UI. The editor, dashboard and admin console are built from components |
+| TypeScript | 6 | Checks document structure and API response types in code |
+| Vite | 8 | Dev server and build. At build time it also generates the sitemap and prerenders public pages (for search visibility) |
+| React Router | 7 | Navigation and per-language URLs (`/en`, `/ja`, `/zh`) |
+| TanStack Query | 5 | Fetching, caching and refetching server data. Handles loading and error states consistently across list and detail screens |
+| Zustand | 5 | UI state such as the editor document, undo and redo, and which panels are open |
+| React Flow (@xyflow/react) | 12 | The ERD canvas. Draws table nodes and relationship lines and handles zooming, panning and selection. Relationship line paths and Crow's Foot notation are implemented in-house |
+| elkjs | 0.12 | Auto layout (layered). It only computes table positions; our own router redraws the relationship lines |
+| Zod | 4 | Schema validation for the document body (JSON). Older documents are read safely too |
+| Tailwind CSS · shadcn/ui (Radix UI) | 4 · — | Styling and base components (dialogs, menus, tabs). Dark mode and theme colors are managed as tokens |
+| i18next · react-i18next | 26 · 17 | UI text in four languages (Korean, English, Japanese, Chinese) |
+| CodeMirror | 6 | SQL console. Syntax highlighting and autocomplete for keywords and table names |
+| Toast UI Editor | 3 | Writing and displaying Markdown for community posts, release notes and the user guide |
+| STOMP.js | 7 | Real-time collaboration client |
+| Recharts | 3 | Charts for the admin traffic analytics |
+| html-to-image | 1 | Exporting the ERD as a PNG image |
+
+### Data and infrastructure
+
+| Technology | Used in | Role |
+| --- | --- | --- |
+| PostgreSQL 16 | core | Service database (members, workspaces, documents, audit logs; `crowfoot_core` schema). Also the instance that free PostgreSQL databases are issued from |
+| MySQL 8 | core, database-manager | The instance that free MySQL databases are issued from |
+| Redis 6 | auth | Blacklist of logged-out access tokens (TTL set to the expiry time, persisted with AOF) |
+| Docker · GHCR | the six servers, web | Each repository builds an image and pushes it to GitHub Container Registry |
+| GitHub Actions | 7 repositories | A push to main runs the tests, builds an image, then updates the image tag in the deployment repository |
+| Kubernetes · Argo CD | production | Argo CD watches the deployment repository (`apps/*`) and applies changes to the cluster (GitOps). Servers are replaced one by one with rolling updates for zero-downtime deployment |
+| nginx | edge, web | At the edge, it terminates TLS and forwards traffic by host. Inside the web container, it serves static files and prerendered pages |
+
+### Testing
+
+| Technology | Used in | Role |
+| --- | --- | --- |
+| JUnit 5 · Spring Boot Test | the six servers | Unit and integration tests |
+| Testcontainers | core, database-manager | Verifies SQL generation, reverse engineering and data editing against real PostgreSQL and MySQL containers |
+| MockWebServer · embedded-redis | gateway, auth, collab | Stands in for other services and Redis to verify inter-service calls |
+| Vitest · Testing Library | web | UI and logic tests (about 1,300) |
+| MSW | web | Mock API server. Used in tests and for capturing user guide screenshots |
+| Playwright | web | Checks in a real browser, and captures screenshots for the user guide and release notes |
 
 ## Releases
 
