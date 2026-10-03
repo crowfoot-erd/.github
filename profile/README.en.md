@@ -11,7 +11,7 @@
 An open-source ERD platform that takes you from requirements → ERD → a real database → data, all in one browser
 
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
-[![Release](https://img.shields.io/badge/release-v1.32-10b981.svg)](https://crowfoot.java21.net/release-notes/34)
+[![Release](https://img.shields.io/badge/release-v1.33-10b981.svg)](https://crowfoot.java21.net/release-notes/35)
 [![Live](https://img.shields.io/badge/live-crowfoot.java21.net-0ea5e9.svg)](https://crowfoot.java21.net)
 [![MCP](https://img.shields.io/badge/MCP-Claude%20%C2%B7%20ChatGPT-f97316.svg)](https://crowfoot.java21.net/guide#20.1)
 
@@ -299,17 +299,18 @@ Every version ships with [release notes](https://crowfoot.java21.net/release-not
 
 | Version | Date | Highlights | Release notes |
 | --- | --- | --- | --- |
+| v1.33 | 2026-10-03 | One design across the site (primary color, menus, titles), polished user guide (same-scale images, expanded explanations, four-language edits), 33 release notes rewritten, free DBs can be issued and revoked locally too | [View](https://crowfoot.java21.net/release-notes/35) |
 | v1.32 | 2026-10-03 | AI integration extended (sample data, document links, drop statements skipped by default), requirements organized by domain (progress, search, export, acceptance criteria), shared documents list and release notes with a table of contents, new start page, new-version notice | [View](https://crowfoot.java21.net/release-notes/34) |
 | v1.31 | 2026-10-02 | Claude integration (MCP — connect Claude Code with a workspace token, build requirements and ERDs through conversation), requirements panel (linked tables, pending status), automatic placement on open, per-connection Allow MCP apply | [View](https://crowfoot.java21.net/release-notes/33) |
 | v1.30 | 2026-10-02 | Terms linked to domain types, column name suggestions split into terms and words, one standards panel, user guide (screenshots in four languages, search) | [View](https://crowfoot.java21.net/release-notes/32) |
 | v1.29 | 2026-10-02 | Domain types (shared type definitions, previewed propagation of changes), paste into another document, editing a relationship's column mapping, auto layout direction | [View](https://crowfoot.java21.net/release-notes/31) |
-| v1.28 | 2026-10-01 | Data browser (browse, filter, sort, CSV), row editing (collected and applied at once, conflict detection), SQL console (syntax highlighting, autocomplete) | [View](https://crowfoot.java21.net/release-notes/30) |
 
 <details>
-<summary>Earlier versions (v1.08 – v1.27)</summary>
+<summary>Earlier versions (v1.08 – v1.28)</summary>
 
 | Version | Date | Highlights | Release notes |
 | --- | --- | --- | --- |
+| v1.28 | 2026-10-01 | Data browser (browse, filter, sort, CSV), row editing (collected and applied at once, conflict detection), SQL console (syntax highlighting, autocomplete) | [View](https://crowfoot.java21.net/release-notes/30) |
 | v1.27 | 2026-10-01 | Duplicate for another DBMS, tidier editor toolbar, document list actions menu, refreshed landing and sign-in pages | [View](https://crowfoot.java21.net/release-notes/29) |
 | v1.26 | 2026-09-30 | Link documents to databases, apply migration DDL to the database (recompute at run time, per-statement report) | [View](https://crowfoot.java21.net/release-notes/28) |
 | v1.25 | 2026-09-29 | ERD library launch (509 real-world topics), balanced layout spacing | [View](https://crowfoot.java21.net/release-notes/27) |

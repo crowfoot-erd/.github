@@ -11,7 +11,7 @@
 在一个浏览器里把需求 → ERD → 真实数据库 → 数据连成一线的开源 ERD 平台
 
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
-[![Release](https://img.shields.io/badge/release-v1.32-10b981.svg)](https://crowfoot.java21.net/release-notes/34)
+[![Release](https://img.shields.io/badge/release-v1.33-10b981.svg)](https://crowfoot.java21.net/release-notes/35)
 [![Live](https://img.shields.io/badge/live-crowfoot.java21.net-0ea5e9.svg)](https://crowfoot.java21.net)
 [![MCP](https://img.shields.io/badge/MCP-Claude%20%C2%B7%20ChatGPT-f97316.svg)](https://crowfoot.java21.net/guide#20.1)
 
@@ -299,17 +299,18 @@ pnpm dev        # http://localhost:8080
 
 | 版本 | 日期 | 主要内容 | 发布说明 |
 | --- | --- | --- | --- |
+| v1.33 | 2026-10-03 | 统一全站设计（主色・菜单・标题）、完善用户指南（同比例图片・补充说明・四种语言校对）、完善 33 篇发布说明、本地也可发放和撤销免费数据库 | [查看](https://crowfoot.java21.net/release-notes/35) |
 | v1.32 | 2026-10-03 | AI 集成扩展（填充示例数据、文档地址提示、默认跳过删除语句）、按领域整理需求（进度・查找・导出・验收标准）、共享文档列表与带目录的发布说明、全新起始页、新版本提示 | [查看](https://crowfoot.java21.net/release-notes/34) |
 | v1.31 | 2026-10-02 | Claude 集成（MCP — 用工作区令牌连接 Claude Code，通过对话编写需求和 ERD）、需求面板（链接表・待反映标记）、打开时自动布局、按连接允许 MCP 应用 | [查看](https://crowfoot.java21.net/release-notes/33) |
 | v1.30 | 2026-10-02 | 术语关联域类型、列名建议分为术语和单词、标准面板合一、使用指南（四种语言的截图・查找） | [查看](https://crowfoot.java21.net/release-notes/32) |
 | v1.29 | 2026-10-02 | 域类型（通用类型定义・变更应用预览）、粘贴到其他文档、编辑关系的列映射、自动布局方向 | [查看](https://crowfoot.java21.net/release-notes/31) |
-| v1.28 | 2026-10-01 | 数据浏览器（查看・筛选・排序・CSV）、行编辑（汇总后一次应用・冲突检测）、SQL 控制台（语法高亮・自动补全） | [查看](https://crowfoot.java21.net/release-notes/30) |
 
 <details>
-<summary>早期版本（v1.08 ~ v1.27）</summary>
+<summary>更早的版本（v1.08 ～ v1.28）</summary>
 
 | 版本 | 日期 | 主要内容 | 发布说明 |
 | --- | --- | --- | --- |
+| v1.28 | 2026-10-01 | 数据浏览器（查看・筛选・排序・CSV）、行编辑（汇总后一次应用・冲突检测）、SQL 控制台（语法高亮・自动补全） | [查看](https://crowfoot.java21.net/release-notes/30) |
 | v1.27 | 2026-10-01 | 复制为其他 DBMS、编辑器工具栏整理、文档列表操作菜单、首页与登录页改版 | [查看](https://crowfoot.java21.net/release-notes/29) |
 | v1.26 | 2026-09-30 | 文档连接数据库、迁移 DDL 套用到数据库（执行时重新计算・逐条语句报告） | [查看](https://crowfoot.java21.net/release-notes/28) |
 | v1.25 | 2026-09-29 | ERD 图库上线（509 个实务主题）、布局间距平衡 | [查看](https://crowfoot.java21.net/release-notes/27) |

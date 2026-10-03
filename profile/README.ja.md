@@ -11,7 +11,7 @@
 要件 → ERD → 本物のデータベース → データまで、ブラウザひとつでつなぐオープンソースの ERD プラットフォーム
 
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
-[![Release](https://img.shields.io/badge/release-v1.32-10b981.svg)](https://crowfoot.java21.net/release-notes/34)
+[![Release](https://img.shields.io/badge/release-v1.33-10b981.svg)](https://crowfoot.java21.net/release-notes/35)
 [![Live](https://img.shields.io/badge/live-crowfoot.java21.net-0ea5e9.svg)](https://crowfoot.java21.net)
 [![MCP](https://img.shields.io/badge/MCP-Claude%20%C2%B7%20ChatGPT-f97316.svg)](https://crowfoot.java21.net/guide#20.1)
 
@@ -299,17 +299,18 @@ pnpm dev        # http://localhost:8080
 
 | バージョン | 日付 | 主な内容 | リリースノート |
 | --- | --- | --- | --- |
+| v1.33 | 2026-10-03 | サイト全体のデザイン統一（基本色・メニュー・タイトル）、利用ガイドの改善（同じ比率の画像・説明の補足・4言語の校正）、リリースノート33件の改善、ローカルでも無料DBの発行・回収 | [見る](https://crowfoot.java21.net/release-notes/35) |
 | v1.32 | 2026-10-03 | AI 連携の拡張(サンプルデータ投入、ドキュメントのアドレス案内、削除文は既定で除外)、要件のドメイン別整理(進捗・検索・エクスポート・受け入れ基準)、共有ドキュメント一覧・目次付きリリースノート、新しいスタートページ、新バージョンの案内 | [見る](https://crowfoot.java21.net/release-notes/34) |
 | v1.31 | 2026-10-02 | Claude 連携(MCP — ワークスペーストークンで Claude Code を接続、会話で要件・ERD を作成)、要件パネル(テーブルのリンク・反映待ち表示)、開くときの自動配置、接続ごとの MCP 反映許可 | [見る](https://crowfoot.java21.net/release-notes/33) |
 | v1.30 | 2026-10-02 | 用語とドメインタイプの連携、カラム名の候補を用語と単語に区分、標準パネルの統合、利用ガイド(4 言語の画面・検索) | [見る](https://crowfoot.java21.net/release-notes/32) |
 | v1.29 | 2026-10-02 | ドメインタイプ(共通の型定義・変更反映のプレビュー)、別のドキュメントへ貼り付け、リレーションのカラムマッピング編集、自動配置の向き | [見る](https://crowfoot.java21.net/release-notes/31) |
-| v1.28 | 2026-10-01 | データブラウザ(閲覧・絞り込み・並べ替え・CSV)、行の編集(まとめて一括適用・競合検知)、SQLコンソール(シンタックスハイライト・自動補完) | [見る](https://crowfoot.java21.net/release-notes/30) |
 
 <details>
-<summary>以前のバージョン(v1.08 ~ v1.27)</summary>
+<summary>以前のバージョン（v1.08 ～ v1.28）</summary>
 
 | バージョン | 日付 | 主な内容 | リリースノート |
 | --- | --- | --- | --- |
+| v1.28 | 2026-10-01 | データブラウザ(閲覧・絞り込み・並べ替え・CSV)、行の編集(まとめて一括適用・競合検知)、SQLコンソール(シンタックスハイライト・自動補完) | [見る](https://crowfoot.java21.net/release-notes/30) |
 | v1.27 | 2026-10-01 | 別のDBMSに複製、エディタツールバーの整理、ドキュメント一覧の操作メニュー、ランディング・ログイン画面の刷新 | [見る](https://crowfoot.java21.net/release-notes/29) |
 | v1.26 | 2026-09-30 | ドキュメントのDB接続、マイグレーションDDLのDB反映(実行時再計算・文ごとのレポート) | [見る](https://crowfoot.java21.net/release-notes/28) |
 | v1.25 | 2026-09-29 | ERDライブラリ公開(実務主題509種)、レイアウト間隔のバランス調整 | [見る](https://crowfoot.java21.net/release-notes/27) |
