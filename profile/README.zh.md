@@ -117,7 +117,7 @@ AI 生成的结果会原样显示在 Crowfoot 界面中，你在界面上修改�
 ### 其他
 
 - **4 种语言** — 韩语、英语、日语、中文界面和使用指南
-- **AI 集成（MCP）** — 20 种工具：读取和创建文档、应用需求和 schema、数据库签发·部署·迁移、示例数据。签发、部署和应用都会先展示计划，只执行你批准的部分。
+- **AI 集成（MCP）** — 21 种工具：读取和创建文档、应用需求和 schema、数据库签发·部署·迁移、示例数据、问题报告。签发、部署和应用都会先展示计划，只执行你批准的部分。
 - **管理控制台** — 用户、代码表、托管数据库实例、签发配额、审计日志、流量统计
 
 ## 架构
@@ -303,7 +303,7 @@ pnpm dev        # http://localhost:8080
 | **crowfoot-core-api** | Spring Web MVC · Spring Data JPA (Hibernate 7) · Querydsl 5.1 · Bean Validation · PostgreSQL/MySQL JDBC · Commons DBCP2 · MaxMind GeoIP2 | 领域的中心。用 JPA 存储会员、工作区和文档，列表、搜索之类的动态条件用 Querydsl 以类型安全的方式编写（关联查询用 fetch join 避免 N+1）。通过 JDBC 驱动读取用户的数据库并生成 ERD（逆向工程）、部署 DDL、签发免费数据库。GeoIP2 用于管理员流量统计中的按国家汇总 |
 | **crowfoot-collab** | Spring WebSocket · STOMP · RestClient | 实时协作服务器。为每个文档设一个 STOMP 房间，按顺序中继在线用户、光标和编辑变更。连接时通过 RestClient 向 auth 校验令牌、向 core 校验文档权限 |
 | **crowfoot-database-manager** | Spring Web MVC · JDBC (PostgreSQL·MySQL 驱动) · OpenFeign | 数据浏览器。自身没有数据库，每次请求都通过 JDBC 连接目标数据库，结束后即关闭。连接信息和权限通过 OpenFeign 向 core 查询。行编辑和示例数据在一个事务中写入 |
-| **crowfoot-mcp** | Spring AI 2.0 (MCP Server, WebMVC) · RestClient | Claude、ChatGPT 等 MCP 客户端的入口。通过 Spring AI 的 MCP 服务器（HTTP 传输）公开 20 种工具，并把工具调用转换为对 core、database-manager 内部 API 的调用。通过服务器说明（instructions）告诉 AI 应遵守的操作顺序和规则 |
+| **crowfoot-mcp** | Spring AI 2.0 (MCP Server, WebMVC) · RestClient | Claude、ChatGPT 等 MCP 客户端的入口。通过 Spring AI 的 MCP 服务器（HTTP 传输）公开 21 种工具，并把工具调用转换为对 core、database-manager 内部 API 的调用。通过服务器说明（instructions）告诉 AI 应遵守的操作顺序和规则 |
 
 ### 前端 (crowfoot-web)
 

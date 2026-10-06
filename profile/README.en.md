@@ -117,7 +117,7 @@ What the AI creates shows up in Crowfoot as is, and the AI reads back whatever y
 ### More
 
 - **Four languages** — Korean, English, Japanese and Chinese screens and user guide
-- **AI integration (MCP)** — 20 tools: reading and creating documents, applying requirements and schemas, issuing, deploying and migrating databases, and sample data. Issuing, deploying and applying show a plan first and run only what you approve.
+- **AI integration (MCP)** — 21 tools: reading and creating documents, applying requirements and schemas, issuing, deploying and migrating databases, sample data, and bug reports. Issuing, deploying and applying show a plan first and run only what you approve.
 - **Admin console** — Users, code tables, managed DB instances, issue quotas, audit logs and traffic analytics
 
 ## Architecture
@@ -303,7 +303,7 @@ The recommended order is auth → core-api → gateway → collab · database-ma
 | **crowfoot-core-api** | Spring Web MVC · Spring Data JPA (Hibernate 7) · Querydsl 5.1 · Bean Validation · PostgreSQL/MySQL JDBC · Commons DBCP2 · MaxMind GeoIP2 | The center of the domain. JPA stores members, workspaces and documents, and dynamic conditions such as lists and search are written type-safely with Querydsl (associations are loaded with fetch joins to prevent N+1 queries). Through JDBC drivers it reads users' databases into ERDs (reverse engineering), deploys DDL and issues free databases. GeoIP2 provides the per-country breakdown in the admin traffic analytics |
 | **crowfoot-collab** | Spring WebSocket · STOMP · RestClient | The real-time collaboration server. Each document has its own STOMP room, where presence, cursors and edits are relayed in order. On connect, it uses RestClient to check the token with auth and document permissions with core |
 | **crowfoot-database-manager** | Spring Web MVC · JDBC (PostgreSQL·MySQL drivers) · OpenFeign | The data browser. It has no database of its own: for each request it connects to the target database over JDBC and closes the connection when done. It asks core for connection info and permissions through OpenFeign. Row edits and sample data are applied in a single transaction |
-| **crowfoot-mcp** | Spring AI 2.0 (MCP Server, WebMVC) · RestClient | The entry point for MCP clients such as Claude and ChatGPT. It exposes 20 tools through Spring AI's MCP server (HTTP transport) and turns tool calls into internal API calls to core and database-manager. Its server instructions tell the AI the order of work and the rules to follow |
+| **crowfoot-mcp** | Spring AI 2.0 (MCP Server, WebMVC) · RestClient | The entry point for MCP clients such as Claude and ChatGPT. It exposes 21 tools through Spring AI's MCP server (HTTP transport) and turns tool calls into internal API calls to core and database-manager. Its server instructions tell the AI the order of work and the rules to follow |
 
 ### Frontend (crowfoot-web)
 

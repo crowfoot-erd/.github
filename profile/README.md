@@ -117,7 +117,7 @@ AI가 만든 결과는 Crowfoot 화면에 그대로 나타나고, 화면에서 �
 ### 그 밖에
 
 - **4개 언어** — 한국어·영어·일본어·중국어 화면과 사용 가이드
-- **AI 연동(MCP)** — 도구 20종: 문서 읽기·만들기, 요구사항·스키마 반영, DB 발급·배포·마이그레이션, 샘플 데이터. 발급·배포·반영은 계획을 먼저 보여 주고 승인한 것만 실행합니다.
+- **AI 연동(MCP)** — 도구 21종: 문서 읽기·만들기, 요구사항·스키마 반영, DB 발급·배포·마이그레이션, 샘플 데이터, 버그 신고. 발급·배포·반영은 계획을 먼저 보여 주고 승인한 것만 실행합니다.
 - **관리자 콘솔** — 사용자, 코드 테이블, 매니지드 DB 인스턴스, 발급 한도, 감사 로그, 트래픽 통계
 
 ## 아키텍처
@@ -303,7 +303,7 @@ pnpm dev        # http://localhost:8080
 | **crowfoot-core-api** | Spring Web MVC · Spring Data JPA (Hibernate 7) · Querydsl 5.1 · Bean Validation · PostgreSQL/MySQL JDBC · Commons DBCP2 · MaxMind GeoIP2 | 도메인의 중심입니다. JPA로 회원·워크스페이스·문서를 저장하고, 목록·검색 같은 동적 조건은 Querydsl로 타입 안전하게 씁니다(연관 조회는 fetch join으로 N+1을 막습니다). JDBC 드라이버로 사용자의 데이터베이스를 읽어 ERD로 만들고(역설계), DDL을 배포하고, 무료 데이터베이스를 발급합니다. GeoIP2는 관리자 트래픽 통계의 국가 집계에 씁니다 |
 | **crowfoot-collab** | Spring WebSocket · STOMP · RestClient | 실시간 협업 서버입니다. 문서마다 STOMP 방을 두고 접속자, 커서, 편집 변경을 순서대로 중계합니다. 접속할 때 RestClient로 auth에 토큰을, core에 문서 권한을 확인합니다 |
 | **crowfoot-database-manager** | Spring Web MVC · JDBC (PostgreSQL·MySQL 드라이버) · OpenFeign | 데이터 브라우저입니다. 자체 DB 없이 요청마다 대상 DB에 JDBC로 접속하고 끝나면 닫습니다. 접속 정보와 권한은 OpenFeign으로 core에 묻습니다. 행 편집과 샘플 데이터는 한 트랜잭션으로 넣습니다 |
-| **crowfoot-mcp** | Spring AI 2.0 (MCP Server, WebMVC) · RestClient | Claude·ChatGPT 같은 MCP 클라이언트의 진입점입니다. Spring AI의 MCP 서버(HTTP 전송)로 도구 20종을 공개하고, 도구 호출을 core·database-manager의 내부 API 호출로 옮깁니다. 서버 안내문(instructions)으로 AI가 지킬 작업 순서와 규칙을 알려 줍니다 |
+| **crowfoot-mcp** | Spring AI 2.0 (MCP Server, WebMVC) · RestClient | Claude·ChatGPT 같은 MCP 클라이언트의 진입점입니다. Spring AI의 MCP 서버(HTTP 전송)로 도구 21종을 공개하고, 도구 호출을 core·database-manager의 내부 API 호출로 옮깁니다. 서버 안내문(instructions)으로 AI가 지킬 작업 순서와 규칙을 알려 줍니다 |
 
 ### 프론트엔드 (crowfoot-web)
 
