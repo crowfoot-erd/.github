@@ -11,7 +11,7 @@
 요구사항 → ERD → 실제 데이터베이스 → 데이터까지, 브라우저 하나로 잇는 오픈소스 ERD 플랫폼
 
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
-[![Release](https://img.shields.io/badge/release-v1.33-10b981.svg)](https://crowfoot.java21.net/release-notes/35)
+[![Release](https://img.shields.io/badge/release-v1.34-10b981.svg)](https://crowfoot.java21.net/release-notes/38)
 [![Live](https://img.shields.io/badge/live-crowfoot.java21.net-0ea5e9.svg)](https://crowfoot.java21.net)
 [![MCP](https://img.shields.io/badge/MCP-Claude%20%C2%B7%20ChatGPT-f97316.svg)](https://crowfoot.java21.net/guide#20.1)
 
@@ -355,17 +355,18 @@ pnpm dev        # http://localhost:8080
 
 | 버전 | 날짜 | 주요 내용 | 릴리스 노트 |
 | --- | --- | --- | --- |
+| v1.34 | 2026-10-06 | 배포 SQL 수정(문자열 기본값 따옴표·VARBINARY 길이), CHECK 제약·생성 컬럼·전문 검색 인덱스, 검증 경고의 의도된 예외, 제안 및 신고 알림, MCP 버그 신고 | [보기](https://crowfoot.java21.net/release-notes/38) |
 | v1.33 | 2026-10-03 | 사이트 디자인 통일(기본색·메뉴·제목), 사용 가이드 다듬기(같은 배율의 그림·설명 보강·4개 언어 교정), 릴리스 노트 33건 다듬기, 로컬에서도 무료 DB 발급·철회 | [보기](https://crowfoot.java21.net/release-notes/35) |
 | v1.32 | 2026-10-03 | AI 연동 확장(샘플 데이터 넣기, 문서 주소 안내, 삭제 문장 기본 제외), 요구사항 도메인별 정리(진행·찾기·내보내기·수용 기준), 공유 문서 목록·릴리스 노트 목차 화면, 새 첫 화면, 새 버전 안내 | [보기](https://crowfoot.java21.net/release-notes/34) |
 | v1.31 | 2026-10-02 | Claude 연동(MCP — 워크스페이스 토큰으로 Claude Code 연결, 대화로 요구사항·ERD 작성), 요구사항 패널(테이블 연결·반영 대기 표시), 열 때 자동 배치, 커넥션별 MCP 반영 허용 | [보기](https://crowfoot.java21.net/release-notes/33) |
 | v1.30 | 2026-10-02 | 용어와 도메인 타입 연결, 컬럼 이름 제안을 용어·단어로 구분, 표준 패널 통합, 사용 가이드(4개 언어 화면·찾기) | [보기](https://crowfoot.java21.net/release-notes/32) |
-| v1.29 | 2026-10-02 | 도메인 타입(공용 타입 정의·변경 전파 미리보기), 다른 문서로 붙여넣기, 관계의 컬럼 매핑 편집, 자동 배치 방향 | [보기](https://crowfoot.java21.net/release-notes/31) |
 
 <details>
-<summary>이전 버전 (v1.08 ~ v1.28)</summary>
+<summary>이전 버전 (v1.08 ~ v1.29)</summary>
 
 | 버전 | 날짜 | 주요 내용 | 릴리스 노트 |
 | --- | --- | --- | --- |
+| v1.29 | 2026-10-02 | 도메인 타입(공용 타입 정의·변경 전파 미리보기), 다른 문서로 붙여넣기, 관계의 컬럼 매핑 편집, 자동 배치 방향 | [보기](https://crowfoot.java21.net/release-notes/31) |
 | v1.28 | 2026-10-01 | 데이터 브라우저(조회·필터·정렬·CSV), 행 편집(모아서 적용·충돌 감지), SQL 콘솔(문법 강조·자동 완성) | [보기](https://crowfoot.java21.net/release-notes/30) |
 | v1.27 | 2026-10-01 | 다른 DBMS로 복제, 에디터 도구 모음 정리, 문서 목록 작업 메뉴, 랜딩·로그인 화면 개편 | [보기](https://crowfoot.java21.net/release-notes/29) |
 | v1.26 | 2026-09-30 | 문서-데이터베이스 연결, 마이그레이션 DDL DB 반영(실행 시점 재계산·문장별 리포트) | [보기](https://crowfoot.java21.net/release-notes/28) |
