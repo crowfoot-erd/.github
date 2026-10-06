@@ -11,7 +11,7 @@
 要件 → ERD → 本物のデータベース → データまで、ブラウザひとつでつなぐオープンソースの ERD プラットフォーム
 
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
-[![Release](https://img.shields.io/badge/release-v1.34-10b981.svg)](https://crowfoot.java21.net/release-notes/38)
+[![Release](https://img.shields.io/badge/release-v1.35-10b981.svg)](https://crowfoot.java21.net/release-notes/40)
 [![Live](https://img.shields.io/badge/live-crowfoot.java21.net-0ea5e9.svg)](https://crowfoot.java21.net)
 [![MCP](https://img.shields.io/badge/MCP-Claude%20%C2%B7%20ChatGPT-f97316.svg)](https://crowfoot.java21.net/guide#20.1)
 
@@ -117,7 +117,7 @@ AI が作った結果はそのまま Crowfoot の画面に表示され、画面�
 ### その他
 
 - **4 言語** — 韓国語・英語・日本語・中国語の画面と利用ガイド
-- **AI 連携(MCP)** — ツール 21 種類: ドキュメントの読み取り・作成、要件・スキーマの反映、DB の発行・デプロイ・マイグレーション、サンプルデータ、バグ報告。発行・デプロイ・反映はまず計画を示し、承認したものだけを実行します。
+- **AI 連携(MCP)** — ツール 23 種類: ドキュメントの読み取り・作成、要件・スキーマの反映、DB の発行・デプロイ・マイグレーション、DB 構造のドキュメントへの同期、サンプルデータ、バグ報告。発行・デプロイ・反映はまず計画を示し、承認したものだけを実行します。
 - **管理コンソール** — ユーザー、コードテーブル、マネージド DB インスタンス、発行上限、監査ログ、トラフィック統計
 
 ## アーキテクチャ
@@ -303,7 +303,7 @@ pnpm dev        # http://localhost:8080
 | **crowfoot-core-api** | Spring Web MVC · Spring Data JPA (Hibernate 7) · Querydsl 5.1 · Bean Validation · PostgreSQL/MySQL JDBC · Commons DBCP2 · MaxMind GeoIP2 | ドメインの中心です。JPA で会員・ワークスペース・ドキュメントを保存し、一覧・検索のような動的な条件は Querydsl で型安全に書きます(関連の取得は fetch join で N+1 を防ぎます)。JDBC ドライバーでユーザーのデータベースを読み取って ERD にし(リバースエンジニアリング)、DDL をデプロイし、無料のデータベースを発行します。GeoIP2 は管理者向けトラフィック統計の国別集計に使います |
 | **crowfoot-collab** | Spring WebSocket · STOMP · RestClient | リアルタイムコラボレーションサーバーです。ドキュメントごとに STOMP のルームを設け、接続状況・カーソル・編集内容を順番に中継します。接続時に RestClient で auth にトークンを、core にドキュメントの権限を確認します |
 | **crowfoot-database-manager** | Spring Web MVC · JDBC (PostgreSQL·MySQL ドライバー) · OpenFeign | データブラウザです。自前の DB を持たず、リクエストごとに対象の DB へ JDBC で接続し、終わったら閉じます。接続情報と権限は OpenFeign で core に問い合わせます。行の編集とサンプルデータは 1 つのトランザクションで投入します |
-| **crowfoot-mcp** | Spring AI 2.0 (MCP Server, WebMVC) · RestClient | Claude・ChatGPT のような MCP クライアントの入口です。Spring AI の MCP サーバー(HTTP トランスポート)で 21 種類のツールを公開し、ツール呼び出しを core・database-manager の内部 API 呼び出しに変換します。サーバーの案内文(instructions)で、AI が守るべき作業の順序とルールを伝えます |
+| **crowfoot-mcp** | Spring AI 2.0 (MCP Server, WebMVC) · RestClient | Claude・ChatGPT のような MCP クライアントの入口です。Spring AI の MCP サーバー(HTTP トランスポート)で 23 種類のツールを公開し、ツール呼び出しを core・database-manager の内部 API 呼び出しに変換します。サーバーの案内文(instructions)で、AI が守るべき作業の順序とルールを伝えます |
 
 ### フロントエンド (crowfoot-web)
 
@@ -355,17 +355,18 @@ pnpm dev        # http://localhost:8080
 
 | バージョン | 日付 | 主な内容 | リリースノート |
 | --- | --- | --- | --- |
+| v1.35 | 2026-10-06 | エディター内のデータタブ、外部キーをたどる・生成列、構造タブでドキュメントと比較、変更された要件の反映、マイグレーションの名前変更（RENAME）、MCP の DB 同期 | [見る](https://crowfoot.java21.net/release-notes/40) |
 | v1.34 | 2026-10-06 | デプロイSQLの修正（文字列デフォルト値の引用符・VARBINARYの長さ）、CHECK制約・生成列・全文検索インデックス、検証の警告を意図した例外に、フィードバック通知、MCPのバグ報告 | [見る](https://crowfoot.java21.net/release-notes/38) |
 | v1.33 | 2026-10-03 | サイト全体のデザイン統一（基本色・メニュー・タイトル）、利用ガイドの改善（同じ比率の画像・説明の補足・4言語の校正）、リリースノート33件の改善、ローカルでも無料DBの発行・回収 | [見る](https://crowfoot.java21.net/release-notes/35) |
 | v1.32 | 2026-10-03 | AI 連携の拡張(サンプルデータ投入、ドキュメントのアドレス案内、削除文は既定で除外)、要件のドメイン別整理(進捗・検索・エクスポート・受け入れ基準)、共有ドキュメント一覧・目次付きリリースノート、新しいスタートページ、新バージョンの案内 | [見る](https://crowfoot.java21.net/release-notes/34) |
 | v1.31 | 2026-10-02 | Claude 連携(MCP — ワークスペーストークンで Claude Code を接続、会話で要件・ERD を作成)、要件パネル(テーブルのリンク・反映待ち表示)、開くときの自動配置、接続ごとの MCP 反映許可 | [見る](https://crowfoot.java21.net/release-notes/33) |
-| v1.30 | 2026-10-02 | 用語とドメインタイプの連携、カラム名の候補を用語と単語に区分、標準パネルの統合、利用ガイド(4 言語の画面・検索) | [見る](https://crowfoot.java21.net/release-notes/32) |
 
 <details>
-<summary>以前のバージョン（v1.08 ～ v1.29）</summary>
+<summary>以前のバージョン（v1.08 ～ v1.30）</summary>
 
 | バージョン | 日付 | 主な内容 | リリースノート |
 | --- | --- | --- | --- |
+| v1.30 | 2026-10-02 | 用語とドメインタイプの連携、カラム名の候補を用語と単語に区分、標準パネルの統合、利用ガイド(4 言語の画面・検索) | [見る](https://crowfoot.java21.net/release-notes/32) |
 | v1.29 | 2026-10-02 | ドメインタイプ(共通の型定義・変更反映のプレビュー)、別のドキュメントへ貼り付け、リレーションのカラムマッピング編集、自動配置の向き | [見る](https://crowfoot.java21.net/release-notes/31) |
 | v1.28 | 2026-10-01 | データブラウザ(閲覧・絞り込み・並べ替え・CSV)、行の編集(まとめて一括適用・競合検知)、SQLコンソール(シンタックスハイライト・自動補完) | [見る](https://crowfoot.java21.net/release-notes/30) |
 | v1.27 | 2026-10-01 | 別のDBMSに複製、エディタツールバーの整理、ドキュメント一覧の操作メニュー、ランディング・ログイン画面の刷新 | [見る](https://crowfoot.java21.net/release-notes/29) |

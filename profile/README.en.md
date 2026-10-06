@@ -11,7 +11,7 @@
 An open-source ERD platform that takes you from requirements → ERD → a real database → data, all in one browser
 
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
-[![Release](https://img.shields.io/badge/release-v1.34-10b981.svg)](https://crowfoot.java21.net/release-notes/38)
+[![Release](https://img.shields.io/badge/release-v1.35-10b981.svg)](https://crowfoot.java21.net/release-notes/40)
 [![Live](https://img.shields.io/badge/live-crowfoot.java21.net-0ea5e9.svg)](https://crowfoot.java21.net)
 [![MCP](https://img.shields.io/badge/MCP-Claude%20%C2%B7%20ChatGPT-f97316.svg)](https://crowfoot.java21.net/guide#20.1)
 
@@ -117,7 +117,7 @@ What the AI creates shows up in Crowfoot as is, and the AI reads back whatever y
 ### More
 
 - **Four languages** — Korean, English, Japanese and Chinese screens and user guide
-- **AI integration (MCP)** — 21 tools: reading and creating documents, applying requirements and schemas, issuing, deploying and migrating databases, sample data, and bug reports. Issuing, deploying and applying show a plan first and run only what you approve.
+- **AI integration (MCP)** — 23 tools: reading and creating documents, applying requirements and schemas, issuing, deploying and migrating databases, syncing database structure into documents, sample data, and bug reports. Issuing, deploying and applying show a plan first and run only what you approve.
 - **Admin console** — Users, code tables, managed DB instances, issue quotas, audit logs and traffic analytics
 
 ## Architecture
@@ -303,7 +303,7 @@ The recommended order is auth → core-api → gateway → collab · database-ma
 | **crowfoot-core-api** | Spring Web MVC · Spring Data JPA (Hibernate 7) · Querydsl 5.1 · Bean Validation · PostgreSQL/MySQL JDBC · Commons DBCP2 · MaxMind GeoIP2 | The center of the domain. JPA stores members, workspaces and documents, and dynamic conditions such as lists and search are written type-safely with Querydsl (associations are loaded with fetch joins to prevent N+1 queries). Through JDBC drivers it reads users' databases into ERDs (reverse engineering), deploys DDL and issues free databases. GeoIP2 provides the per-country breakdown in the admin traffic analytics |
 | **crowfoot-collab** | Spring WebSocket · STOMP · RestClient | The real-time collaboration server. Each document has its own STOMP room, where presence, cursors and edits are relayed in order. On connect, it uses RestClient to check the token with auth and document permissions with core |
 | **crowfoot-database-manager** | Spring Web MVC · JDBC (PostgreSQL·MySQL drivers) · OpenFeign | The data browser. It has no database of its own: for each request it connects to the target database over JDBC and closes the connection when done. It asks core for connection info and permissions through OpenFeign. Row edits and sample data are applied in a single transaction |
-| **crowfoot-mcp** | Spring AI 2.0 (MCP Server, WebMVC) · RestClient | The entry point for MCP clients such as Claude and ChatGPT. It exposes 21 tools through Spring AI's MCP server (HTTP transport) and turns tool calls into internal API calls to core and database-manager. Its server instructions tell the AI the order of work and the rules to follow |
+| **crowfoot-mcp** | Spring AI 2.0 (MCP Server, WebMVC) · RestClient | The entry point for MCP clients such as Claude and ChatGPT. It exposes 23 tools through Spring AI's MCP server (HTTP transport) and turns tool calls into internal API calls to core and database-manager. Its server instructions tell the AI the order of work and the rules to follow |
 
 ### Frontend (crowfoot-web)
 
@@ -355,17 +355,18 @@ Every version ships with [release notes](https://crowfoot.java21.net/release-not
 
 | Version | Date | Highlights | Release notes |
 | --- | --- | --- | --- |
+| v1.35 | 2026-10-06 | Data tab inside the editor, following foreign keys and generated columns, comparing with the document in the structure tab, changed requirements through to the database, renames in migrations (RENAME), MCP database sync | [View](https://crowfoot.java21.net/release-notes/40) |
 | v1.34 | 2026-10-06 | Deployment SQL fixes (quoted string defaults, VARBINARY length), CHECK constraints, generated columns, full-text indexes, validation warnings as intended exceptions, Feedback notifications, MCP bug reports | [View](https://crowfoot.java21.net/release-notes/38) |
 | v1.33 | 2026-10-03 | One design across the site (primary color, menus, titles), polished user guide (same-scale images, expanded explanations, four-language edits), 33 release notes rewritten, free DBs can be issued and revoked locally too | [View](https://crowfoot.java21.net/release-notes/35) |
 | v1.32 | 2026-10-03 | AI integration extended (sample data, document links, drop statements skipped by default), requirements organized by domain (progress, search, export, acceptance criteria), shared documents list and release notes with a table of contents, new start page, new-version notice | [View](https://crowfoot.java21.net/release-notes/34) |
 | v1.31 | 2026-10-02 | Claude integration (MCP — connect Claude Code with a workspace token, build requirements and ERDs through conversation), requirements panel (linked tables, pending status), automatic placement on open, per-connection Allow MCP apply | [View](https://crowfoot.java21.net/release-notes/33) |
-| v1.30 | 2026-10-02 | Terms linked to domain types, column name suggestions split into terms and words, one standards panel, user guide (screenshots in four languages, search) | [View](https://crowfoot.java21.net/release-notes/32) |
 
 <details>
-<summary>Earlier versions (v1.08 – v1.29)</summary>
+<summary>Earlier versions (v1.08 – v1.30)</summary>
 
 | Version | Date | Highlights | Release notes |
 | --- | --- | --- | --- |
+| v1.30 | 2026-10-02 | Terms linked to domain types, column name suggestions split into terms and words, one standards panel, user guide (screenshots in four languages, search) | [View](https://crowfoot.java21.net/release-notes/32) |
 | v1.29 | 2026-10-02 | Domain types (shared type definitions, previewed propagation of changes), paste into another document, editing a relationship's column mapping, auto layout direction | [View](https://crowfoot.java21.net/release-notes/31) |
 | v1.28 | 2026-10-01 | Data browser (browse, filter, sort, CSV), row editing (collected and applied at once, conflict detection), SQL console (syntax highlighting, autocomplete) | [View](https://crowfoot.java21.net/release-notes/30) |
 | v1.27 | 2026-10-01 | Duplicate for another DBMS, tidier editor toolbar, document list actions menu, refreshed landing and sign-in pages | [View](https://crowfoot.java21.net/release-notes/29) |
