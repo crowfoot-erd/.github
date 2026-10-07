@@ -11,7 +11,7 @@
 An open-source ERD platform that takes you from requirements → ERD → a real database → data, all in one browser
 
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
-[![Release](https://img.shields.io/badge/release-v1.36-10b981.svg)](https://crowfoot.java21.net/release-notes/42)
+[![Release](https://img.shields.io/badge/release-v1.37-10b981.svg)](https://crowfoot.java21.net/release-notes/46)
 [![Live](https://img.shields.io/badge/live-crowfoot.java21.net-0ea5e9.svg)](https://crowfoot.java21.net)
 [![MCP](https://img.shields.io/badge/MCP-Claude%20%C2%B7%20ChatGPT-f97316.svg)](https://crowfoot.java21.net/guide#20.1)
 
@@ -124,7 +124,7 @@ What the AI creates shows up in Crowfoot as is, and the AI reads back whatever y
 
 Crowfoot is made of seven microservices. Every HTTP request from outside goes through the API gateway, and services talk to each other only through internal calls inside the cluster.
 
-![Crowfoot architecture — browser and MCP clients, nginx, seven services in Kubernetes, data stores, and the delivery pipeline](architecture.svg)
+![Crowfoot architecture — browser and MCP clients, four public hosts on nginx, seven services in Kubernetes (stack, versions, replicas, ports, memory), data stores, and the GitOps delivery pipeline](architecture.svg)
 
 ### Services
 
@@ -355,17 +355,18 @@ Every version ships with [release notes](https://crowfoot.java21.net/release-not
 
 | Version | Date | Highlights | Release notes |
 | --- | --- | --- | --- |
+| v1.37 | 2026-10-07 | Smoother table dragging, relationship lines on all four sides and best-of-candidates auto layout, PostgreSQL special indexes (GIN, expression, partial, INCLUDE, operator class) and IDENTITY kind, Suggestions & Reports notifications fixed | [View](https://crowfoot.java21.net/release-notes/46) |
 | v1.36 | 2026-10-06 | Checking acceptance criteria with data, requirement sync (MCP), lighter data browsing (keyset paging, may-be-slow notice) | [View](https://crowfoot.java21.net/release-notes/42) |
 | v1.35 | 2026-10-06 | Data tab inside the editor, following foreign keys and generated columns, comparing with the document in the structure tab, changed requirements through to the database, renames in migrations (RENAME), MCP database sync | [View](https://crowfoot.java21.net/release-notes/40) |
 | v1.34 | 2026-10-06 | Deployment SQL fixes (quoted string defaults, VARBINARY length), CHECK constraints, generated columns, full-text indexes, validation warnings as intended exceptions, Feedback notifications, MCP bug reports | [View](https://crowfoot.java21.net/release-notes/38) |
 | v1.33 | 2026-10-03 | One design across the site (primary color, menus, titles), polished user guide (same-scale images, expanded explanations, four-language edits), 33 release notes rewritten, free DBs can be issued and revoked locally too | [View](https://crowfoot.java21.net/release-notes/35) |
-| v1.32 | 2026-10-03 | AI integration extended (sample data, document links, drop statements skipped by default), requirements organized by domain (progress, search, export, acceptance criteria), shared documents list and release notes with a table of contents, new start page, new-version notice | [View](https://crowfoot.java21.net/release-notes/34) |
 
 <details>
-<summary>Earlier versions (v1.08 – v1.31)</summary>
+<summary>Earlier versions (v1.08 – v1.32)</summary>
 
 | Version | Date | Highlights | Release notes |
 | --- | --- | --- | --- |
+| v1.32 | 2026-10-03 | AI integration extended (sample data, document links, drop statements skipped by default), requirements organized by domain (progress, search, export, acceptance criteria), shared documents list and release notes with a table of contents, new start page, new-version notice | [View](https://crowfoot.java21.net/release-notes/34) |
 | v1.31 | 2026-10-02 | Claude integration (MCP — connect Claude Code with a workspace token, build requirements and ERDs through conversation), requirements panel (linked tables, pending status), automatic placement on open, per-connection Allow MCP apply | [View](https://crowfoot.java21.net/release-notes/33) |
 | v1.30 | 2026-10-02 | Terms linked to domain types, column name suggestions split into terms and words, one standards panel, user guide (screenshots in four languages, search) | [View](https://crowfoot.java21.net/release-notes/32) |
 | v1.29 | 2026-10-02 | Domain types (shared type definitions, previewed propagation of changes), paste into another document, editing a relationship's column mapping, auto layout direction | [View](https://crowfoot.java21.net/release-notes/31) |
