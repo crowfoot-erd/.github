@@ -11,7 +11,7 @@
 요구사항 → ERD → 실제 데이터베이스 → 데이터까지, 브라우저 하나로 잇는 오픈소스 ERD 플랫폼
 
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
-[![Release](https://img.shields.io/badge/release-v1.39-10b981.svg)](https://crowfoot.java21.net/release-notes/49)
+[![Release](https://img.shields.io/badge/release-v1.40-10b981.svg)](https://crowfoot.java21.net/release-notes/51)
 [![Live](https://img.shields.io/badge/live-crowfoot.java21.net-0ea5e9.svg)](https://crowfoot.java21.net)
 [![MCP](https://img.shields.io/badge/MCP-Claude%20%C2%B7%20ChatGPT-f97316.svg)](https://crowfoot.java21.net/guide#20.1)
 
@@ -118,13 +118,14 @@ AI가 만든 결과는 Crowfoot 화면에 그대로 나타나고, 화면에서 �
 
 - **4개 언어** — 한국어·영어·일본어·중국어 화면과 사용 가이드
 - **AI 연동(MCP)** — 도구 26종: 문서 읽기·만들기, 요구사항·스키마 반영·동기화, 수용 기준 데이터 확인, DB 발급·배포·마이그레이션, DB → 문서 동기화, 샘플 데이터, 버그 신고. 발급·배포·반영은 계획을 먼저 보여 주고 승인한 것만 실행합니다.
+- **사이트 쇼케이스** — ERD로 만든 사이트를 문서에 등록하면 썸네일과 함께 첫 화면과 `/showcase`에 소개됩니다. 썸네일은 캡처 서비스가 만듭니다.
 - **관리자 콘솔** — 사용자, 코드 테이블, 매니지드 DB 인스턴스, 발급 한도, 감사 로그, 트래픽 통계
 
 ## 아키텍처
 
-Crowfoot은 서비스 7개로 이루어진 마이크로서비스입니다. 밖에서 들어오는 HTTP 요청은 모두 API 게이트웨이를 지나고, 서비스끼리는 클러스터 안의 내부 호출로만 이어집니다.
+Crowfoot은 서비스 8개로 이루어진 마이크로서비스입니다. 밖에서 들어오는 HTTP 요청은 모두 API 게이트웨이를 지나고, 서비스끼리는 클러스터 안의 내부 호출로만 이어집니다.
 
-![Crowfoot 아키텍처 — 브라우저와 MCP 클라이언트, nginx의 공개 호스트 4개, 쿠버네티스 안의 서비스 7개(스택·버전·레플리카·포트·메모리), 데이터 저장소, GitOps 배포 파이프라인](architecture.svg)
+![Crowfoot 아키텍처 — 브라우저와 MCP 클라이언트, nginx의 공개 호스트 4개, 쿠버네티스 안의 서비스 8개(스택·버전·레플리카·포트·메모리), 데이터 저장소, GitOps 배포 파이프라인](architecture.svg)
 
 ### 서비스
 
@@ -133,10 +134,11 @@ Crowfoot은 서비스 7개로 이루어진 마이크로서비스입니다. 밖�
 | **crowfoot-web** | React SPA. 에디터, 대시보드, 관리자 콘솔, 공개 페이지 | — | gateway, collab |
 | **crowfoot-api-gateway** | 모든 HTTP 요청의 입구. 경로·호스트로 라우팅, 토큰 확인, 공개 경로 허용 목록, 사용자 식별 헤더(`X-USER-ID` 등) 주입 | — | auth |
 | **crowfoot-auth** | GitHub·Google OAuth2 로그인(PKCE), JWT 발급·갱신, 토큰 확인(introspection), 로그아웃 블랙리스트 | Redis | core(회원·워크스페이스 토큰) |
-| **crowfoot-core-api** | 도메인의 중심. 회원·워크스페이스·팀·문서·요구사항·댓글, SQL 생성·배포·역설계·마이그레이션, 매니지드 DB 발급, 감사 로그 | PostgreSQL | 매니지드 DB 인스턴스, 사용자 DB |
+| **crowfoot-core-api** | 도메인의 중심. 회원·워크스페이스·팀·문서·요구사항·댓글, SQL 생성·배포·역설계·마이그레이션, 매니지드 DB 발급, 감사 로그 | PostgreSQL | 매니지드 DB 인스턴스, 사용자 DB, capture |
 | **crowfoot-collab** | 실시간 협업. WebSocket(STOMP) 방에서 접속 현황과 편집 변경을 중계 | 메모리 | auth, core |
 | **crowfoot-database-manager** | 데이터 브라우저. 조회·행 편집·SQL 콘솔·샘플 데이터. 자체 DB 없이 요청마다 접속 | — | core(권한·접속 정보) |
 | **crowfoot-mcp** | MCP 서버. Claude·ChatGPT의 도구 호출을 core·DB 매니저 호출로 옮김 | — | core, database-manager |
+| **crowfoot-capture** | 캡처 서비스. 사이트 주소를 헤드리스 Chromium으로 열어 800×500 JPEG 썸네일과 메타데이터(제목·설명·사이트 이름·파비콘)를 돌려줌. 게이트웨이 경로 없이 core에서만 호출 | — (썸네일은 core가 저장) | — |
 
 ### 요청 흐름
 
@@ -200,6 +202,7 @@ sequenceDiagram
 - **권한 판정은 코어에서** — 다른 서비스는 권한을 스스로 판단하지 않고 코어 API에 묻습니다. 다른 사람의 리소스는 404로 존재 자체를 감춥니다.
 - **발급 계정 격리** — 매니지드 DB는 발급마다 그 스키마에만 권한이 있는 계정을 만들고, 철회하면 스키마와 계정을 함께 지웁니다.
 - **내부 주소 접속** — 운영 환경의 서버는 매니지드 DB에 클러스터 안의 내부 주소로 접속합니다. 사용자에게는 외부에서 쓸 수 있는 주소를 보여 줍니다.
+- **사설망 차단(SSRF)** — 캡처 서비스는 캡처마다 루프백에 검사 프록시를 띄워 브라우저 연결을 모두 거기로 보냅니다. 호스트를 직접 풀어 사설·루프백·링크 로컬·CGNAT·IPv6 ULA 주소를 거절하고, 확인한 IP로만 접속해 DNS 리바인딩도 막습니다.
 - **감사 로그** — 발급·철회·배포·마이그레이션·접속 정보 조회 같은 중요한 작업을 기록합니다.
 
 ### 배포
@@ -217,6 +220,7 @@ GitOps로 배포합니다. 서비스 저장소의 `main`에 올리면 GitHub Act
 | [crowfoot-collab](https://github.com/crowfoot-erd/crowfoot-collab) | 협업 서버 — WebSocket(STOMP). 문서별 접속 현황과 편집 변경의 실시간 중계 |
 | [crowfoot-database-manager](https://github.com/crowfoot-erd/crowfoot-database-manager) | DB 매니저 — 데이터 조회·행 편집·SQL 콘솔·샘플 데이터. 자체 DB 없이 요청마다 접속하고 권한은 코어 API에 묻습니다 |
 | [crowfoot-mcp](https://github.com/crowfoot-erd/crowfoot-mcp) | MCP 서버 — Spring AI MCP. 요구사항·ERD 읽기와 쓰기, DB 발급·배포·마이그레이션, 샘플 데이터를 도구로 제공 |
+| [crowfoot-capture](https://github.com/crowfoot-erd/crowfoot-capture) | 캡처 서비스 — Playwright(헤드리스 Chromium). 사이트 쇼케이스에 쓸 썸네일과 메타데이터를 만듭니다. 코어 API에서만 호출하는 내부 전용 서비스이고, 사설망 주소는 막습니다 |
 
 ## 직접 실행하기
 
@@ -224,7 +228,7 @@ GitOps로 배포합니다. 서비스 저장소의 `main`에 올리면 GitHub Act
 
 | 도구 | 버전 | 쓰는 곳 |
 | --- | --- | --- |
-| Java (Temurin) | 21 | 서버 6종 |
+| Java (Temurin) | 21 | 서버 7종 |
 | Maven | 3.9 이상 | 서버 빌드·실행 |
 | Node.js / pnpm | 20.19 이상 / 10 | 프론트엔드 |
 | PostgreSQL | 16 이상 | 서비스 DB (`crowfoot` 데이터베이스, `crowfoot_core` 스키마) |
@@ -243,6 +247,7 @@ GitOps로 배포합니다. 서비스 저장소의 `main`에 올리면 GitHub Act
 | crowfoot-collab | 8083 | WebSocket — 게이트웨이를 거치지 않고 직접 붙습니다 |
 | crowfoot-database-manager | 8084 | |
 | crowfoot-mcp | 8085 | |
+| crowfoot-capture | 8086 | 사이트 쇼케이스를 등록할 때만 필요합니다. 처음 한 번 Chromium을 설치합니다 — 저장소 README 참고 |
 
 ### 환경변수
 
@@ -273,7 +278,7 @@ OAuth 앱에는 리디렉션 URI로 `http://localhost:8080/auth/callback`을 등
 ### 실행
 
 ```bash
-# 서버 6종 — 각 저장소에서 (로컬 프로필이 기본)
+# 서버 7종 — 각 저장소에서 (로컬 프로필이 기본)
 mvn spring-boot:run
 
 # 프론트엔드
@@ -289,8 +294,8 @@ pnpm dev        # http://localhost:8080
 
 | 기술 | 버전 | 쓰는 곳 | 왜·무엇을 |
 | --- | --- | --- | --- |
-| Java | 21 | 서버 6종 | LTS 버전. 레코드, 패턴 매칭, 가상 스레드를 쓸 수 있는 현재 기준 |
-| Spring Boot | 4.1 | 서버 6종 | 서버마다 같은 버전으로 맞춰 설정·로깅·헬스 체크(Actuator) 방식을 통일합니다. 쿠버네티스는 Actuator 헬스 체크로 서버 상태를 확인합니다 |
+| Java | 21 | 서버 7종 | LTS 버전. 레코드, 패턴 매칭, 가상 스레드를 쓸 수 있는 현재 기준 |
+| Spring Boot | 4.1 | 서버 7종 | 서버마다 같은 버전으로 맞춰 설정·로깅·헬스 체크(Actuator) 방식을 통일합니다. 쿠버네티스는 Actuator 헬스 체크로 서버 상태를 확인합니다 |
 | Spring Cloud | 2025.1 | gateway, auth, database-manager | 게이트웨이와 서비스 간 호출(OpenFeign, LoadBalancer)의 버전을 한 묶음으로 관리합니다 |
 | Lombok | — | 서버 | 생성자·접근자 같은 반복 코드를 줄입니다 |
 
@@ -304,6 +309,7 @@ pnpm dev        # http://localhost:8080
 | **crowfoot-collab** | Spring WebSocket · STOMP · RestClient | 실시간 협업 서버입니다. 문서마다 STOMP 방을 두고 접속자, 커서, 편집 변경을 순서대로 중계합니다. 접속할 때 RestClient로 auth에 토큰을, core에 문서 권한을 확인합니다 |
 | **crowfoot-database-manager** | Spring Web MVC · JDBC (PostgreSQL·MySQL 드라이버) · OpenFeign | 데이터 브라우저입니다. 자체 DB 없이 요청마다 대상 DB에 JDBC로 접속하고 끝나면 닫습니다. 접속 정보와 권한은 OpenFeign으로 core에 묻습니다. 행 편집과 샘플 데이터는 한 트랜잭션으로 넣습니다 |
 | **crowfoot-mcp** | Spring AI 2.0 (MCP Server, WebMVC) · RestClient | Claude·ChatGPT 같은 MCP 클라이언트의 진입점입니다. Spring AI의 MCP 서버(HTTP 전송)로 도구 26종을 공개하고, 도구 호출을 core·database-manager의 내부 API 호출로 옮깁니다. 서버 안내문(instructions)으로 AI가 지킬 작업 순서와 규칙을 알려 줍니다 |
+| **crowfoot-capture** | Spring Web MVC · Playwright for Java 1.63 (Chromium headless shell) · java.awt ImageIO | 사이트 쇼케이스의 썸네일을 만드는 내부 서비스입니다. core가 넘긴 주소를 헤드리스 Chromium으로 열어 화면을 찍고, ImageIO로 800×500 JPEG로 줄이며 제목·설명·사이트 이름·파비콘을 함께 읽습니다. 동시 캡처는 2개, 한 번에 20초까지이고, 브라우저 연결은 모두 사설망 주소를 막는 검사 프록시를 지납니다 |
 
 ### 프론트엔드 (crowfoot-web)
 
@@ -333,8 +339,8 @@ pnpm dev        # http://localhost:8080
 | PostgreSQL 16 | core | 서비스 DB(회원·워크스페이스·문서·감사 로그, `crowfoot_core` 스키마). 무료 PostgreSQL 발급용 인스턴스이기도 합니다 |
 | MySQL 8 | core, database-manager | 무료 MySQL 발급용 인스턴스 |
 | Redis 6 | auth | 로그아웃한 Access 토큰 블랙리스트(만료 시간 TTL, AOF로 보관) |
-| Docker · GHCR | 서버 6종, web | 저장소마다 이미지를 만들어 GitHub Container Registry에 올립니다 |
-| GitHub Actions | 저장소 7개 | main에 올리면 테스트하고 이미지를 만든 뒤 배포 저장소의 이미지 태그를 고칩니다 |
+| Docker · GHCR | 서버 7종, web | 저장소마다 이미지를 만들어 GitHub Container Registry에 올립니다 |
+| GitHub Actions | 저장소 8개 | main에 올리면 테스트하고 이미지를 만든 뒤 배포 저장소의 이미지 태그를 고칩니다 |
 | Kubernetes · Argo CD | 운영 | Argo CD가 배포 저장소(`apps/*`)를 지켜보다 클러스터에 반영합니다(GitOps). 서버는 순차 교체로 무중단 배포합니다 |
 | nginx | 앞단, web | 앞단에서 TLS를 끝내고 호스트별로 넘깁니다. web 컨테이너 안에서는 정적 파일과 프리렌더 페이지를 내줍니다 |
 
@@ -342,7 +348,7 @@ pnpm dev        # http://localhost:8080
 
 | 기술 | 쓰는 곳 | 역할 |
 | --- | --- | --- |
-| JUnit 5 · Spring Boot Test | 서버 6종 | 단위·통합 테스트 |
+| JUnit 5 · Spring Boot Test | 서버 7종 | 단위·통합 테스트 |
 | Testcontainers | core, database-manager | 실제 PostgreSQL·MySQL 컨테이너로 SQL 생성, 역설계, 데이터 편집을 검증합니다 |
 | MockWebServer · embedded-redis | gateway, auth, collab | 다른 서비스와 Redis를 흉내 내어 서비스 간 호출을 검증합니다 |
 | Vitest · Testing Library | web | 화면과 로직 테스트(1,300여 건) |
@@ -351,21 +357,22 @@ pnpm dev        # http://localhost:8080
 
 ## 릴리스
 
-버전마다 [릴리스 노트](https://crowfoot.java21.net/release-notes)를 4개 언어로 공개합니다. 각 버전은 서비스 저장소 7개 전부에 같은 git 태그(`vX.Y`)로 남깁니다 — 변경이 없던 저장소에도 시스템 버전을 맞추는 태그를 찍습니다.
+버전마다 [릴리스 노트](https://crowfoot.java21.net/release-notes)를 4개 언어로 공개합니다. 각 버전은 서비스 저장소 8개 전부에 같은 git 태그(`vX.Y`)로 남깁니다 — 변경이 없던 저장소에도 시스템 버전을 맞추는 태그를 찍습니다.
 
 | 버전 | 날짜 | 주요 내용 | 릴리스 노트 |
 | --- | --- | --- | --- |
+| v1.40 | 2026-10-08 | 사이트 쇼케이스(문서로 만든 사이트 등록·자동 썸네일·신고), 캡처 서비스 신설, 새 그룹 자동 색, PostgreSQL 기본값 수정(MCP 신고 50) | [보기](https://crowfoot.java21.net/release-notes/51) |
 | v1.39 | 2026-10-08 | 요구사항에 연결하면 그룹에 자동 배치(화면·MCP), MCP 설계 흐름 보강(요구사항 초안 먼저·배포 계획 경고·문서 다시 쓰기) | [보기](https://crowfoot.java21.net/release-notes/49) |
 | v1.38 | 2026-10-07 | 같은 이름 인덱스의 변경 계획 수정(MCP 신고 47), MCP 인덱스 삭제 | [보기](https://crowfoot.java21.net/release-notes/48) |
 | v1.37 | 2026-10-07 | 테이블 드래그 성능, 관계선 4면 분산·자동 배치 후보 선택, PostgreSQL 특수 인덱스(GIN·식·부분·INCLUDE·연산자 클래스)·IDENTITY 종류, 제안 및 신고 알림 수정 | [보기](https://crowfoot.java21.net/release-notes/46) |
 | v1.36 | 2026-10-06 | 수용 기준을 데이터로 확인, 요구사항 동기화(MCP), 데이터 보기 조회 부하 줄이기(keyset 페이징·느릴 수 있음 안내) | [보기](https://crowfoot.java21.net/release-notes/42) |
-| v1.35 | 2026-10-06 | 에디터 안의 데이터 보기 탭, 외래 키 따라가기·생성 컬럼, 구조 탭 문서와 비교, 요구사항 바뀐 내용 반영, 마이그레이션 이름 변경(RENAME), MCP DB 동기화 | [보기](https://crowfoot.java21.net/release-notes/40) |
 
 <details>
-<summary>이전 버전 (v1.08 ~ v1.34)</summary>
+<summary>이전 버전 (v1.08 ~ v1.35)</summary>
 
 | 버전 | 날짜 | 주요 내용 | 릴리스 노트 |
 | --- | --- | --- | --- |
+| v1.35 | 2026-10-06 | 에디터 안의 데이터 보기 탭, 외래 키 따라가기·생성 컬럼, 구조 탭 문서와 비교, 요구사항 바뀐 내용 반영, 마이그레이션 이름 변경(RENAME), MCP DB 동기화 | [보기](https://crowfoot.java21.net/release-notes/40) |
 | v1.34 | 2026-10-06 | 배포 SQL 수정(문자열 기본값 따옴표·VARBINARY 길이), CHECK 제약·생성 컬럼·전문 검색 인덱스, 검증 경고의 의도된 예외, 제안 및 신고 알림, MCP 버그 신고 | [보기](https://crowfoot.java21.net/release-notes/38) |
 | v1.33 | 2026-10-03 | 사이트 디자인 통일(기본색·메뉴·제목), 사용 가이드 다듬기(같은 배율의 그림·설명 보강·4개 언어 교정), 릴리스 노트 33건 다듬기, 로컬에서도 무료 DB 발급·철회 | [보기](https://crowfoot.java21.net/release-notes/35) |
 | v1.32 | 2026-10-03 | AI 연동 확장(샘플 데이터 넣기, 문서 주소 안내, 삭제 문장 기본 제외), 요구사항 도메인별 정리(진행·찾기·내보내기·수용 기준), 공유 문서 목록·릴리스 노트 목차 화면, 새 첫 화면, 새 버전 안내 | [보기](https://crowfoot.java21.net/release-notes/34) |

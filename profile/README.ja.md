@@ -11,7 +11,7 @@
 要件 → ERD → 本物のデータベース → データまで、ブラウザひとつでつなぐオープンソースの ERD プラットフォーム
 
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
-[![Release](https://img.shields.io/badge/release-v1.39-10b981.svg)](https://crowfoot.java21.net/release-notes/49)
+[![Release](https://img.shields.io/badge/release-v1.40-10b981.svg)](https://crowfoot.java21.net/release-notes/51)
 [![Live](https://img.shields.io/badge/live-crowfoot.java21.net-0ea5e9.svg)](https://crowfoot.java21.net)
 [![MCP](https://img.shields.io/badge/MCP-Claude%20%C2%B7%20ChatGPT-f97316.svg)](https://crowfoot.java21.net/guide#20.1)
 
@@ -118,13 +118,14 @@ AI が作った結果はそのまま Crowfoot の画面に表示され、画面�
 
 - **4 言語** — 韓国語・英語・日本語・中国語の画面と利用ガイド
 - **AI 連携(MCP)** — ツール 26 種類: ドキュメントの読み取り・作成、要件・スキーマの反映・同期、受け入れ基準のデータ確認、DB の発行・デプロイ・マイグレーション、DB 構造のドキュメントへの同期、サンプルデータ、バグ報告。発行・デプロイ・反映はまず計画を示し、承認したものだけを実行します。
+- **サイトショーケース** — ERD から作ったサイトをドキュメントに登録すると、サムネイル付きでトップページと `/showcase` に紹介されます。サムネイルはキャプチャサービスが作ります。
 - **管理コンソール** — ユーザー、コードテーブル、マネージド DB インスタンス、発行上限、監査ログ、トラフィック統計
 
 ## アーキテクチャ
 
-Crowfoot は 7 つのサービスからなるマイクロサービスです。外から入る HTTP リクエストはすべて API ゲートウェイを通り、サービス同士はクラスター内の内部呼び出しだけでつながります。
+Crowfoot は 8 つのサービスからなるマイクロサービスです。外から入る HTTP リクエストはすべて API ゲートウェイを通り、サービス同士はクラスター内の内部呼び出しだけでつながります。
 
-![Crowfoot アーキテクチャ — ブラウザと MCP クライアント、nginx の公開ホスト 4 つ、Kubernetes 内の 7 サービス(スタック・バージョン・レプリカ・ポート・メモリ)、データストア、GitOps デリバリーパイプライン](architecture.svg)
+![Crowfoot アーキテクチャ — ブラウザと MCP クライアント、nginx の公開ホスト 4 つ、Kubernetes 内の 8 サービス(スタック・バージョン・レプリカ・ポート・メモリ)、データストア、GitOps デリバリーパイプライン](architecture.svg)
 
 ### サービス
 
@@ -133,10 +134,11 @@ Crowfoot は 7 つのサービスからなるマイクロサービスです。�
 | **crowfoot-web** | React SPA。エディタ、ダッシュボード、管理コンソール、公開ページ | — | gateway, collab |
 | **crowfoot-api-gateway** | すべての HTTP リクエストの入口。パス・ホストによるルーティング、トークン確認、公開パスの許可リスト、ユーザー識別ヘッダー(`X-USER-ID` など)の注入 | — | auth |
 | **crowfoot-auth** | GitHub・Google OAuth2 ログイン(PKCE)、JWT の発行・更新、トークン確認(introspection)、ログアウトのブラックリスト | Redis | core(会員・ワークスペーストークン) |
-| **crowfoot-core-api** | ドメインの中心。会員・ワークスペース・チーム・ドキュメント・要件・コメント、SQL 生成・デプロイ・リバースエンジニアリング・マイグレーション、マネージド DB の発行、監査ログ | PostgreSQL | マネージド DB インスタンス、ユーザー DB |
+| **crowfoot-core-api** | ドメインの中心。会員・ワークスペース・チーム・ドキュメント・要件・コメント、SQL 生成・デプロイ・リバースエンジニアリング・マイグレーション、マネージド DB の発行、監査ログ | PostgreSQL | マネージド DB インスタンス、ユーザー DB、capture |
 | **crowfoot-collab** | リアルタイムコラボレーション。WebSocket(STOMP)のルームで接続状況と編集内容を中継 | メモリ | auth, core |
 | **crowfoot-database-manager** | データブラウザ。閲覧・行の編集・SQL コンソール・サンプルデータ。自前の DB を持たずリクエストごとに接続 | — | core(権限・接続情報) |
 | **crowfoot-mcp** | MCP サーバー。Claude・ChatGPT のツール呼び出しを core・DB マネージャーへの呼び出しに変換 | — | core, database-manager |
+| **crowfoot-capture** | キャプチャサービス。サイトの URL をヘッドレス Chromium で開き、800×500 の JPEG サムネイルとメタデータ(タイトル・説明・サイト名・ファビコン)を返す。ゲートウェイのルートはなく core だけが呼ぶ | —(サムネイルは core が保存) | — |
 
 ### リクエストの流れ
 
@@ -200,6 +202,7 @@ sequenceDiagram
 - **権限の判定はコアで** — 他のサービスは権限を自分で判断せず、コア API に問い合わせます。他人のリソースは 404 を返し、存在そのものを隠します。
 - **発行アカウントの分離** — マネージド DB は発行ごとにそのスキーマだけに権限を持つアカウントを作成し、取り消すとスキーマとアカウントをまとめて削除します。
 - **内部アドレスでの接続** — 本番環境のサーバーは、マネージド DB にクラスター内の内部アドレスで接続します。ユーザーには外部から使えるアドレスを表示します。
+- **プライベートネットワークの遮断(SSRF)** — キャプチャサービスはキャプチャごとにループバック上にチェック用プロキシを立て、ブラウザの接続をすべてそこへ通します。ホストを自分で名前解決し、プライベート・ループバック・リンクローカル・CGNAT・IPv6 ULA のアドレスを拒否し、確認した IP にだけ接続するので DNS リバインディングも防ぎます。
 - **監査ログ** — 発行・取り消し・デプロイ・マイグレーション・接続情報の閲覧といった重要な操作を記録します。
 
 ### デプロイ
@@ -217,6 +220,7 @@ GitOps でデプロイします。サービスリポジトリの `main` に push
 | [crowfoot-collab](https://github.com/crowfoot-erd/crowfoot-collab) | コラボレーションサーバー — WebSocket(STOMP)。ドキュメントごとの接続状況と編集内容のリアルタイム中継 |
 | [crowfoot-database-manager](https://github.com/crowfoot-erd/crowfoot-database-manager) | DB マネージャー — データの閲覧・行の編集・SQL コンソール・サンプルデータ。自前の DB を持たずリクエストごとに接続し、権限はコア API に問い合わせます |
 | [crowfoot-mcp](https://github.com/crowfoot-erd/crowfoot-mcp) | MCP サーバー — Spring AI MCP。要件・ERD の読み書き、DB の発行・デプロイ・マイグレーション、サンプルデータをツールとして提供 |
+| [crowfoot-capture](https://github.com/crowfoot-erd/crowfoot-capture) | キャプチャサービス — Playwright(ヘッドレス Chromium)。サイトショーケース用のサムネイルとメタデータを作ります。内部専用でコア API だけが呼び、プライベートネットワークのアドレスはブロックします |
 
 ## 自分で動かす
 
@@ -224,7 +228,7 @@ GitOps でデプロイします。サービスリポジトリの `main` に push
 
 | ツール | バージョン | 用途 |
 | --- | --- | --- |
-| Java (Temurin) | 21 | 6 つのサーバー |
+| Java (Temurin) | 21 | 7 つのサーバー |
 | Maven | 3.9 以上 | サーバーのビルド・実行 |
 | Node.js / pnpm | 20.19 以上 / 10 | フロントエンド |
 | PostgreSQL | 16 以上 | サービス DB(`crowfoot` データベース、`crowfoot_core` スキーマ) |
@@ -243,6 +247,7 @@ GitOps でデプロイします。サービスリポジトリの `main` に push
 | crowfoot-collab | 8083 | WebSocket — ゲートウェイを経由せず直接接続します |
 | crowfoot-database-manager | 8084 | |
 | crowfoot-mcp | 8085 | |
+| crowfoot-capture | 8086 | サイトショーケースを登録するときだけ必要です。最初に一度 Chromium をインストールします — リポジトリの README を参照 |
 
 ### 環境変数
 
@@ -273,7 +278,7 @@ OAuth アプリにはリダイレクト URI として `http://localhost:8080/aut
 ### 起動
 
 ```bash
-# 6 つのサーバー — 各リポジトリで(local プロファイルが既定)
+# 7 つのサーバー — 各リポジトリで(local プロファイルが既定)
 mvn spring-boot:run
 
 # フロントエンド
@@ -289,8 +294,8 @@ pnpm dev        # http://localhost:8080
 
 | 技術 | バージョン | 使う場所 | 理由・役割 |
 | --- | --- | --- | --- |
-| Java | 21 | 6 つのサーバー | LTS バージョン。レコード、パターンマッチング、仮想スレッドが使える現在の基準です |
-| Spring Boot | 4.1 | 6 つのサーバー | すべてのサーバーで同じバージョンに揃え、設定・ロギング・ヘルスチェック(Actuator)の方式を統一します。Kubernetes は Actuator のヘルスチェックでサーバーの状態を確認します |
+| Java | 21 | 7 つのサーバー | LTS バージョン。レコード、パターンマッチング、仮想スレッドが使える現在の基準です |
+| Spring Boot | 4.1 | 7 つのサーバー | すべてのサーバーで同じバージョンに揃え、設定・ロギング・ヘルスチェック(Actuator)の方式を統一します。Kubernetes は Actuator のヘルスチェックでサーバーの状態を確認します |
 | Spring Cloud | 2025.1 | gateway, auth, database-manager | ゲートウェイとサービス間呼び出し(OpenFeign, LoadBalancer)のバージョンをひとまとめに管理します |
 | Lombok | — | サーバー | コンストラクタやアクセサのような繰り返しのコードを減らします |
 
@@ -304,6 +309,7 @@ pnpm dev        # http://localhost:8080
 | **crowfoot-collab** | Spring WebSocket · STOMP · RestClient | リアルタイムコラボレーションサーバーです。ドキュメントごとに STOMP のルームを設け、接続状況・カーソル・編集内容を順番に中継します。接続時に RestClient で auth にトークンを、core にドキュメントの権限を確認します |
 | **crowfoot-database-manager** | Spring Web MVC · JDBC (PostgreSQL·MySQL ドライバー) · OpenFeign | データブラウザです。自前の DB を持たず、リクエストごとに対象の DB へ JDBC で接続し、終わったら閉じます。接続情報と権限は OpenFeign で core に問い合わせます。行の編集とサンプルデータは 1 つのトランザクションで投入します |
 | **crowfoot-mcp** | Spring AI 2.0 (MCP Server, WebMVC) · RestClient | Claude・ChatGPT のような MCP クライアントの入口です。Spring AI の MCP サーバー(HTTP トランスポート)で 26 種類のツールを公開し、ツール呼び出しを core・database-manager の内部 API 呼び出しに変換します。サーバーの案内文(instructions)で、AI が守るべき作業の順序とルールを伝えます |
+| **crowfoot-capture** | Spring Web MVC · Playwright for Java 1.63 (Chromium headless shell) · java.awt ImageIO | サイトショーケースのサムネイルを作る内部サービスです。core から渡された URL をヘッドレス Chromium で開いて撮影し、ImageIO で 800×500 の JPEG に縮小しながら、タイトル・説明・サイト名・ファビコンも読み取ります。同時キャプチャは 2 件、1 回 20 秒までで、ブラウザの接続はすべてプライベートネットワークのアドレスをブロックするチェック用プロキシを通ります |
 
 ### フロントエンド (crowfoot-web)
 
@@ -333,8 +339,8 @@ pnpm dev        # http://localhost:8080
 | PostgreSQL 16 | core | サービス DB(会員・ワークスペース・ドキュメント・監査ログ、`crowfoot_core` スキーマ)。無料の PostgreSQL を発行するためのインスタンスでもあります |
 | MySQL 8 | core, database-manager | 無料の MySQL を発行するためのインスタンス |
 | Redis 6 | auth | ログアウトしたアクセストークンのブラックリスト(有効期限までの TTL、AOF で永続化) |
-| Docker · GHCR | 6 つのサーバー、web | リポジトリごとにイメージをビルドし、GitHub Container Registry に push します |
-| GitHub Actions | 7 つのリポジトリ | main に push するとテストしてイメージをビルドし、デプロイリポジトリのイメージタグを更新します |
+| Docker · GHCR | 7 つのサーバー、web | リポジトリごとにイメージをビルドし、GitHub Container Registry に push します |
+| GitHub Actions | 8 つのリポジトリ | main に push するとテストしてイメージをビルドし、デプロイリポジトリのイメージタグを更新します |
 | Kubernetes · Argo CD | 本番 | Argo CD がデプロイリポジトリ(`apps/*`)を監視し、クラスターに反映します(GitOps)。サーバーはローリングアップデートで順に入れ替え、無停止でデプロイします |
 | nginx | フロント、web | フロントでは TLS を終端し、ホストごとに振り分けます。web コンテナの中では静的ファイルとプリレンダリング済みのページを配信します |
 
@@ -342,7 +348,7 @@ pnpm dev        # http://localhost:8080
 
 | 技術 | 使う場所 | 役割 |
 | --- | --- | --- |
-| JUnit 5 · Spring Boot Test | 6 つのサーバー | 単体テスト・結合テスト |
+| JUnit 5 · Spring Boot Test | 7 つのサーバー | 単体テスト・結合テスト |
 | Testcontainers | core, database-manager | 実際の PostgreSQL・MySQL コンテナで SQL 生成、リバースエンジニアリング、データ編集を検証します |
 | MockWebServer · embedded-redis | gateway, auth, collab | 他のサービスや Redis を模倣して、サービス間の呼び出しを検証します |
 | Vitest · Testing Library | web | 画面とロジックのテスト(約 1,300 件) |
@@ -351,21 +357,22 @@ pnpm dev        # http://localhost:8080
 
 ## リリース
 
-バージョンごとに[リリースノート](https://crowfoot.java21.net/release-notes)を 4 言語で公開しています。各バージョンはサービスリポジトリ 7 つすべてに同じ git タグ(`vX.Y`)で残します — 変更のなかったリポジトリにも、システムのバージョンを揃えるためのタグを付けます。
+バージョンごとに[リリースノート](https://crowfoot.java21.net/release-notes)を 4 言語で公開しています。各バージョンはサービスリポジトリ 8 つすべてに同じ git タグ(`vX.Y`)で残します — 変更のなかったリポジトリにも、システムのバージョンを揃えるためのタグを付けます。
 
 | バージョン | 日付 | 主な内容 | リリースノート |
 | --- | --- | --- | --- |
+| v1.40 | 2026-10-08 | サイトショーケース（ドキュメントで作ったサイトの登録・自動サムネイル・報告）、キャプチャサービスの新設、グループの自動配色、PostgreSQL デフォルト値の修正（MCP 報告 50） | [見る](https://crowfoot.java21.net/release-notes/51) |
 | v1.39 | 2026-10-08 | 要件リンク時のグループ自動配置（画面・MCP）、MCP 設計フローの強化（要件の下書きを先に・デプロイ計画の警告・ドキュメントの書き直し） | [見る](https://crowfoot.java21.net/release-notes/49) |
 | v1.38 | 2026-10-07 | 同じ名前のインデックスの変更計画の修正（MCP 報告 47）、MCP でのインデックス削除 | [見る](https://crowfoot.java21.net/release-notes/48) |
 | v1.37 | 2026-10-07 | テーブルドラッグの高速化、リレーション線の4面分散・自動配置の候補選択、PostgreSQLの特殊インデックス(GIN・式・部分・INCLUDE・演算子クラス)・IDENTITYの種類、提案・報告の通知の修正 | [見る](https://crowfoot.java21.net/release-notes/46) |
 | v1.36 | 2026-10-06 | 受け入れ基準をデータで確認、要件の同期（MCP）、データ閲覧の負荷軽減（キーセットページング・遅くなる場合の案内） | [見る](https://crowfoot.java21.net/release-notes/42) |
-| v1.35 | 2026-10-06 | エディター内のデータタブ、外部キーをたどる・生成列、構造タブでドキュメントと比較、変更された要件の反映、マイグレーションの名前変更（RENAME）、MCP の DB 同期 | [見る](https://crowfoot.java21.net/release-notes/40) |
 
 <details>
-<summary>以前のバージョン（v1.08 ～ v1.34）</summary>
+<summary>以前のバージョン（v1.08 ～ v1.35）</summary>
 
 | バージョン | 日付 | 主な内容 | リリースノート |
 | --- | --- | --- | --- |
+| v1.35 | 2026-10-06 | エディター内のデータタブ、外部キーをたどる・生成列、構造タブでドキュメントと比較、変更された要件の反映、マイグレーションの名前変更（RENAME）、MCP の DB 同期 | [見る](https://crowfoot.java21.net/release-notes/40) |
 | v1.34 | 2026-10-06 | デプロイSQLの修正（文字列デフォルト値の引用符・VARBINARYの長さ）、CHECK制約・生成列・全文検索インデックス、検証の警告を意図した例外に、フィードバック通知、MCPのバグ報告 | [見る](https://crowfoot.java21.net/release-notes/38) |
 | v1.33 | 2026-10-03 | サイト全体のデザイン統一（基本色・メニュー・タイトル）、利用ガイドの改善（同じ比率の画像・説明の補足・4言語の校正）、リリースノート33件の改善、ローカルでも無料DBの発行・回収 | [見る](https://crowfoot.java21.net/release-notes/35) |
 | v1.32 | 2026-10-03 | AI 連携の拡張(サンプルデータ投入、ドキュメントのアドレス案内、削除文は既定で除外)、要件のドメイン別整理(進捗・検索・エクスポート・受け入れ基準)、共有ドキュメント一覧・目次付きリリースノート、新しいスタートページ、新バージョンの案内 | [見る](https://crowfoot.java21.net/release-notes/34) |

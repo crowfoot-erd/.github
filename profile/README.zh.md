@@ -11,7 +11,7 @@
 在一个浏览器里把需求 → ERD → 真实数据库 → 数据连成一线的开源 ERD 平台
 
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
-[![Release](https://img.shields.io/badge/release-v1.39-10b981.svg)](https://crowfoot.java21.net/release-notes/49)
+[![Release](https://img.shields.io/badge/release-v1.40-10b981.svg)](https://crowfoot.java21.net/release-notes/51)
 [![Live](https://img.shields.io/badge/live-crowfoot.java21.net-0ea5e9.svg)](https://crowfoot.java21.net)
 [![MCP](https://img.shields.io/badge/MCP-Claude%20%C2%B7%20ChatGPT-f97316.svg)](https://crowfoot.java21.net/guide#20.1)
 
@@ -118,13 +118,14 @@ AI 生成的结果会原样显示在 Crowfoot 界面中，你在界面上修改�
 
 - **4 种语言** — 韩语、英语、日语、中文界面和使用指南
 - **AI 集成（MCP）** — 26 种工具：读取和创建文档、应用和同步需求与 schema、用数据确认验收标准、数据库签发·部署·迁移、将数据库结构同步到文档、示例数据、问题报告。签发、部署和应用都会先展示计划，只执行你批准的部分。
+- **网站展示** — 在文档中登记用 ERD 构建的网站后，它会带着缩略图出现在首页和 `/showcase`。缩略图由截图服务生成。
 - **管理控制台** — 用户、代码表、托管数据库实例、签发配额、审计日志、流量统计
 
 ## 架构
 
-Crowfoot 是由 7 个服务组成的微服务架构。所有来自外部的 HTTP 请求都经过 API 网关，服务之间只通过集群内部调用相连。
+Crowfoot 是由 8 个服务组成的微服务架构。所有来自外部的 HTTP 请求都经过 API 网关，服务之间只通过集群内部调用相连。
 
-![Crowfoot 架构 — 浏览器与 MCP 客户端、nginx 上的四个公开主机、Kubernetes 中的七个服务（技术栈、版本、副本、端口、内存）、数据存储以及 GitOps 交付流水线](architecture.svg)
+![Crowfoot 架构 — 浏览器与 MCP 客户端、nginx 上的四个公开主机、Kubernetes 中的八个服务（技术栈、版本、副本、端口、内存）、数据存储以及 GitOps 交付流水线](architecture.svg)
 
 ### 服务
 
@@ -133,10 +134,11 @@ Crowfoot 是由 7 个服务组成的微服务架构。所有来自外部的 HTTP
 | **crowfoot-web** | React SPA。编辑器、仪表板、管理控制台、公开页面 | — | gateway, collab |
 | **crowfoot-api-gateway** | 所有 HTTP 请求的入口。按路径和主机路由、令牌校验、公开路径白名单、注入用户身份头（`X-USER-ID` 等） | — | auth |
 | **crowfoot-auth** | GitHub、Google OAuth2 登录（PKCE）、JWT 签发与刷新、令牌校验（introspection）、登出黑名单 | Redis | core（会员、工作区令牌） |
-| **crowfoot-core-api** | 领域的中心。会员、工作区、团队、文档、需求、评论，SQL 生成·部署·逆向工程·迁移，托管数据库签发，审计日志 | PostgreSQL | 托管数据库实例、用户数据库 |
+| **crowfoot-core-api** | 领域的中心。会员、工作区、团队、文档、需求、评论，SQL 生成·部署·逆向工程·迁移，托管数据库签发，审计日志 | PostgreSQL | 托管数据库实例、用户数据库、capture |
 | **crowfoot-collab** | 实时协作。在 WebSocket（STOMP）房间中中继在线状态和编辑变更 | 内存 | auth, core |
 | **crowfoot-database-manager** | 数据浏览器。查看、行编辑、SQL 控制台、示例数据。自身没有数据库，每次请求时连接 | — | core（权限、连接信息） |
 | **crowfoot-mcp** | MCP 服务器。把 Claude、ChatGPT 的工具调用转换为对 core 和数据库管理器的调用 | — | core, database-manager |
+| **crowfoot-capture** | 截图服务。用无头 Chromium 打开网站地址，返回 800×500 的 JPEG 缩略图和元数据（标题、描述、站点名称、网站图标）。没有网关路由，只由 core 调用 | —（缩略图由 core 保存） | — |
 
 ### 请求流程
 
@@ -200,6 +202,7 @@ sequenceDiagram
 - **权限判定在核心完成** — 其他服务不自行判断权限，而是询问核心 API。他人的资源返回 404，连是否存在都不暴露。
 - **签发账户隔离** — 托管数据库每次签发都会创建只对该 schema 拥有权限的账户，撤销时会同时删除 schema 和账户。
 - **通过内部地址连接** — 生产环境的服务器通过集群内部地址连接托管数据库，向用户展示的则是可从外部访问的地址。
+- **拦截私有网络（SSRF）** — 截图服务每次截图都会在回环地址上启动一个检查代理，让浏览器的所有连接都经过它。代理自行解析主机，拒绝私有、回环、链路本地、CGNAT 和 IPv6 ULA 地址，只连接到已检查的 IP，因此也能防御 DNS 重绑定。
 - **审计日志** — 记录签发、撤销、部署、迁移、查看连接信息等重要操作。
 
 ### 部署
@@ -217,6 +220,7 @@ sequenceDiagram
 | [crowfoot-collab](https://github.com/crowfoot-erd/crowfoot-collab) | 协作服务器 — WebSocket（STOMP）。按文档实时中继在线状态和编辑变更 |
 | [crowfoot-database-manager](https://github.com/crowfoot-erd/crowfoot-database-manager) | 数据库管理器 — 数据查看·行编辑·SQL 控制台·示例数据。自身没有数据库，每次请求时连接，权限交由核心 API 判定 |
 | [crowfoot-mcp](https://github.com/crowfoot-erd/crowfoot-mcp) | MCP 服务器 — Spring AI MCP。以工具形式提供需求·ERD 的读写、数据库签发·部署·迁移以及示例数据 |
+| [crowfoot-capture](https://github.com/crowfoot-erd/crowfoot-capture) | 截图服务 — Playwright（无头 Chromium）。为网站展示生成缩略图和元数据。仅供内部使用，只由核心 API 调用，并拦截私有网络地址 |
 
 ## 自行运行
 
@@ -224,7 +228,7 @@ sequenceDiagram
 
 | 工具 | 版本 | 用途 |
 | --- | --- | --- |
-| Java (Temurin) | 21 | 6 个服务器 |
+| Java (Temurin) | 21 | 7 个服务器 |
 | Maven | 3.9 及以上 | 构建和运行服务器 |
 | Node.js / pnpm | 20.19 及以上 / 10 | 前端 |
 | PostgreSQL | 16 及以上 | 服务数据库（`crowfoot` 数据库、`crowfoot_core` schema） |
@@ -243,6 +247,7 @@ Schema 不会自动创建（`ddl-auto: none`）。请先使用 DDL 脚本初始�
 | crowfoot-collab | 8083 | WebSocket — 不经过网关，直接连接 |
 | crowfoot-database-manager | 8084 | |
 | crowfoot-mcp | 8085 | |
+| crowfoot-capture | 8086 | 仅在登记网站展示时需要。请先安装一次 Chromium — 参见仓库 README |
 
 ### 环境变量
 
@@ -273,7 +278,7 @@ Schema 不会自动创建（`ddl-auto: none`）。请先使用 DDL 脚本初始�
 ### 启动
 
 ```bash
-# 6 个服务器 — 在各仓库中运行（默认使用 local 配置）
+# 7 个服务器 — 在各仓库中运行（默认使用 local 配置）
 mvn spring-boot:run
 
 # 前端
@@ -289,8 +294,8 @@ pnpm dev        # http://localhost:8080
 
 | 技术 | 版本 | 使用位置 | 原因与作用 |
 | --- | --- | --- | --- |
-| Java | 21 | 6 个服务器 | LTS 版本。可以使用记录类、模式匹配和虚拟线程的当前基准 |
-| Spring Boot | 4.1 | 6 个服务器 | 各服务器统一使用同一版本，使配置、日志和健康检查（Actuator）的方式保持一致。Kubernetes 通过 Actuator 健康检查确认服务器状态 |
+| Java | 21 | 7 个服务器 | LTS 版本。可以使用记录类、模式匹配和虚拟线程的当前基准 |
+| Spring Boot | 4.1 | 7 个服务器 | 各服务器统一使用同一版本，使配置、日志和健康检查（Actuator）的方式保持一致。Kubernetes 通过 Actuator 健康检查确认服务器状态 |
 | Spring Cloud | 2025.1 | gateway, auth, database-manager | 把网关和服务间调用（OpenFeign、LoadBalancer）的版本作为一个整体统一管理 |
 | Lombok | — | 服务器 | 减少构造函数、访问器之类的重复代码 |
 
@@ -304,6 +309,7 @@ pnpm dev        # http://localhost:8080
 | **crowfoot-collab** | Spring WebSocket · STOMP · RestClient | 实时协作服务器。为每个文档设一个 STOMP 房间，按顺序中继在线用户、光标和编辑变更。连接时通过 RestClient 向 auth 校验令牌、向 core 校验文档权限 |
 | **crowfoot-database-manager** | Spring Web MVC · JDBC (PostgreSQL·MySQL 驱动) · OpenFeign | 数据浏览器。自身没有数据库，每次请求都通过 JDBC 连接目标数据库，结束后即关闭。连接信息和权限通过 OpenFeign 向 core 查询。行编辑和示例数据在一个事务中写入 |
 | **crowfoot-mcp** | Spring AI 2.0 (MCP Server, WebMVC) · RestClient | Claude、ChatGPT 等 MCP 客户端的入口。通过 Spring AI 的 MCP 服务器（HTTP 传输）公开 26 种工具，并把工具调用转换为对 core、database-manager 内部 API 的调用。通过服务器说明（instructions）告诉 AI 应遵守的操作顺序和规则 |
+| **crowfoot-capture** | Spring Web MVC · Playwright for Java 1.63 (Chromium headless shell) · java.awt ImageIO | 生成网站展示缩略图的内部服务。用无头 Chromium 打开 core 传来的地址并截图，用 ImageIO 缩小为 800×500 的 JPEG，同时读取标题、描述、站点名称和网站图标。最多同时进行 2 次截图，每次不超过 20 秒，浏览器的所有连接都经过拦截私有网络地址的检查代理 |
 
 ### 前端 (crowfoot-web)
 
@@ -333,8 +339,8 @@ pnpm dev        # http://localhost:8080
 | PostgreSQL 16 | core | 服务数据库（会员、工作区、文档、审计日志，`crowfoot_core` schema）。同时也是签发免费 PostgreSQL 的实例 |
 | MySQL 8 | core, database-manager | 签发免费 MySQL 的实例 |
 | Redis 6 | auth | 已登出访问令牌的黑名单（TTL 为过期时间，以 AOF 持久化） |
-| Docker · GHCR | 6 个服务器、web | 每个仓库构建镜像并推送到 GitHub Container Registry |
-| GitHub Actions | 7 个仓库 | 推送到 main 后运行测试、构建镜像，然后修改部署仓库中的镜像标签 |
+| Docker · GHCR | 7 个服务器、web | 每个仓库构建镜像并推送到 GitHub Container Registry |
+| GitHub Actions | 8 个仓库 | 推送到 main 后运行测试、构建镜像，然后修改部署仓库中的镜像标签 |
 | Kubernetes · Argo CD | 生产环境 | Argo CD 监视部署仓库（`apps/*`）并将变更应用到集群（GitOps）。服务器通过滚动更新逐个替换，实现零停机部署 |
 | nginx | 前置层、web | 在前置层终止 TLS 并按主机转发。在 web 容器内提供静态文件和预渲染页面 |
 
@@ -342,7 +348,7 @@ pnpm dev        # http://localhost:8080
 
 | 技术 | 使用位置 | 作用 |
 | --- | --- | --- |
-| JUnit 5 · Spring Boot Test | 6 个服务器 | 单元测试与集成测试 |
+| JUnit 5 · Spring Boot Test | 7 个服务器 | 单元测试与集成测试 |
 | Testcontainers | core, database-manager | 用真实的 PostgreSQL、MySQL 容器验证 SQL 生成、逆向工程和数据编辑 |
 | MockWebServer · embedded-redis | gateway, auth, collab | 模拟其他服务和 Redis，验证服务间调用 |
 | Vitest · Testing Library | web | 界面与逻辑测试（约 1,300 个） |
@@ -351,21 +357,22 @@ pnpm dev        # http://localhost:8080
 
 ## 版本发布
 
-每个版本都会以 4 种语言公开[发布说明](https://crowfoot.java21.net/release-notes)。每个版本都会在全部 7 个服务仓库打上相同的 git 标签（`vX.Y`）— 没有变更的仓库也会打上标签，以对齐系统版本。
+每个版本都会以 4 种语言公开[发布说明](https://crowfoot.java21.net/release-notes)。每个版本都会在全部 8 个服务仓库打上相同的 git 标签（`vX.Y`）— 没有变更的仓库也会打上标签，以对齐系统版本。
 
 | 版本 | 日期 | 主要内容 | 发布说明 |
 | --- | --- | --- | --- |
+| v1.40 | 2026-10-08 | 网站展示（登记用文档做成的网站、自动缩略图、举报）、新增截图服务、分组自动配色、修复 PostgreSQL 默认值（MCP 报告 50） | [查看](https://crowfoot.java21.net/release-notes/51) |
 | v1.39 | 2026-10-08 | 链接需求时自动加入分组（编辑器・MCP）、强化 MCP 设计流程（先展示需求草案・部署计划警告・重写文档） | [查看](https://crowfoot.java21.net/release-notes/49) |
 | v1.38 | 2026-10-07 | 修复同名索引的变更计划（MCP 报告 47）、通过 MCP 删除索引 | [查看](https://crowfoot.java21.net/release-notes/48) |
 | v1.37 | 2026-10-07 | 表拖动更流畅、关系线四面分布与自动布局候选择优、PostgreSQL 特殊索引（GIN、表达式、部分、INCLUDE、运算符类）与 IDENTITY 类型、修复建议与举报通知 | [查看](https://crowfoot.java21.net/release-notes/46) |
 | v1.36 | 2026-10-06 | 用数据确认验收标准、需求同步（MCP）、减轻数据浏览负载（键集分页・可能较慢提示） | [查看](https://crowfoot.java21.net/release-notes/42) |
-| v1.35 | 2026-10-06 | 编辑器内的数据标签页、沿外键跳转・生成列、在结构标签页与文档比较、需求变更一路反映到数据库、迁移中的重命名（RENAME）、MCP 数据库同步 | [查看](https://crowfoot.java21.net/release-notes/40) |
 
 <details>
-<summary>更早的版本（v1.08 ～ v1.34）</summary>
+<summary>更早的版本（v1.08 ～ v1.35）</summary>
 
 | 版本 | 日期 | 主要内容 | 发布说明 |
 | --- | --- | --- | --- |
+| v1.35 | 2026-10-06 | 编辑器内的数据标签页、沿外键跳转・生成列、在结构标签页与文档比较、需求变更一路反映到数据库、迁移中的重命名（RENAME）、MCP 数据库同步 | [查看](https://crowfoot.java21.net/release-notes/40) |
 | v1.34 | 2026-10-06 | 修复部署 SQL（字符串默认值引号・VARBINARY 长度）、CHECK 约束・生成列・全文索引、将验证警告标为有意例外、反馈通知、MCP 问题报告 | [查看](https://crowfoot.java21.net/release-notes/38) |
 | v1.33 | 2026-10-03 | 统一全站设计（主色・菜单・标题）、完善用户指南（同比例图片・补充说明・四种语言校对）、完善 33 篇发布说明、本地也可发放和撤销免费数据库 | [查看](https://crowfoot.java21.net/release-notes/35) |
 | v1.32 | 2026-10-03 | AI 集成扩展（填充示例数据、文档地址提示、默认跳过删除语句）、按领域整理需求（进度・查找・导出・验收标准）、共享文档列表与带目录的发布说明、全新起始页、新版本提示 | [查看](https://crowfoot.java21.net/release-notes/34) |

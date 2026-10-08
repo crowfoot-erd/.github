@@ -11,7 +11,7 @@
 An open-source ERD platform that takes you from requirements → ERD → a real database → data, all in one browser
 
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
-[![Release](https://img.shields.io/badge/release-v1.39-10b981.svg)](https://crowfoot.java21.net/release-notes/49)
+[![Release](https://img.shields.io/badge/release-v1.40-10b981.svg)](https://crowfoot.java21.net/release-notes/51)
 [![Live](https://img.shields.io/badge/live-crowfoot.java21.net-0ea5e9.svg)](https://crowfoot.java21.net)
 [![MCP](https://img.shields.io/badge/MCP-Claude%20%C2%B7%20ChatGPT-f97316.svg)](https://crowfoot.java21.net/guide#20.1)
 
@@ -118,13 +118,14 @@ What the AI creates shows up in Crowfoot as is, and the AI reads back whatever y
 
 - **Four languages** — Korean, English, Japanese and Chinese screens and user guide
 - **AI integration (MCP)** — 26 tools: reading and creating documents, applying and syncing requirements and schemas, checking acceptance criteria with data, issuing, deploying and migrating databases, syncing database structure into documents, sample data, and bug reports. Issuing, deploying and applying show a plan first and run only what you approve.
+- **Site showcase** — Register a site built from your ERD on a document, and it is featured with a thumbnail on the landing page and `/showcase`. The capture service makes the thumbnails.
 - **Admin console** — Users, code tables, managed DB instances, issue quotas, audit logs and traffic analytics
 
 ## Architecture
 
-Crowfoot is made of seven microservices. Every HTTP request from outside goes through the API gateway, and services talk to each other only through internal calls inside the cluster.
+Crowfoot is made of eight microservices. Every HTTP request from outside goes through the API gateway, and services talk to each other only through internal calls inside the cluster.
 
-![Crowfoot architecture — browser and MCP clients, four public hosts on nginx, seven services in Kubernetes (stack, versions, replicas, ports, memory), data stores, and the GitOps delivery pipeline](architecture.svg)
+![Crowfoot architecture — browser and MCP clients, four public hosts on nginx, eight services in Kubernetes (stack, versions, replicas, ports, memory), data stores, and the GitOps delivery pipeline](architecture.svg)
 
 ### Services
 
@@ -133,10 +134,11 @@ Crowfoot is made of seven microservices. Every HTTP request from outside goes th
 | **crowfoot-web** | React SPA. Editor, dashboard, admin console, public pages | — | gateway, collab |
 | **crowfoot-api-gateway** | The entry point for all HTTP requests. Routing by path and host, token verification, public-path allowlist, user identity header (`X-USER-ID` and others) injection | — | auth |
 | **crowfoot-auth** | GitHub and Google OAuth2 sign-in (PKCE), JWT issue and refresh, token verification (introspection), logout blacklist | Redis | core (members, workspace tokens) |
-| **crowfoot-core-api** | The center of the domain. Members, workspaces, teams, documents, requirements and comments, SQL generation, deployment, reverse engineering and migration, managed DB issuing, audit logs | PostgreSQL | managed DB instances, user databases |
+| **crowfoot-core-api** | The center of the domain. Members, workspaces, teams, documents, requirements and comments, SQL generation, deployment, reverse engineering and migration, managed DB issuing, audit logs | PostgreSQL | managed DB instances, user databases, capture |
 | **crowfoot-collab** | Real-time collaboration. Relays presence and edits in WebSocket (STOMP) rooms | Memory | auth, core |
 | **crowfoot-database-manager** | Data browser. Browsing, row editing, SQL console and sample data. Has no database of its own and connects per request | — | core (permissions, connection info) |
 | **crowfoot-mcp** | MCP server. Turns tool calls from Claude and ChatGPT into calls to core and the DB manager | — | core, database-manager |
+| **crowfoot-capture** | Capture service. Opens a site URL in headless Chromium and returns an 800×500 JPEG thumbnail with metadata (title, description, site name, favicon). No gateway route; only core calls it | — (core stores the thumbnails) | — |
 
 ### Request flows
 
@@ -200,6 +202,7 @@ sequenceDiagram
 - **Permissions are decided in core** — Other services do not decide permissions on their own; they ask the core API. Other people's resources return 404, hiding that they exist at all.
 - **Isolated issued accounts** — Each managed DB issue gets an account with privileges on its own schema only, and revoking it deletes both the schema and the account.
 - **Internal addresses** — In production, servers connect to managed databases through internal addresses inside the cluster. Users are shown addresses they can reach from outside.
+- **Private network blocking (SSRF)** — For each capture, the capture service starts a checking proxy on loopback and routes every browser connection through it. The proxy resolves the host itself, rejects private, loopback, link-local, CGNAT and IPv6 ULA addresses, and connects only to the checked IP, which also defeats DNS rebinding.
 - **Audit logs** — Important actions such as issuing, revoking, deploying, migrating and viewing connection info are recorded.
 
 ### Deployment
@@ -217,6 +220,7 @@ Deployment is GitOps. When you push to `main` in a service repository, GitHub Ac
 | [crowfoot-collab](https://github.com/crowfoot-erd/crowfoot-collab) | Collaboration server — WebSocket (STOMP). Real-time relay of per-document presence and edits |
 | [crowfoot-database-manager](https://github.com/crowfoot-erd/crowfoot-database-manager) | DB manager — data browsing, row editing, SQL console and sample data. Has no database of its own, connects per request, and asks the core API for permissions |
 | [crowfoot-mcp](https://github.com/crowfoot-erd/crowfoot-mcp) | MCP server — Spring AI MCP. Provides tools for reading and writing requirements and ERDs, issuing, deploying and migrating databases, and sample data |
+| [crowfoot-capture](https://github.com/crowfoot-erd/crowfoot-capture) | Capture service — Playwright (headless Chromium). Produces thumbnails and metadata for the site showcase. Internal only: called by the core API alone, and private network addresses are blocked |
 
 ## Run it yourself
 
@@ -224,7 +228,7 @@ Deployment is GitOps. When you push to `main` in a service repository, GitHub Ac
 
 | Tool | Version | Used by |
 | --- | --- | --- |
-| Java (Temurin) | 21 | the six servers |
+| Java (Temurin) | 21 | the seven servers |
 | Maven | 3.9+ | building and running the servers |
 | Node.js / pnpm | 20.19+ / 10 | frontend |
 | PostgreSQL | 16+ | service database (`crowfoot` database, `crowfoot_core` schema) |
@@ -243,6 +247,7 @@ The schema is not created automatically (`ddl-auto: none`). Initialize it with a
 | crowfoot-collab | 8083 | WebSocket — connected directly, not through the gateway |
 | crowfoot-database-manager | 8084 | |
 | crowfoot-mcp | 8085 | |
+| crowfoot-capture | 8086 | Needed only when registering a showcase site. Install Chromium once first — see the repository README |
 
 ### Environment variables
 
@@ -273,7 +278,7 @@ Register `http://localhost:8080/auth/callback` as the redirect URI in your OAuth
 ### Start
 
 ```bash
-# the six servers — from each repository (local profile is the default)
+# the seven servers — from each repository (local profile is the default)
 mvn spring-boot:run
 
 # frontend
@@ -289,8 +294,8 @@ The recommended order is auth → core-api → gateway → collab · database-ma
 
 | Technology | Version | Used in | Why and what |
 | --- | --- | --- | --- |
-| Java | 21 | the six servers | The LTS release. Today's baseline, with records, pattern matching and virtual threads |
-| Spring Boot | 4.1 | the six servers | Every server runs the same version, so configuration, logging and health checks (Actuator) work the same way everywhere. Kubernetes checks server status through the Actuator health checks |
+| Java | 21 | the seven servers | The LTS release. Today's baseline, with records, pattern matching and virtual threads |
+| Spring Boot | 4.1 | the seven servers | Every server runs the same version, so configuration, logging and health checks (Actuator) work the same way everywhere. Kubernetes checks server status through the Actuator health checks |
 | Spring Cloud | 2025.1 | gateway, auth, database-manager | Manages the versions for the gateway and inter-service calls (OpenFeign, LoadBalancer) as one set |
 | Lombok | — | servers | Cuts down repetitive code such as constructors and accessors |
 
@@ -304,6 +309,7 @@ The recommended order is auth → core-api → gateway → collab · database-ma
 | **crowfoot-collab** | Spring WebSocket · STOMP · RestClient | The real-time collaboration server. Each document has its own STOMP room, where presence, cursors and edits are relayed in order. On connect, it uses RestClient to check the token with auth and document permissions with core |
 | **crowfoot-database-manager** | Spring Web MVC · JDBC (PostgreSQL·MySQL drivers) · OpenFeign | The data browser. It has no database of its own: for each request it connects to the target database over JDBC and closes the connection when done. It asks core for connection info and permissions through OpenFeign. Row edits and sample data are applied in a single transaction |
 | **crowfoot-mcp** | Spring AI 2.0 (MCP Server, WebMVC) · RestClient | The entry point for MCP clients such as Claude and ChatGPT. It exposes 26 tools through Spring AI's MCP server (HTTP transport) and turns tool calls into internal API calls to core and database-manager. Its server instructions tell the AI the order of work and the rules to follow |
+| **crowfoot-capture** | Spring Web MVC · Playwright for Java 1.63 (Chromium headless shell) · java.awt ImageIO | The internal service that makes site showcase thumbnails. It opens the URL core passes in headless Chromium, takes a screenshot, scales it to an 800×500 JPEG with ImageIO, and reads the title, description, site name and favicon along the way. It runs at most two captures at a time, 20 seconds each, and every browser connection goes through a checking proxy that blocks private network addresses |
 
 ### Frontend (crowfoot-web)
 
@@ -333,8 +339,8 @@ The recommended order is auth → core-api → gateway → collab · database-ma
 | PostgreSQL 16 | core | Service database (members, workspaces, documents, audit logs; `crowfoot_core` schema). Also the instance that free PostgreSQL databases are issued from |
 | MySQL 8 | core, database-manager | The instance that free MySQL databases are issued from |
 | Redis 6 | auth | Blacklist of logged-out access tokens (TTL set to the expiry time, persisted with AOF) |
-| Docker · GHCR | the six servers, web | Each repository builds an image and pushes it to GitHub Container Registry |
-| GitHub Actions | 7 repositories | A push to main runs the tests, builds an image, then updates the image tag in the deployment repository |
+| Docker · GHCR | the seven servers, web | Each repository builds an image and pushes it to GitHub Container Registry |
+| GitHub Actions | 8 repositories | A push to main runs the tests, builds an image, then updates the image tag in the deployment repository |
 | Kubernetes · Argo CD | production | Argo CD watches the deployment repository (`apps/*`) and applies changes to the cluster (GitOps). Servers are replaced one by one with rolling updates for zero-downtime deployment |
 | nginx | edge, web | At the edge, it terminates TLS and forwards traffic by host. Inside the web container, it serves static files and prerendered pages |
 
@@ -342,7 +348,7 @@ The recommended order is auth → core-api → gateway → collab · database-ma
 
 | Technology | Used in | Role |
 | --- | --- | --- |
-| JUnit 5 · Spring Boot Test | the six servers | Unit and integration tests |
+| JUnit 5 · Spring Boot Test | the seven servers | Unit and integration tests |
 | Testcontainers | core, database-manager | Verifies SQL generation, reverse engineering and data editing against real PostgreSQL and MySQL containers |
 | MockWebServer · embedded-redis | gateway, auth, collab | Stands in for other services and Redis to verify inter-service calls |
 | Vitest · Testing Library | web | UI and logic tests (about 1,300) |
@@ -351,21 +357,22 @@ The recommended order is auth → core-api → gateway → collab · database-ma
 
 ## Releases
 
-Every version ships with [release notes](https://crowfoot.java21.net/release-notes) in four languages. Each version is tagged with the same git tag (`vX.Y`) in all seven service repositories — repositories with no changes also get the tag to keep the system version aligned.
+Every version ships with [release notes](https://crowfoot.java21.net/release-notes) in four languages. Each version is tagged with the same git tag (`vX.Y`) in all eight service repositories — repositories with no changes also get the tag to keep the system version aligned.
 
 | Version | Date | Highlights | Release notes |
 | --- | --- | --- | --- |
+| v1.40 | 2026-10-08 | Site Showcase (register a site built from a document, automatic thumbnails, reports), new capture service, automatic group colors, PostgreSQL default fix (MCP report 50) | [View](https://crowfoot.java21.net/release-notes/51) |
 | v1.39 | 2026-10-08 | Tables join their requirement's group (editor and MCP), better MCP design flow (requirements draft first, deployment plan warnings, rewriting documents) | [View](https://crowfoot.java21.net/release-notes/49) |
 | v1.38 | 2026-10-07 | Change plan fix for same-name indexes (MCP report 47), deleting indexes with MCP | [View](https://crowfoot.java21.net/release-notes/48) |
 | v1.37 | 2026-10-07 | Smoother table dragging, relationship lines on all four sides and best-of-candidates auto layout, PostgreSQL special indexes (GIN, expression, partial, INCLUDE, operator class) and IDENTITY kind, Suggestions & Reports notifications fixed | [View](https://crowfoot.java21.net/release-notes/46) |
 | v1.36 | 2026-10-06 | Checking acceptance criteria with data, requirement sync (MCP), lighter data browsing (keyset paging, may-be-slow notice) | [View](https://crowfoot.java21.net/release-notes/42) |
-| v1.35 | 2026-10-06 | Data tab inside the editor, following foreign keys and generated columns, comparing with the document in the structure tab, changed requirements through to the database, renames in migrations (RENAME), MCP database sync | [View](https://crowfoot.java21.net/release-notes/40) |
 
 <details>
-<summary>Earlier versions (v1.08 – v1.34)</summary>
+<summary>Earlier versions (v1.08 – v1.35)</summary>
 
 | Version | Date | Highlights | Release notes |
 | --- | --- | --- | --- |
+| v1.35 | 2026-10-06 | Data tab inside the editor, following foreign keys and generated columns, comparing with the document in the structure tab, changed requirements through to the database, renames in migrations (RENAME), MCP database sync | [View](https://crowfoot.java21.net/release-notes/40) |
 | v1.34 | 2026-10-06 | Deployment SQL fixes (quoted string defaults, VARBINARY length), CHECK constraints, generated columns, full-text indexes, validation warnings as intended exceptions, Feedback notifications, MCP bug reports | [View](https://crowfoot.java21.net/release-notes/38) |
 | v1.33 | 2026-10-03 | One design across the site (primary color, menus, titles), polished user guide (same-scale images, expanded explanations, four-language edits), 33 release notes rewritten, free DBs can be issued and revoked locally too | [View](https://crowfoot.java21.net/release-notes/35) |
 | v1.32 | 2026-10-03 | AI integration extended (sample data, document links, drop statements skipped by default), requirements organized by domain (progress, search, export, acceptance criteria), shared documents list and release notes with a table of contents, new start page, new-version notice | [View](https://crowfoot.java21.net/release-notes/34) |
