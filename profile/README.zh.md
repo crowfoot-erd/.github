@@ -11,7 +11,7 @@
 在一个浏览器里把需求 → ERD → 真实数据库 → 数据连成一线的开源 ERD 平台
 
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
-[![Release](https://img.shields.io/badge/release-v1.38-10b981.svg)](https://crowfoot.java21.net/release-notes/48)
+[![Release](https://img.shields.io/badge/release-v1.39-10b981.svg)](https://crowfoot.java21.net/release-notes/49)
 [![Live](https://img.shields.io/badge/live-crowfoot.java21.net-0ea5e9.svg)](https://crowfoot.java21.net)
 [![MCP](https://img.shields.io/badge/MCP-Claude%20%C2%B7%20ChatGPT-f97316.svg)](https://crowfoot.java21.net/guide#20.1)
 
@@ -355,17 +355,18 @@ pnpm dev        # http://localhost:8080
 
 | 版本 | 日期 | 主要内容 | 发布说明 |
 | --- | --- | --- | --- |
+| v1.39 | 2026-10-08 | 链接需求时自动加入分组（编辑器・MCP）、强化 MCP 设计流程（先展示需求草案・部署计划警告・重写文档） | [查看](https://crowfoot.java21.net/release-notes/49) |
 | v1.38 | 2026-10-07 | 修复同名索引的变更计划（MCP 报告 47）、通过 MCP 删除索引 | [查看](https://crowfoot.java21.net/release-notes/48) |
 | v1.37 | 2026-10-07 | 表拖动更流畅、关系线四面分布与自动布局候选择优、PostgreSQL 特殊索引（GIN、表达式、部分、INCLUDE、运算符类）与 IDENTITY 类型、修复建议与举报通知 | [查看](https://crowfoot.java21.net/release-notes/46) |
 | v1.36 | 2026-10-06 | 用数据确认验收标准、需求同步（MCP）、减轻数据浏览负载（键集分页・可能较慢提示） | [查看](https://crowfoot.java21.net/release-notes/42) |
 | v1.35 | 2026-10-06 | 编辑器内的数据标签页、沿外键跳转・生成列、在结构标签页与文档比较、需求变更一路反映到数据库、迁移中的重命名（RENAME）、MCP 数据库同步 | [查看](https://crowfoot.java21.net/release-notes/40) |
-| v1.34 | 2026-10-06 | 修复部署 SQL（字符串默认值引号・VARBINARY 长度）、CHECK 约束・生成列・全文索引、将验证警告标为有意例外、反馈通知、MCP 问题报告 | [查看](https://crowfoot.java21.net/release-notes/38) |
 
 <details>
-<summary>更早的版本（v1.08 ～ v1.33）</summary>
+<summary>更早的版本（v1.08 ～ v1.34）</summary>
 
 | 版本 | 日期 | 主要内容 | 发布说明 |
 | --- | --- | --- | --- |
+| v1.34 | 2026-10-06 | 修复部署 SQL（字符串默认值引号・VARBINARY 长度）、CHECK 约束・生成列・全文索引、将验证警告标为有意例外、反馈通知、MCP 问题报告 | [查看](https://crowfoot.java21.net/release-notes/38) |
 | v1.33 | 2026-10-03 | 统一全站设计（主色・菜单・标题）、完善用户指南（同比例图片・补充说明・四种语言校对）、完善 33 篇发布说明、本地也可发放和撤销免费数据库 | [查看](https://crowfoot.java21.net/release-notes/35) |
 | v1.32 | 2026-10-03 | AI 集成扩展（填充示例数据、文档地址提示、默认跳过删除语句）、按领域整理需求（进度・查找・导出・验收标准）、共享文档列表与带目录的发布说明、全新起始页、新版本提示 | [查看](https://crowfoot.java21.net/release-notes/34) |
 | v1.31 | 2026-10-02 | Claude 集成（MCP — 用工作区令牌连接 Claude Code，通过对话编写需求和 ERD）、需求面板（链接表・待反映标记）、打开时自动布局、按连接允许 MCP 应用 | [查看](https://crowfoot.java21.net/release-notes/33) |
