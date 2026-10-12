@@ -11,7 +11,7 @@
 요구사항 → ERD → 실제 데이터베이스 → 데이터까지, 브라우저 하나로 잇는 오픈소스 ERD 플랫폼
 
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
-[![Release](https://img.shields.io/badge/release-v1.41-10b981.svg)](https://crowfoot.java21.net/release-notes/52)
+[![Release](https://img.shields.io/badge/release-v1.42-10b981.svg)](https://crowfoot.java21.net/release-notes/53)
 [![Live](https://img.shields.io/badge/live-crowfoot.java21.net-0ea5e9.svg)](https://crowfoot.java21.net)
 [![MCP](https://img.shields.io/badge/MCP-Claude%20%C2%B7%20ChatGPT-f97316.svg)](https://crowfoot.java21.net/guide#20.1)
 
@@ -117,7 +117,7 @@ AI가 만든 결과는 Crowfoot 화면에 그대로 나타나고, 화면에서 �
 ### 그 밖에
 
 - **4개 언어** — 한국어·영어·일본어·중국어 화면과 사용 가이드
-- **AI 연동(MCP)** — 도구 26종: 문서 읽기·만들기, 요구사항·스키마 반영·동기화, 수용 기준 데이터 확인, DB 발급·배포·마이그레이션, DB → 문서 동기화, 샘플 데이터, 버그 신고. 발급·배포·반영은 계획을 먼저 보여 주고 승인한 것만 실행합니다.
+- **AI 연동(MCP)** — 도구 27종: 문서 읽기·만들기, 요구사항·스키마 반영·동기화, 수용 기준 데이터 확인, DB 발급·배포·마이그레이션, DB → 문서 동기화, 샘플 데이터, 만든 사이트 등록, 버그 신고. 발급·배포·반영은 계획을 먼저 보여 주고 승인한 것만 실행합니다.
 - **사이트 쇼케이스** — ERD로 만든 사이트를 문서에 등록하면 썸네일과 함께 첫 화면과 `/showcase`에 소개됩니다. 썸네일은 캡처 서비스가 만듭니다.
 - **관리자 콘솔** — 사용자, 코드 테이블, 매니지드 DB 인스턴스, 발급 한도, 감사 로그, 트래픽 통계
 
@@ -308,7 +308,7 @@ pnpm dev        # http://localhost:8080
 | **crowfoot-core-api** | Spring Web MVC · Spring Data JPA (Hibernate 7) · Querydsl 5.1 · Bean Validation · PostgreSQL/MySQL JDBC · Commons DBCP2 · MaxMind GeoIP2 | 도메인의 중심입니다. JPA로 회원·워크스페이스·문서를 저장하고, 목록·검색 같은 동적 조건은 Querydsl로 타입 안전하게 씁니다(연관 조회는 fetch join으로 N+1을 막습니다). JDBC 드라이버로 사용자의 데이터베이스를 읽어 ERD로 만들고(역설계), DDL을 배포하고, 무료 데이터베이스를 발급합니다. GeoIP2는 관리자 트래픽 통계의 국가 집계에 씁니다 |
 | **crowfoot-collab** | Spring WebSocket · STOMP · RestClient | 실시간 협업 서버입니다. 문서마다 STOMP 방을 두고 접속자, 커서, 편집 변경을 순서대로 중계합니다. 접속할 때 RestClient로 auth에 토큰을, core에 문서 권한을 확인합니다 |
 | **crowfoot-database-manager** | Spring Web MVC · JDBC (PostgreSQL·MySQL 드라이버) · OpenFeign | 데이터 브라우저입니다. 자체 DB 없이 요청마다 대상 DB에 JDBC로 접속하고 끝나면 닫습니다. 접속 정보와 권한은 OpenFeign으로 core에 묻습니다. 행 편집과 샘플 데이터는 한 트랜잭션으로 넣습니다 |
-| **crowfoot-mcp** | Spring AI 2.0 (MCP Server, WebMVC) · RestClient | Claude·ChatGPT 같은 MCP 클라이언트의 진입점입니다. Spring AI의 MCP 서버(HTTP 전송)로 도구 26종을 공개하고, 도구 호출을 core·database-manager의 내부 API 호출로 옮깁니다. 서버 안내문(instructions)으로 AI가 지킬 작업 순서와 규칙을 알려 줍니다 |
+| **crowfoot-mcp** | Spring AI 2.0 (MCP Server, WebMVC) · RestClient | Claude·ChatGPT 같은 MCP 클라이언트의 진입점입니다. Spring AI의 MCP 서버(HTTP 전송)로 도구 27종을 공개하고, 도구 호출을 core·database-manager의 내부 API 호출로 옮깁니다. 서버 안내문(instructions)으로 AI가 지킬 작업 순서와 규칙을 알려 줍니다 |
 | **crowfoot-capture** | Spring Web MVC · Playwright for Java 1.63 (Chromium headless shell) · java.awt ImageIO | 사이트 쇼케이스의 썸네일을 만드는 내부 서비스입니다. core가 넘긴 주소를 헤드리스 Chromium으로 열어 화면을 찍고, ImageIO로 800×500 JPEG로 줄이며 제목·설명·사이트 이름·파비콘을 함께 읽습니다. 동시 캡처는 2개, 한 번에 20초까지이고, 브라우저 연결은 모두 사설망 주소를 막는 검사 프록시를 지납니다 |
 
 ### 프론트엔드 (crowfoot-web)
@@ -361,17 +361,18 @@ pnpm dev        # http://localhost:8080
 
 | 버전 | 날짜 | 주요 내용 | 릴리스 노트 |
 | --- | --- | --- | --- |
+| v1.42 | 2026-10-12 | 사이트가 등록된 문서 표시, 썸네일 자동 갱신, Claude로 사이트 등록, 기본색 그룹 색 다시 매기기 | [보기](https://crowfoot.java21.net/release-notes/53) |
 | v1.41 | 2026-10-08 | 만든 사이트 아이콘·창, 랜딩 쇼케이스(슬라이드 위·9개), 같은 서버 사이트 캡처, 모바일 슬라이드, 커뮤니티 긴 제목 | [보기](https://crowfoot.java21.net/release-notes/52) |
 | v1.40 | 2026-10-08 | 사이트 쇼케이스(문서로 만든 사이트 등록·자동 썸네일·신고), 캡처 서비스 신설, 새 그룹 자동 색, PostgreSQL 기본값 수정(MCP 신고 50) | [보기](https://crowfoot.java21.net/release-notes/51) |
 | v1.39 | 2026-10-08 | 요구사항에 연결하면 그룹에 자동 배치(화면·MCP), MCP 설계 흐름 보강(요구사항 초안 먼저·배포 계획 경고·문서 다시 쓰기) | [보기](https://crowfoot.java21.net/release-notes/49) |
 | v1.38 | 2026-10-07 | 같은 이름 인덱스의 변경 계획 수정(MCP 신고 47), MCP 인덱스 삭제 | [보기](https://crowfoot.java21.net/release-notes/48) |
-| v1.37 | 2026-10-07 | 테이블 드래그 성능, 관계선 4면 분산·자동 배치 후보 선택, PostgreSQL 특수 인덱스(GIN·식·부분·INCLUDE·연산자 클래스)·IDENTITY 종류, 제안 및 신고 알림 수정 | [보기](https://crowfoot.java21.net/release-notes/46) |
 
 <details>
-<summary>이전 버전 (v1.08 ~ v1.36)</summary>
+<summary>이전 버전 (v1.08 ~ v1.37)</summary>
 
 | 버전 | 날짜 | 주요 내용 | 릴리스 노트 |
 | --- | --- | --- | --- |
+| v1.37 | 2026-10-07 | 테이블 드래그 성능, 관계선 4면 분산·자동 배치 후보 선택, PostgreSQL 특수 인덱스(GIN·식·부분·INCLUDE·연산자 클래스)·IDENTITY 종류, 제안 및 신고 알림 수정 | [보기](https://crowfoot.java21.net/release-notes/46) |
 | v1.36 | 2026-10-06 | 수용 기준을 데이터로 확인, 요구사항 동기화(MCP), 데이터 보기 조회 부하 줄이기(keyset 페이징·느릴 수 있음 안내) | [보기](https://crowfoot.java21.net/release-notes/42) |
 | v1.35 | 2026-10-06 | 에디터 안의 데이터 보기 탭, 외래 키 따라가기·생성 컬럼, 구조 탭 문서와 비교, 요구사항 바뀐 내용 반영, 마이그레이션 이름 변경(RENAME), MCP DB 동기화 | [보기](https://crowfoot.java21.net/release-notes/40) |
 | v1.34 | 2026-10-06 | 배포 SQL 수정(문자열 기본값 따옴표·VARBINARY 길이), CHECK 제약·생성 컬럼·전문 검색 인덱스, 검증 경고의 의도된 예외, 제안 및 신고 알림, MCP 버그 신고 | [보기](https://crowfoot.java21.net/release-notes/38) |

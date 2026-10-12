@@ -81,7 +81,7 @@
 <use href="#i-spring" x="1074" y="303" width="22" height="22"/>
 <use href="#i-claude" x="1102" y="303" width="22" height="22"/>
 <text x="1134" y="320" font-size="15" font-weight="700" fill="#0f172a" text-anchor="start">crowfoot-mcp</text>
-<text x="1076" y="346" font-size="11.5" font-weight="400" fill="#334155" text-anchor="start">MCP server — 26 tools</text>
+<text x="1076" y="346" font-size="11.5" font-weight="400" fill="#334155" text-anchor="start">MCP server — 27 tools</text>
 <text x="1076" y="363" font-size="11.5" font-weight="400" fill="#334155" text-anchor="start">requirements · ERD · deploy · migration</text>
 <text x="1076" y="380" font-size="11.5" font-weight="400" fill="#334155" text-anchor="start">plan first, run only what is approved</text>
 <text x="1076" y="406" font-size="11" font-weight="700" fill="#047857" text-anchor="start" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">Spring AI 2.0 MCP · HTTP</text>

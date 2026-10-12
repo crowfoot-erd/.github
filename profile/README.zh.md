@@ -11,7 +11,7 @@
 在一个浏览器里把需求 → ERD → 真实数据库 → 数据连成一线的开源 ERD 平台
 
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
-[![Release](https://img.shields.io/badge/release-v1.41-10b981.svg)](https://crowfoot.java21.net/release-notes/52)
+[![Release](https://img.shields.io/badge/release-v1.42-10b981.svg)](https://crowfoot.java21.net/release-notes/53)
 [![Live](https://img.shields.io/badge/live-crowfoot.java21.net-0ea5e9.svg)](https://crowfoot.java21.net)
 [![MCP](https://img.shields.io/badge/MCP-Claude%20%C2%B7%20ChatGPT-f97316.svg)](https://crowfoot.java21.net/guide#20.1)
 
@@ -117,7 +117,7 @@ AI 生成的结果会原样显示在 Crowfoot 界面中，你在界面上修改�
 ### 其他
 
 - **4 种语言** — 韩语、英语、日语、中文界面和使用指南
-- **AI 集成（MCP）** — 26 种工具：读取和创建文档、应用和同步需求与 schema、用数据确认验收标准、数据库签发·部署·迁移、将数据库结构同步到文档、示例数据、问题报告。签发、部署和应用都会先展示计划，只执行你批准的部分。
+- **AI 集成（MCP）** — 27 种工具：读取和创建文档、应用和同步需求与 schema、用数据确认验收标准、数据库签发·部署·迁移、将数据库结构同步到文档、示例数据、登记做成的网站、问题报告。签发、部署和应用都会先展示计划，只执行你批准的部分。
 - **网站展示** — 在文档中登记用 ERD 构建的网站后，它会带着缩略图出现在首页和 `/showcase`。缩略图由截图服务生成。
 - **管理控制台** — 用户、代码表、托管数据库实例、签发配额、审计日志、流量统计
 
@@ -308,7 +308,7 @@ pnpm dev        # http://localhost:8080
 | **crowfoot-core-api** | Spring Web MVC · Spring Data JPA (Hibernate 7) · Querydsl 5.1 · Bean Validation · PostgreSQL/MySQL JDBC · Commons DBCP2 · MaxMind GeoIP2 | 领域的中心。用 JPA 存储会员、工作区和文档，列表、搜索之类的动态条件用 Querydsl 以类型安全的方式编写（关联查询用 fetch join 避免 N+1）。通过 JDBC 驱动读取用户的数据库并生成 ERD（逆向工程）、部署 DDL、签发免费数据库。GeoIP2 用于管理员流量统计中的按国家汇总 |
 | **crowfoot-collab** | Spring WebSocket · STOMP · RestClient | 实时协作服务器。为每个文档设一个 STOMP 房间，按顺序中继在线用户、光标和编辑变更。连接时通过 RestClient 向 auth 校验令牌、向 core 校验文档权限 |
 | **crowfoot-database-manager** | Spring Web MVC · JDBC (PostgreSQL·MySQL 驱动) · OpenFeign | 数据浏览器。自身没有数据库，每次请求都通过 JDBC 连接目标数据库，结束后即关闭。连接信息和权限通过 OpenFeign 向 core 查询。行编辑和示例数据在一个事务中写入 |
-| **crowfoot-mcp** | Spring AI 2.0 (MCP Server, WebMVC) · RestClient | Claude、ChatGPT 等 MCP 客户端的入口。通过 Spring AI 的 MCP 服务器（HTTP 传输）公开 26 种工具，并把工具调用转换为对 core、database-manager 内部 API 的调用。通过服务器说明（instructions）告诉 AI 应遵守的操作顺序和规则 |
+| **crowfoot-mcp** | Spring AI 2.0 (MCP Server, WebMVC) · RestClient | Claude、ChatGPT 等 MCP 客户端的入口。通过 Spring AI 的 MCP 服务器（HTTP 传输）公开 27 种工具，并把工具调用转换为对 core、database-manager 内部 API 的调用。通过服务器说明（instructions）告诉 AI 应遵守的操作顺序和规则 |
 | **crowfoot-capture** | Spring Web MVC · Playwright for Java 1.63 (Chromium headless shell) · java.awt ImageIO | 生成网站展示缩略图的内部服务。用无头 Chromium 打开 core 传来的地址并截图，用 ImageIO 缩小为 800×500 的 JPEG，同时读取标题、描述、站点名称和网站图标。最多同时进行 2 次截图，每次不超过 20 秒，浏览器的所有连接都经过拦截私有网络地址的检查代理 |
 
 ### 前端 (crowfoot-web)
@@ -361,17 +361,18 @@ pnpm dev        # http://localhost:8080
 
 | 版本 | 日期 | 主要内容 | 发布说明 |
 | --- | --- | --- | --- |
+| v1.42 | 2026-10-12 | 网站登记标识、缩略图自动更新、通过 Claude 登记网站、为默认颜色分组上色 | [查看](https://crowfoot.java21.net/release-notes/53) |
 | v1.41 | 2026-10-08 | 网站图标与对话框、首页展示（轮播上方・最多 9 个）、同服务器网站截图、移动端轮播、社区长标题 | [查看](https://crowfoot.java21.net/release-notes/52) |
 | v1.40 | 2026-10-08 | 网站展示（登记用文档做成的网站、自动缩略图、举报）、新增截图服务、分组自动配色、修复 PostgreSQL 默认值（MCP 报告 50） | [查看](https://crowfoot.java21.net/release-notes/51) |
 | v1.39 | 2026-10-08 | 链接需求时自动加入分组（编辑器・MCP）、强化 MCP 设计流程（先展示需求草案・部署计划警告・重写文档） | [查看](https://crowfoot.java21.net/release-notes/49) |
 | v1.38 | 2026-10-07 | 修复同名索引的变更计划（MCP 报告 47）、通过 MCP 删除索引 | [查看](https://crowfoot.java21.net/release-notes/48) |
-| v1.37 | 2026-10-07 | 表拖动更流畅、关系线四面分布与自动布局候选择优、PostgreSQL 特殊索引（GIN、表达式、部分、INCLUDE、运算符类）与 IDENTITY 类型、修复建议与举报通知 | [查看](https://crowfoot.java21.net/release-notes/46) |
 
 <details>
-<summary>更早的版本（v1.08 ～ v1.36）</summary>
+<summary>更早的版本（v1.08 ～ v1.37）</summary>
 
 | 版本 | 日期 | 主要内容 | 发布说明 |
 | --- | --- | --- | --- |
+| v1.37 | 2026-10-07 | 表拖动更流畅、关系线四面分布与自动布局候选择优、PostgreSQL 特殊索引（GIN、表达式、部分、INCLUDE、运算符类）与 IDENTITY 类型、修复建议与举报通知 | [查看](https://crowfoot.java21.net/release-notes/46) |
 | v1.36 | 2026-10-06 | 用数据确认验收标准、需求同步（MCP）、减轻数据浏览负载（键集分页・可能较慢提示） | [查看](https://crowfoot.java21.net/release-notes/42) |
 | v1.35 | 2026-10-06 | 编辑器内的数据标签页、沿外键跳转・生成列、在结构标签页与文档比较、需求变更一路反映到数据库、迁移中的重命名（RENAME）、MCP 数据库同步 | [查看](https://crowfoot.java21.net/release-notes/40) |
 | v1.34 | 2026-10-06 | 修复部署 SQL（字符串默认值引号・VARBINARY 长度）、CHECK 约束・生成列・全文索引、将验证警告标为有意例外、反馈通知、MCP 问题报告 | [查看](https://crowfoot.java21.net/release-notes/38) |

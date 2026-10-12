@@ -11,7 +11,7 @@
 要件 → ERD → 本物のデータベース → データまで、ブラウザひとつでつなぐオープンソースの ERD プラットフォーム
 
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
-[![Release](https://img.shields.io/badge/release-v1.41-10b981.svg)](https://crowfoot.java21.net/release-notes/52)
+[![Release](https://img.shields.io/badge/release-v1.42-10b981.svg)](https://crowfoot.java21.net/release-notes/53)
 [![Live](https://img.shields.io/badge/live-crowfoot.java21.net-0ea5e9.svg)](https://crowfoot.java21.net)
 [![MCP](https://img.shields.io/badge/MCP-Claude%20%C2%B7%20ChatGPT-f97316.svg)](https://crowfoot.java21.net/guide#20.1)
 
@@ -117,7 +117,7 @@ AI が作った結果はそのまま Crowfoot の画面に表示され、画面�
 ### その他
 
 - **4 言語** — 韓国語・英語・日本語・中国語の画面と利用ガイド
-- **AI 連携(MCP)** — ツール 26 種類: ドキュメントの読み取り・作成、要件・スキーマの反映・同期、受け入れ基準のデータ確認、DB の発行・デプロイ・マイグレーション、DB 構造のドキュメントへの同期、サンプルデータ、バグ報告。発行・デプロイ・反映はまず計画を示し、承認したものだけを実行します。
+- **AI 連携(MCP)** — ツール 27 種類: ドキュメントの読み取り・作成、要件・スキーマの反映・同期、受け入れ基準のデータ確認、DB の発行・デプロイ・マイグレーション、DB 構造のドキュメントへの同期、サンプルデータ、作ったサイトの登録、バグ報告。発行・デプロイ・反映はまず計画を示し、承認したものだけを実行します。
 - **サイトショーケース** — ERD から作ったサイトをドキュメントに登録すると、サムネイル付きでトップページと `/showcase` に紹介されます。サムネイルはキャプチャサービスが作ります。
 - **管理コンソール** — ユーザー、コードテーブル、マネージド DB インスタンス、発行上限、監査ログ、トラフィック統計
 
@@ -308,7 +308,7 @@ pnpm dev        # http://localhost:8080
 | **crowfoot-core-api** | Spring Web MVC · Spring Data JPA (Hibernate 7) · Querydsl 5.1 · Bean Validation · PostgreSQL/MySQL JDBC · Commons DBCP2 · MaxMind GeoIP2 | ドメインの中心です。JPA で会員・ワークスペース・ドキュメントを保存し、一覧・検索のような動的な条件は Querydsl で型安全に書きます(関連の取得は fetch join で N+1 を防ぎます)。JDBC ドライバーでユーザーのデータベースを読み取って ERD にし(リバースエンジニアリング)、DDL をデプロイし、無料のデータベースを発行します。GeoIP2 は管理者向けトラフィック統計の国別集計に使います |
 | **crowfoot-collab** | Spring WebSocket · STOMP · RestClient | リアルタイムコラボレーションサーバーです。ドキュメントごとに STOMP のルームを設け、接続状況・カーソル・編集内容を順番に中継します。接続時に RestClient で auth にトークンを、core にドキュメントの権限を確認します |
 | **crowfoot-database-manager** | Spring Web MVC · JDBC (PostgreSQL·MySQL ドライバー) · OpenFeign | データブラウザです。自前の DB を持たず、リクエストごとに対象の DB へ JDBC で接続し、終わったら閉じます。接続情報と権限は OpenFeign で core に問い合わせます。行の編集とサンプルデータは 1 つのトランザクションで投入します |
-| **crowfoot-mcp** | Spring AI 2.0 (MCP Server, WebMVC) · RestClient | Claude・ChatGPT のような MCP クライアントの入口です。Spring AI の MCP サーバー(HTTP トランスポート)で 26 種類のツールを公開し、ツール呼び出しを core・database-manager の内部 API 呼び出しに変換します。サーバーの案内文(instructions)で、AI が守るべき作業の順序とルールを伝えます |
+| **crowfoot-mcp** | Spring AI 2.0 (MCP Server, WebMVC) · RestClient | Claude・ChatGPT のような MCP クライアントの入口です。Spring AI の MCP サーバー(HTTP トランスポート)で 27 種類のツールを公開し、ツール呼び出しを core・database-manager の内部 API 呼び出しに変換します。サーバーの案内文(instructions)で、AI が守るべき作業の順序とルールを伝えます |
 | **crowfoot-capture** | Spring Web MVC · Playwright for Java 1.63 (Chromium headless shell) · java.awt ImageIO | サイトショーケースのサムネイルを作る内部サービスです。core から渡された URL をヘッドレス Chromium で開いて撮影し、ImageIO で 800×500 の JPEG に縮小しながら、タイトル・説明・サイト名・ファビコンも読み取ります。同時キャプチャは 2 件、1 回 20 秒までで、ブラウザの接続はすべてプライベートネットワークのアドレスをブロックするチェック用プロキシを通ります |
 
 ### フロントエンド (crowfoot-web)
@@ -361,17 +361,18 @@ pnpm dev        # http://localhost:8080
 
 | バージョン | 日付 | 主な内容 | リリースノート |
 | --- | --- | --- | --- |
+| v1.42 | 2026-10-12 | サイト登録の表示、サムネイルの自動更新、Claude でのサイト登録、デフォルト色グループの配色 | [見る](https://crowfoot.java21.net/release-notes/53) |
 | v1.41 | 2026-10-08 | 作ったサイトのアイコンとダイアログ、トップページのショーケース（スライドの上・最大 9 件）、同一サーバーのサイト撮影、モバイルのスライド、コミュニティの長いタイトル | [見る](https://crowfoot.java21.net/release-notes/52) |
 | v1.40 | 2026-10-08 | サイトショーケース（ドキュメントで作ったサイトの登録・自動サムネイル・報告）、キャプチャサービスの新設、グループの自動配色、PostgreSQL デフォルト値の修正（MCP 報告 50） | [見る](https://crowfoot.java21.net/release-notes/51) |
 | v1.39 | 2026-10-08 | 要件リンク時のグループ自動配置（画面・MCP）、MCP 設計フローの強化（要件の下書きを先に・デプロイ計画の警告・ドキュメントの書き直し） | [見る](https://crowfoot.java21.net/release-notes/49) |
 | v1.38 | 2026-10-07 | 同じ名前のインデックスの変更計画の修正（MCP 報告 47）、MCP でのインデックス削除 | [見る](https://crowfoot.java21.net/release-notes/48) |
-| v1.37 | 2026-10-07 | テーブルドラッグの高速化、リレーション線の4面分散・自動配置の候補選択、PostgreSQLの特殊インデックス(GIN・式・部分・INCLUDE・演算子クラス)・IDENTITYの種類、提案・報告の通知の修正 | [見る](https://crowfoot.java21.net/release-notes/46) |
 
 <details>
-<summary>以前のバージョン（v1.08 ～ v1.36）</summary>
+<summary>以前のバージョン（v1.08 ～ v1.37）</summary>
 
 | バージョン | 日付 | 主な内容 | リリースノート |
 | --- | --- | --- | --- |
+| v1.37 | 2026-10-07 | テーブルドラッグの高速化、リレーション線の4面分散・自動配置の候補選択、PostgreSQLの特殊インデックス(GIN・式・部分・INCLUDE・演算子クラス)・IDENTITYの種類、提案・報告の通知の修正 | [見る](https://crowfoot.java21.net/release-notes/46) |
 | v1.36 | 2026-10-06 | 受け入れ基準をデータで確認、要件の同期（MCP）、データ閲覧の負荷軽減（キーセットページング・遅くなる場合の案内） | [見る](https://crowfoot.java21.net/release-notes/42) |
 | v1.35 | 2026-10-06 | エディター内のデータタブ、外部キーをたどる・生成列、構造タブでドキュメントと比較、変更された要件の反映、マイグレーションの名前変更（RENAME）、MCP の DB 同期 | [見る](https://crowfoot.java21.net/release-notes/40) |
 | v1.34 | 2026-10-06 | デプロイSQLの修正（文字列デフォルト値の引用符・VARBINARYの長さ）、CHECK制約・生成列・全文検索インデックス、検証の警告を意図した例外に、フィードバック通知、MCPのバグ報告 | [見る](https://crowfoot.java21.net/release-notes/38) |

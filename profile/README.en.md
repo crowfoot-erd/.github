@@ -11,7 +11,7 @@
 An open-source ERD platform that takes you from requirements → ERD → a real database → data, all in one browser
 
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
-[![Release](https://img.shields.io/badge/release-v1.41-10b981.svg)](https://crowfoot.java21.net/release-notes/52)
+[![Release](https://img.shields.io/badge/release-v1.42-10b981.svg)](https://crowfoot.java21.net/release-notes/53)
 [![Live](https://img.shields.io/badge/live-crowfoot.java21.net-0ea5e9.svg)](https://crowfoot.java21.net)
 [![MCP](https://img.shields.io/badge/MCP-Claude%20%C2%B7%20ChatGPT-f97316.svg)](https://crowfoot.java21.net/guide#20.1)
 
@@ -117,7 +117,7 @@ What the AI creates shows up in Crowfoot as is, and the AI reads back whatever y
 ### More
 
 - **Four languages** — Korean, English, Japanese and Chinese screens and user guide
-- **AI integration (MCP)** — 26 tools: reading and creating documents, applying and syncing requirements and schemas, checking acceptance criteria with data, issuing, deploying and migrating databases, syncing database structure into documents, sample data, and bug reports. Issuing, deploying and applying show a plan first and run only what you approve.
+- **AI integration (MCP)** — 27 tools: reading and creating documents, applying and syncing requirements and schemas, checking acceptance criteria with data, issuing, deploying and migrating databases, syncing database structure into documents, sample data, registering sites built with a document, and bug reports. Issuing, deploying and applying show a plan first and run only what you approve.
 - **Site showcase** — Register a site built from your ERD on a document, and it is featured with a thumbnail on the landing page and `/showcase`. The capture service makes the thumbnails.
 - **Admin console** — Users, code tables, managed DB instances, issue quotas, audit logs and traffic analytics
 
@@ -308,7 +308,7 @@ The recommended order is auth → core-api → gateway → collab · database-ma
 | **crowfoot-core-api** | Spring Web MVC · Spring Data JPA (Hibernate 7) · Querydsl 5.1 · Bean Validation · PostgreSQL/MySQL JDBC · Commons DBCP2 · MaxMind GeoIP2 | The center of the domain. JPA stores members, workspaces and documents, and dynamic conditions such as lists and search are written type-safely with Querydsl (associations are loaded with fetch joins to prevent N+1 queries). Through JDBC drivers it reads users' databases into ERDs (reverse engineering), deploys DDL and issues free databases. GeoIP2 provides the per-country breakdown in the admin traffic analytics |
 | **crowfoot-collab** | Spring WebSocket · STOMP · RestClient | The real-time collaboration server. Each document has its own STOMP room, where presence, cursors and edits are relayed in order. On connect, it uses RestClient to check the token with auth and document permissions with core |
 | **crowfoot-database-manager** | Spring Web MVC · JDBC (PostgreSQL·MySQL drivers) · OpenFeign | The data browser. It has no database of its own: for each request it connects to the target database over JDBC and closes the connection when done. It asks core for connection info and permissions through OpenFeign. Row edits and sample data are applied in a single transaction |
-| **crowfoot-mcp** | Spring AI 2.0 (MCP Server, WebMVC) · RestClient | The entry point for MCP clients such as Claude and ChatGPT. It exposes 26 tools through Spring AI's MCP server (HTTP transport) and turns tool calls into internal API calls to core and database-manager. Its server instructions tell the AI the order of work and the rules to follow |
+| **crowfoot-mcp** | Spring AI 2.0 (MCP Server, WebMVC) · RestClient | The entry point for MCP clients such as Claude and ChatGPT. It exposes 27 tools through Spring AI's MCP server (HTTP transport) and turns tool calls into internal API calls to core and database-manager. Its server instructions tell the AI the order of work and the rules to follow |
 | **crowfoot-capture** | Spring Web MVC · Playwright for Java 1.63 (Chromium headless shell) · java.awt ImageIO | The internal service that makes site showcase thumbnails. It opens the URL core passes in headless Chromium, takes a screenshot, scales it to an 800×500 JPEG with ImageIO, and reads the title, description, site name and favicon along the way. It runs at most two captures at a time, 20 seconds each, and every browser connection goes through a checking proxy that blocks private network addresses |
 
 ### Frontend (crowfoot-web)
@@ -361,17 +361,18 @@ Every version ships with [release notes](https://crowfoot.java21.net/release-not
 
 | Version | Date | Highlights | Release notes |
 | --- | --- | --- | --- |
+| v1.42 | 2026-10-12 | Registered-site indicator, automatic thumbnail refresh, register sites with Claude, colors for default-colored groups | [View](https://crowfoot.java21.net/release-notes/53) |
 | v1.41 | 2026-10-08 | Site icon and dialog, home page showcase (above the slides, up to 9), same-server site capture, mobile slides, long community titles | [View](https://crowfoot.java21.net/release-notes/52) |
 | v1.40 | 2026-10-08 | Site Showcase (register a site built from a document, automatic thumbnails, reports), new capture service, automatic group colors, PostgreSQL default fix (MCP report 50) | [View](https://crowfoot.java21.net/release-notes/51) |
 | v1.39 | 2026-10-08 | Tables join their requirement's group (editor and MCP), better MCP design flow (requirements draft first, deployment plan warnings, rewriting documents) | [View](https://crowfoot.java21.net/release-notes/49) |
 | v1.38 | 2026-10-07 | Change plan fix for same-name indexes (MCP report 47), deleting indexes with MCP | [View](https://crowfoot.java21.net/release-notes/48) |
-| v1.37 | 2026-10-07 | Smoother table dragging, relationship lines on all four sides and best-of-candidates auto layout, PostgreSQL special indexes (GIN, expression, partial, INCLUDE, operator class) and IDENTITY kind, Suggestions & Reports notifications fixed | [View](https://crowfoot.java21.net/release-notes/46) |
 
 <details>
-<summary>Earlier versions (v1.08 – v1.36)</summary>
+<summary>Earlier versions (v1.08 – v1.37)</summary>
 
 | Version | Date | Highlights | Release notes |
 | --- | --- | --- | --- |
+| v1.37 | 2026-10-07 | Smoother table dragging, relationship lines on all four sides and best-of-candidates auto layout, PostgreSQL special indexes (GIN, expression, partial, INCLUDE, operator class) and IDENTITY kind, Suggestions & Reports notifications fixed | [View](https://crowfoot.java21.net/release-notes/46) |
 | v1.36 | 2026-10-06 | Checking acceptance criteria with data, requirement sync (MCP), lighter data browsing (keyset paging, may-be-slow notice) | [View](https://crowfoot.java21.net/release-notes/42) |
 | v1.35 | 2026-10-06 | Data tab inside the editor, following foreign keys and generated columns, comparing with the document in the structure tab, changed requirements through to the database, renames in migrations (RENAME), MCP database sync | [View](https://crowfoot.java21.net/release-notes/40) |
 | v1.34 | 2026-10-06 | Deployment SQL fixes (quoted string defaults, VARBINARY length), CHECK constraints, generated columns, full-text indexes, validation warnings as intended exceptions, Feedback notifications, MCP bug reports | [View](https://crowfoot.java21.net/release-notes/38) |
