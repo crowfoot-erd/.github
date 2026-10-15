@@ -11,7 +11,7 @@
 An open-source ERD platform that takes you from requirements → ERD → a real database → data, all in one browser
 
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
-[![Release](https://img.shields.io/badge/release-v1.44-10b981.svg)](https://crowfoot.java21.net/release-notes/55)
+[![Release](https://img.shields.io/badge/release-v1.45-10b981.svg)](https://crowfoot.java21.net/release-notes/56)
 [![Live](https://img.shields.io/badge/live-crowfoot.java21.net-0ea5e9.svg)](https://crowfoot.java21.net)
 [![MCP](https://img.shields.io/badge/MCP-Claude%20%C2%B7%20ChatGPT-f97316.svg)](https://crowfoot.java21.net/guide#20.1)
 
@@ -361,17 +361,18 @@ Every version ships with [release notes](https://crowfoot.java21.net/release-not
 
 | Version | Date | Highlights | Release notes |
 | --- | --- | --- | --- |
+| v1.45 | 2026-10-15 | Tag versions in the version history (names like 1.0 with a description, tagged versions are kept) | [View](https://crowfoot.java21.net/release-notes/56) |
 | v1.44 | 2026-10-15 | Pages load after a deployment without a hard refresh, web function complexity rule (95→46), PMD closeQuietly | [View](https://crowfoot.java21.net/release-notes/55) |
 | v1.43 | 2026-10-15 | Static analysis (zero issues, deployment gate), clearer error for a missing PostgreSQL schema | [View](https://crowfoot.java21.net/release-notes/54) |
 | v1.42 | 2026-10-12 | Registered-site indicator, automatic thumbnail refresh, register sites with Claude, colors for default-colored groups | [View](https://crowfoot.java21.net/release-notes/53) |
 | v1.41 | 2026-10-08 | Site icon and dialog, home page showcase (above the slides, up to 9), same-server site capture, mobile slides, long community titles | [View](https://crowfoot.java21.net/release-notes/52) |
-| v1.40 | 2026-10-08 | Site Showcase (register a site built from a document, automatic thumbnails, reports), new capture service, automatic group colors, PostgreSQL default fix (MCP report 50) | [View](https://crowfoot.java21.net/release-notes/51) |
 
 <details>
-<summary>Earlier versions (v1.08 – v1.39)</summary>
+<summary>Earlier versions (v1.08 – v1.40)</summary>
 
 | Version | Date | Highlights | Release notes |
 | --- | --- | --- | --- |
+| v1.40 | 2026-10-08 | Site Showcase (register a site built from a document, automatic thumbnails, reports), new capture service, automatic group colors, PostgreSQL default fix (MCP report 50) | [View](https://crowfoot.java21.net/release-notes/51) |
 | v1.39 | 2026-10-08 | Tables join their requirement's group (editor and MCP), better MCP design flow (requirements draft first, deployment plan warnings, rewriting documents) | [View](https://crowfoot.java21.net/release-notes/49) |
 | v1.38 | 2026-10-07 | Change plan fix for same-name indexes (MCP report 47), deleting indexes with MCP | [View](https://crowfoot.java21.net/release-notes/48) |
 | v1.37 | 2026-10-07 | Smoother table dragging, relationship lines on all four sides and best-of-candidates auto layout, PostgreSQL special indexes (GIN, expression, partial, INCLUDE, operator class) and IDENTITY kind, Suggestions & Reports notifications fixed | [View](https://crowfoot.java21.net/release-notes/46) |

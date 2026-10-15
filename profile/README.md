@@ -11,7 +11,7 @@
 요구사항 → ERD → 실제 데이터베이스 → 데이터까지, 브라우저 하나로 잇는 오픈소스 ERD 플랫폼
 
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
-[![Release](https://img.shields.io/badge/release-v1.44-10b981.svg)](https://crowfoot.java21.net/release-notes/55)
+[![Release](https://img.shields.io/badge/release-v1.45-10b981.svg)](https://crowfoot.java21.net/release-notes/56)
 [![Live](https://img.shields.io/badge/live-crowfoot.java21.net-0ea5e9.svg)](https://crowfoot.java21.net)
 [![MCP](https://img.shields.io/badge/MCP-Claude%20%C2%B7%20ChatGPT-f97316.svg)](https://crowfoot.java21.net/guide#20.1)
 
@@ -361,17 +361,18 @@ pnpm dev        # http://localhost:8080
 
 | 버전 | 날짜 | 주요 내용 | 릴리스 노트 |
 | --- | --- | --- | --- |
+| v1.45 | 2026-10-15 | 버전 기록에 태그 붙이기(1.0 같은 이름과 설명, 태그 버전은 보존) | [보기](https://crowfoot.java21.net/release-notes/56) |
 | v1.44 | 2026-10-15 | 배포 뒤 강력 새로고침 없이 화면 표시, 웹 함수 복잡도 규칙(95→46), PMD closeQuietly 인식 | [보기](https://crowfoot.java21.net/release-notes/55) |
 | v1.43 | 2026-10-15 | 정적 분석 도입(위반 0건·배포 게이트), PostgreSQL 없는 스키마 오류 문구 수정 | [보기](https://crowfoot.java21.net/release-notes/54) |
 | v1.42 | 2026-10-12 | 사이트가 등록된 문서 표시, 썸네일 자동 갱신, Claude로 사이트 등록, 기본색 그룹 색 다시 매기기 | [보기](https://crowfoot.java21.net/release-notes/53) |
 | v1.41 | 2026-10-08 | 만든 사이트 아이콘·창, 랜딩 쇼케이스(슬라이드 위·9개), 같은 서버 사이트 캡처, 모바일 슬라이드, 커뮤니티 긴 제목 | [보기](https://crowfoot.java21.net/release-notes/52) |
-| v1.40 | 2026-10-08 | 사이트 쇼케이스(문서로 만든 사이트 등록·자동 썸네일·신고), 캡처 서비스 신설, 새 그룹 자동 색, PostgreSQL 기본값 수정(MCP 신고 50) | [보기](https://crowfoot.java21.net/release-notes/51) |
 
 <details>
-<summary>이전 버전 (v1.08 ~ v1.39)</summary>
+<summary>이전 버전 (v1.08 ~ v1.40)</summary>
 
 | 버전 | 날짜 | 주요 내용 | 릴리스 노트 |
 | --- | --- | --- | --- |
+| v1.40 | 2026-10-08 | 사이트 쇼케이스(문서로 만든 사이트 등록·자동 썸네일·신고), 캡처 서비스 신설, 새 그룹 자동 색, PostgreSQL 기본값 수정(MCP 신고 50) | [보기](https://crowfoot.java21.net/release-notes/51) |
 | v1.39 | 2026-10-08 | 요구사항에 연결하면 그룹에 자동 배치(화면·MCP), MCP 설계 흐름 보강(요구사항 초안 먼저·배포 계획 경고·문서 다시 쓰기) | [보기](https://crowfoot.java21.net/release-notes/49) |
 | v1.38 | 2026-10-07 | 같은 이름 인덱스의 변경 계획 수정(MCP 신고 47), MCP 인덱스 삭제 | [보기](https://crowfoot.java21.net/release-notes/48) |
 | v1.37 | 2026-10-07 | 테이블 드래그 성능, 관계선 4면 분산·자동 배치 후보 선택, PostgreSQL 특수 인덱스(GIN·식·부분·INCLUDE·연산자 클래스)·IDENTITY 종류, 제안 및 신고 알림 수정 | [보기](https://crowfoot.java21.net/release-notes/46) |
