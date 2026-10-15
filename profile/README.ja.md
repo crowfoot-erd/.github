@@ -11,7 +11,7 @@
 要件 → ERD → 本物のデータベース → データまで、ブラウザひとつでつなぐオープンソースの ERD プラットフォーム
 
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
-[![Release](https://img.shields.io/badge/release-v1.42-10b981.svg)](https://crowfoot.java21.net/release-notes/53)
+[![Release](https://img.shields.io/badge/release-v1.43-10b981.svg)](https://crowfoot.java21.net/release-notes/54)
 [![Live](https://img.shields.io/badge/live-crowfoot.java21.net-0ea5e9.svg)](https://crowfoot.java21.net)
 [![MCP](https://img.shields.io/badge/MCP-Claude%20%C2%B7%20ChatGPT-f97316.svg)](https://crowfoot.java21.net/guide#20.1)
 
@@ -361,17 +361,18 @@ pnpm dev        # http://localhost:8080
 
 | バージョン | 日付 | 主な内容 | リリースノート |
 | --- | --- | --- | --- |
+| v1.43 | 2026-10-15 | 静的解析の導入(違反 0 件・デプロイゲート)、PostgreSQL の存在しないスキーマのエラー表示を修正 | [見る](https://crowfoot.java21.net/release-notes/54) |
 | v1.42 | 2026-10-12 | サイト登録の表示、サムネイルの自動更新、Claude でのサイト登録、デフォルト色グループの配色 | [見る](https://crowfoot.java21.net/release-notes/53) |
 | v1.41 | 2026-10-08 | 作ったサイトのアイコンとダイアログ、トップページのショーケース（スライドの上・最大 9 件）、同一サーバーのサイト撮影、モバイルのスライド、コミュニティの長いタイトル | [見る](https://crowfoot.java21.net/release-notes/52) |
 | v1.40 | 2026-10-08 | サイトショーケース（ドキュメントで作ったサイトの登録・自動サムネイル・報告）、キャプチャサービスの新設、グループの自動配色、PostgreSQL デフォルト値の修正（MCP 報告 50） | [見る](https://crowfoot.java21.net/release-notes/51) |
 | v1.39 | 2026-10-08 | 要件リンク時のグループ自動配置（画面・MCP）、MCP 設計フローの強化（要件の下書きを先に・デプロイ計画の警告・ドキュメントの書き直し） | [見る](https://crowfoot.java21.net/release-notes/49) |
-| v1.38 | 2026-10-07 | 同じ名前のインデックスの変更計画の修正（MCP 報告 47）、MCP でのインデックス削除 | [見る](https://crowfoot.java21.net/release-notes/48) |
 
 <details>
-<summary>以前のバージョン（v1.08 ～ v1.37）</summary>
+<summary>以前のバージョン（v1.08 ～ v1.38）</summary>
 
 | バージョン | 日付 | 主な内容 | リリースノート |
 | --- | --- | --- | --- |
+| v1.38 | 2026-10-07 | 同じ名前のインデックスの変更計画の修正（MCP 報告 47）、MCP でのインデックス削除 | [見る](https://crowfoot.java21.net/release-notes/48) |
 | v1.37 | 2026-10-07 | テーブルドラッグの高速化、リレーション線の4面分散・自動配置の候補選択、PostgreSQLの特殊インデックス(GIN・式・部分・INCLUDE・演算子クラス)・IDENTITYの種類、提案・報告の通知の修正 | [見る](https://crowfoot.java21.net/release-notes/46) |
 | v1.36 | 2026-10-06 | 受け入れ基準をデータで確認、要件の同期（MCP）、データ閲覧の負荷軽減（キーセットページング・遅くなる場合の案内） | [見る](https://crowfoot.java21.net/release-notes/42) |
 | v1.35 | 2026-10-06 | エディター内のデータタブ、外部キーをたどる・生成列、構造タブでドキュメントと比較、変更された要件の反映、マイグレーションの名前変更（RENAME）、MCP の DB 同期 | [見る](https://crowfoot.java21.net/release-notes/40) |
