@@ -11,7 +11,7 @@
 在一个浏览器里把需求 → ERD → 真实数据库 → 数据连成一线的开源 ERD 平台
 
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
-[![Release](https://img.shields.io/badge/release-v1.48-10b981.svg)](https://crowfoot.java21.net/release-notes/59)
+[![Release](https://img.shields.io/badge/release-v1.49-10b981.svg)](https://crowfoot.java21.net/release-notes/60)
 [![Live](https://img.shields.io/badge/live-crowfoot.java21.net-0ea5e9.svg)](https://crowfoot.java21.net)
 [![MCP](https://img.shields.io/badge/MCP-Claude%20%C2%B7%20ChatGPT-f97316.svg)](https://crowfoot.java21.net/guide#20.1)
 
@@ -361,17 +361,18 @@ pnpm dev        # http://localhost:8080
 
 | 版本 | 日期 | 主要内容 | 发布说明 |
 | --- | --- | --- | --- |
+| v1.49 | 2026-11-05 | pgvector 设计(向量列、HNSW/IVFFlat 索引、存储参数)并应用到实际数据库(声明扩展、执行前检查) | [查看](https://crowfoot.java21.net/release-notes/60) |
 | v1.48 | 2026-11-04 | 断开数据库连接(列表、编辑器、MCP)，MCP 不再覆盖(其他文档正在使用的数据库会改为签发新库后部署) | [查看](https://crowfoot.java21.net/release-notes/59) |
 | v1.47 | 2026-10-15 | 修复图片在空白窗口中打开的问题，统一 base64 处理 | [查看](https://crowfoot.java21.net/release-notes/58) |
 | v1.46 | 2026-10-15 | 改进手机页面(菜单抽屉、页面宽度整理)、比较标签 | [查看](https://crowfoot.java21.net/release-notes/57) |
 | v1.45 | 2026-10-15 | 为版本记录添加标签(1.0 等名称和说明，带标签的版本会保留) | [查看](https://crowfoot.java21.net/release-notes/56) |
-| v1.44 | 2026-10-15 | 部署后无需强制刷新即可显示、网页端函数复杂度规则(95→46)、PMD 识别 closeQuietly | [查看](https://crowfoot.java21.net/release-notes/55) |
 
 <details>
-<summary>更早的版本（v1.08 ～ v1.43）</summary>
+<summary>更早的版本（v1.08 ～ v1.44）</summary>
 
 | 版本 | 日期 | 主要内容 | 发布说明 |
 | --- | --- | --- | --- |
+| v1.44 | 2026-10-15 | 部署后无需强制刷新即可显示、网页端函数复杂度规则(95→46)、PMD 识别 closeQuietly | [查看](https://crowfoot.java21.net/release-notes/55) |
 | v1.43 | 2026-10-15 | 引入静态分析(零问题、部署门禁)，修正 PostgreSQL 不存在架构时的错误提示 | [查看](https://crowfoot.java21.net/release-notes/54) |
 | v1.42 | 2026-10-12 | 网站登记标识、缩略图自动更新、通过 Claude 登记网站、为默认颜色分组上色 | [查看](https://crowfoot.java21.net/release-notes/53) |
 | v1.41 | 2026-10-08 | 网站图标与对话框、首页展示（轮播上方・最多 9 个）、同服务器网站截图、移动端轮播、社区长标题 | [查看](https://crowfoot.java21.net/release-notes/52) |
